@@ -1,4 +1,5 @@
 import CenterOnLgScreen from "@/common/utils/CenterOnLgScreen";
+import PublicFooter from "@/components/layout/Footer";
 import PublicHeader from "@/components/layout/Header";
 
 export default function Layout({
@@ -9,8 +10,10 @@ export default function Layout({
   return (
     <>
       <PublicHeader />
-      <CenterOnLgScreen>{children}</CenterOnLgScreen>
-      <footer></footer>
+      <CenterOnLgScreen props={{ component: "main" }}>
+        {children}
+      </CenterOnLgScreen>
+      <PublicFooter />
     </>
   );
 }

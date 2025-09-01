@@ -1,3 +1,4 @@
+import LanguageSelector from "@/components/layout/LanguageSelector";
 import { Button } from "@mui/material";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -5,7 +6,7 @@ import Image from "next/image";
 const PublicHeader: React.FC = () => {
   const t = useTranslations("PUBLIC_HEADER");
   return (
-    <header className="flex  items-center   h-[90px]  py-4 px-4 md:px-8 xl:px-16">
+    <header className="flex items-center h-[90px] py-4 px-4 md:px-8 xl:px-16">
       <div className="flex items-baseline">
         <Image src="/black-logo.svg" alt="Logo" width={50} height={50} />
         <h1 className="font-bold text-2xl -translate-1">tackTrails</h1>
@@ -15,28 +16,30 @@ const PublicHeader: React.FC = () => {
         <ul className="flex space-x-8">
           <li>
             <a href="/courses" className=" hover:text-gray-900">
-              About
+              {t("ABOUT")}
             </a>
           </li>
           <li>
             <a href="/about" className=" hover:text-gray-900">
-              Explore
+              {t("EXPLORE")}
             </a>
           </li>
           <li>
             <a href="/contact" className=" hover:text-gray-900">
-              Paid Courses
+              {t("PAID_COURSES")}
             </a>
           </li>
           <li>
             <a href="/contact" className=" hover:text-gray-900">
-              Create
+              {t("CREATE")}
             </a>
           </li>
         </ul>
       </nav>
 
-      <div className="ml-auto">
+      <div className="ml-auto flex items-center gap-2">
+        <LanguageSelector />
+
         <Button
           size="large"
           variant="text"

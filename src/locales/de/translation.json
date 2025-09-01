@@ -1,1 +1,62 @@
-{}
+{
+    "HERO": {
+        "MAIN": "Wir definieren Lernen neu — gemeinsam",
+        "SUB": "Eine offene Plattform, auf der Communities Lernressourcen organisieren und mithilfe von KI smarter lernen.",
+        "SEARCH": "Welches Thema interessiert dich?",
+        "TAGS": "Stichwörter"
+    },
+    "PUBLIC_HEADER": {
+        "REGISTER": "Registrieren",
+        "LOGIN": "Anmelden",
+        "ABOUT": "Über uns",
+        "EXPLORE": "Entdecken",
+        "PAID_COURSES": "Bezahlte Kurse",
+        "CREATE": "Erstellen"
+    },
+    "LANGUAGE_SELECT": {
+        "ENGLISH": "Englisch",
+        "GERMAN": "Deutsch",
+        "SPANISH": "Español",
+        "FRENCH": "Français",
+        "CHANGE_LANGUAGE": "Sprache ändern"
+    },
+    "PUBLIC_FOOTER": {
+        "ABOUT": "Über uns",
+        "BLOG": "Blog",
+        "CONTACT": "Kontakt",
+        "SUPPORT": "Support",
+        "PRIVACY": "Datenschutz",
+        "Terms": "Nutzungsbedingungen",
+        "FAQs": "FAQs",
+        "RIGHTS": "Alle Rechte vorbehalten."
+    },
+    "HOME_SORT": {
+        "MOST_VIEWED": "Meistgesehen",
+        "TOP_RATED": "Top bewertet",
+        "RECENTLY_ADDED": "Kürzlich hinzugefügt"
+    },
+    "DIFFICULTY_LEVEL": {
+        "BEGINNER": "Für Einsteiger geeignet",
+        "INTERMEDIATE": "Mittelstufe",
+        "ADVANCED": "Fortgeschritten",
+        "EXPERT": "Experte"
+    },
+    "TIME_TEXT": {
+        "MIN": "min",
+        "MINS": "mins",
+        "JUST_NOW": "gerade eben",
+        "HOUR": "Stunde",
+        "HOURS": "Stunden",
+        "DAY": "Tag",
+        "DAYS": "Tage",
+        "MONTH": "Monat",
+        "MONTHS": "Monate",
+        "YEAR": "Jahr",
+        "YEARS": "Jahre",
+        "SECOND": "Sekunde",
+        "SECONDS": "Sekunden"
+    },
+    "PUBLIC_MAIN": {
+        "CREATE_COURSE": "Kurs erstellen"
+    }
+}

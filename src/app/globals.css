@@ -28,6 +28,14 @@
   }
 } */
 
+@utility shadow-border {
+  /* 1px outline-like shadow; adjust color/alpha to taste */
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+
+  @variant hover {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.14);
+  }
+}
 body {
   font-family: var(--font-lexend);
 }

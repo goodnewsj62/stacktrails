@@ -57,7 +57,7 @@ export default async function Hero() {
 
 function Tag({ name }: { name: string }) {
   return (
-    <div className="cursor-pointer rounded-2xl  p-2 text-xs border-base border-2 hover:text-white hover:bg-neutral-black hover:border-0">
+    <div className="cursor-pointer rounded-2xl  p-2 text-xs shadow-border hover:text-white hover:bg-neutral-black hover:shadow-none">
       {name}
     </div>
   );
