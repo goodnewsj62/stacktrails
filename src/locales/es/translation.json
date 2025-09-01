@@ -59,5 +59,20 @@
     "PUBLIC_MAIN": {
         "CREATE_COURSE": "Crear curso",
         "SELECT_DIFFICULTY": "Seleccionar nivel de dificultad"
-    }
+    },
+    "AUTH": {
+        "WELCOME_BACK": "Bienvenido de vuelta",
+        "WELCOME": "Bienvenido a Stacktrials",
+        "INTRODUCTION": "Crea una cuenta para conectar con personas afines, explorar cursos bien curados y aprender de forma más inteligente juntos.",
+        "AGREEMENT_START_PHRASE": "Al continuar, aceptas nuestros",
+        "TERMS": "Términos",
+        "PRIVACY": "Política de Privacidad",
+        "HAVE_ACCOUNT": "¿No tienes una cuenta?",
+        "ALREADY_HAVE_AN_ACCOUNT": "¿Ya tienes una cuenta?",
+        "REGISTER": "registrarse",
+        "CONTINUE_WITH_GOOGLE": "Continuar con Google",
+        "CONTINUE_WITH_GITHUB": "Continuar con GitHub",
+        "OR": "o"
+    },
+    "AND": "y"
 }

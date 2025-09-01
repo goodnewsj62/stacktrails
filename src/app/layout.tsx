@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { Bebas_Neue, Lexend } from "next/font/google";
@@ -36,7 +37,13 @@ export default function RootLayout({
       <body className={`${bebas.variable} ${lexend.variable} antialiased`}>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            <NextIntlClientProvider>{children}</NextIntlClientProvider>
+            <NextIntlClientProvider>
+              <GoogleOAuthProvider
+                clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
+              >
+                {children}
+              </GoogleOAuthProvider>
+            </NextIntlClientProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
 
@@ -58,6 +65,11 @@ export default function RootLayout({
         <a href="https://storyset.com/home" className="hidden">
           Home illustrations by Storyset
         </a>
+        {/* <script
+          src="https://accounts.google.com/gsi/client"
+          async
+          defer
+        ></script> */}
       </body>
     </html>
   );

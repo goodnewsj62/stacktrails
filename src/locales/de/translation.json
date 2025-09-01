@@ -59,5 +59,20 @@
     "PUBLIC_MAIN": {
         "CREATE_COURSE": "Kurs erstellen",
         "SELECT_DIFFICULTY": "Schwierigkeitsgrad auswählen"
-    }
+    },
+    "AUTH": {
+        "WELCOME_BACK": "Willkommen zurück",
+        "WELCOME": "Willkommen bei Stacktrials",
+        "INTRODUCTION": "Erstellen Sie ein Konto, um sich mit Gleichgesinnten zu vernetzen, gut kuratierte Kurse zu erkunden und gemeinsam intelligenter zu lernen.",
+        "AGREEMENT_START_PHRASE": "Durch Fortfahren stimmen Sie unseren",
+        "TERMS": "Nutzungsbedingungen",
+        "PRIVACY": "Datenschutzrichtlinie",
+        "HAVE_ACCOUNT": "Haben Sie noch kein Konto?",
+        "ALREADY_HAVE_AN_ACCOUNT": "Haben Sie bereits ein Konto?",
+        "REGISTER": "registrieren",
+        "CONTINUE_WITH_GOOGLE": "Mit Google fortfahren",
+        "CONTINUE_WITH_GITHUB": "Mit GitHub fortfahren",
+        "OR": "oder"
+    },
+    "AND": "und"
 }

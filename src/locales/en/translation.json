@@ -32,12 +32,12 @@
     },
     "HOME_SORT": {
         "MOST_VIEWED": "Most Viewed",
-        "TOP_RATED": "Top Reated",
+        "TOP_RATED": "Top Rated",
         "RECENTLY_ADDED": "Recently Added"
     },
     "DIFFICULTY_LEVEL": {
         "BEGINNER": "Beginner friendly",
-        "INTERMEDIATE": "Intermeiate",
+        "INTERMEDIATE": "Intermediate",
         "ADVANCED": "Advanced",
         "EXPERT": "Expert"
     },
@@ -62,14 +62,17 @@
     },
     "AUTH": {
         "WELCOME_BACK": "Welcome back",
-        "WELCOME": "Welocme to Stacktrials",
+        "WELCOME": "Welcome to Stacktrials",
         "INTRODUCTION": "Create an account to connect with like-minded individuals, explore well-curated courses, and learn smarter together.",
         "AGREEMENT_START_PHRASE": "By continuing, you agree to our",
         "TERMS": "Terms",
         "PRIVACY": "Privacy Policy",
-        "HAVE_ACCOUNT": "Dont have an account?",
+        "HAVE_ACCOUNT": "Don't have an account?",
         "ALREADY_HAVE_AN_ACCOUNT": "Already have an account?",
-        "REGISTER": "register"
+        "REGISTER": "register",
+        "CONTINUE_WITH_GOOGLE": "Continue with Google",
+        "CONTINUE_WITH_GITHUB": "Continue with GitHub",
+        "OR": "or"
     },
     "AND": "and"
 }

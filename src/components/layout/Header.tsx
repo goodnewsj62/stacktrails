@@ -4,6 +4,7 @@ import { Button } from "@mui/material";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
+import GoogleOneTapWrapper from "../auth/GoogleOneTapWrapper";
 
 type params = {
   locale: string;
@@ -11,7 +12,7 @@ type params = {
 
 const PublicHeader: React.FC<params> = ({ locale }) => {
   const t = useTranslations("PUBLIC_HEADER");
-  const linkHelperObject = new PublicRoutes(locale);
+  const routes = new PublicRoutes(locale).getRoutes();
   return (
     <header className="flex items-center h-[90px] py-4 px-4 md:px-8 xl:px-16">
       <div className="flex items-baseline">
@@ -44,17 +45,19 @@ const PublicHeader: React.FC<params> = ({ locale }) => {
       </nav>
 
       <div className="ml-auto flex items-center gap-2">
+        <GoogleOneTapWrapper />
         <LanguageSelector />
-
-        <Button
-          size="large"
-          variant="text"
-          color="inherit"
-          sx={{ textTransform: "capitalize" }}
-        >
-          {t("REGISTER")}
-        </Button>
-        <Link href={linkHelperObject.getRoutes().LOGIN}>
+        <Link href={routes.REGISTER}>
+          <Button
+            size="large"
+            variant="text"
+            color="inherit"
+            sx={{ textTransform: "capitalize" }}
+          >
+            {t("REGISTER")}
+          </Button>
+        </Link>
+        <Link href={routes.LOGIN}>
           <Button
             size="large"
             sx={{ borderRadius: "20px", textTransform: "capitalize" }}
