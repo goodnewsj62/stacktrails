@@ -4,12 +4,14 @@ import PublicHeader from "@/components/layout/Header";
 
 export default function Layout({
   children,
+  params: { locale },
 }: Readonly<{
   children: React.ReactNode;
+  params: { locale: string };
 }>) {
   return (
     <>
-      <PublicHeader />
+      <PublicHeader locale={locale} />
       <CenterOnLgScreen props={{ component: "main" }}>
         {children}
       </CenterOnLgScreen>

@@ -1,10 +1,17 @@
 import LanguageSelector from "@/components/layout/LanguageSelector";
+import { PublicRoutes } from "@/routes";
 import { Button } from "@mui/material";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import Link from "next/link";
 
-const PublicHeader: React.FC = () => {
+type params = {
+  locale: string;
+};
+
+const PublicHeader: React.FC<params> = ({ locale }) => {
   const t = useTranslations("PUBLIC_HEADER");
+  const linkHelperObject = new PublicRoutes(locale);
   return (
     <header className="flex items-center h-[90px] py-4 px-4 md:px-8 xl:px-16">
       <div className="flex items-baseline">
@@ -14,26 +21,25 @@ const PublicHeader: React.FC = () => {
 
       <nav className="mx-16">
         <ul className="flex space-x-8">
-          <li>
-            <a href="/courses" className=" hover:text-gray-900">
-              {t("ABOUT")}
-            </a>
-          </li>
-          <li>
-            <a href="/about" className=" hover:text-gray-900">
-              {t("EXPLORE")}
-            </a>
-          </li>
-          <li>
-            <a href="/contact" className=" hover:text-gray-900">
-              {t("PAID_COURSES")}
-            </a>
-          </li>
-          <li>
-            <a href="/contact" className=" hover:text-gray-900">
-              {t("CREATE")}
-            </a>
-          </li>
+          {[
+            { href: "/courses", label: t("ABOUT") },
+            { href: "/about", label: t("EXPLORE") },
+            { href: "/contact", label: t("PAID_COURSES") },
+            { href: "/contact", label: t("CREATE") },
+          ].map((item, idx) => (
+            <li key={idx} className="relative">
+              <a
+                href={item.href}
+                className="relative group hover:text-accent transition-colors duration-200 pb-1"
+              >
+                {item.label}
+                <span
+                  className="pointer-events-none absolute left-0 bottom-0 w-full h-[2px] bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                  aria-hidden="true"
+                />
+              </a>
+            </li>
+          ))}
         </ul>
       </nav>
 
@@ -48,12 +54,14 @@ const PublicHeader: React.FC = () => {
         >
           {t("REGISTER")}
         </Button>
-        <Button
-          size="large"
-          sx={{ borderRadius: "20px", textTransform: "capitalize" }}
-        >
-          {t("LOGIN")}
-        </Button>
+        <Link href={linkHelperObject.getRoutes().LOGIN}>
+          <Button
+            size="large"
+            sx={{ borderRadius: "20px", textTransform: "capitalize" }}
+          >
+            {t("LOGIN")}
+          </Button>
+        </Link>
       </div>
     </header>
   );

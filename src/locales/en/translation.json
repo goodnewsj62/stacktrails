@@ -15,7 +15,7 @@
     },
     "LANGUAGE_SELECT": {
         "ENGLISH": "English",
-        "GERMAN": "Deutch",
+        "GERMAN": "Deutsch",
         "SPANISH": "Español",
         "FRENCH": "Français",
         "CHANGE_LANGUAGE": "Change language"
@@ -59,5 +59,10 @@
     "PUBLIC_MAIN": {
         "CREATE_COURSE": "Create Course",
         "SELECT_DIFFICULTY": "Select difficulty"
+    },
+    "SIGN_UP": {
+        "WELCOME_BACK": "Welcome back",
+        "WELCOME": "Welocme to Stacktrials",
+        "INTRODUCTION": "Create an account to connect with like-minded individuals, explore well-curated courses, and learn smarter together."
     }
 }

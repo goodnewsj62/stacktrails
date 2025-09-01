@@ -57,6 +57,7 @@
         "SECONDS": "segundos"
     },
     "PUBLIC_MAIN": {
-        "CREATE_COURSE": "Crear curso"
+        "CREATE_COURSE": "Crear curso",
+        "SELECT_DIFFICULTY": "Seleccionar nivel de dificultad"
     }
 }

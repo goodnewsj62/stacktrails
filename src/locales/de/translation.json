@@ -57,6 +57,7 @@
         "SECONDS": "Sekunden"
     },
     "PUBLIC_MAIN": {
-        "CREATE_COURSE": "Kurs erstellen"
+        "CREATE_COURSE": "Kurs erstellen",
+        "SELECT_DIFFICULTY": "Schwierigkeitsgrad auswählen"
     }
 }

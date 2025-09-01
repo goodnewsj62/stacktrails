@@ -49,6 +49,15 @@ export default function RootLayout({
         <a href="https://storyset.com/work" className="hidden">
           Work illustrations by Storyset
         </a>
+        <a href="https://storyset.com/communication" className="hidden">
+          Communication illustrations by Storyset
+        </a>
+        <a href="https://storyset.com/data" className="hidden">
+          Data illustrations by Storyset
+        </a>
+        <a href="https://storyset.com/home" className="hidden">
+          Home illustrations by Storyset
+        </a>
       </body>
     </html>
   );
