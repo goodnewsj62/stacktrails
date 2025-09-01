@@ -1,1 +1,12 @@
-{}
+{
+    "HERO": {
+        "MAIN": "Redefining How We Learn, Together",
+        "SUB": "An open platform where communities organize study resources and learn smarter together with AI.",
+        "SEARCH": "what topic are you interested in?",
+        "TAGS": "tags"
+    },
+    "PUBLIC_HEADER": {
+        "REGISTER": "Sign up",
+        "LOGIN": "Log in"
+    }
+}
