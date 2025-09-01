@@ -60,9 +60,16 @@
         "CREATE_COURSE": "Create Course",
         "SELECT_DIFFICULTY": "Select difficulty"
     },
-    "SIGN_UP": {
+    "AUTH": {
         "WELCOME_BACK": "Welcome back",
         "WELCOME": "Welocme to Stacktrials",
-        "INTRODUCTION": "Create an account to connect with like-minded individuals, explore well-curated courses, and learn smarter together."
-    }
+        "INTRODUCTION": "Create an account to connect with like-minded individuals, explore well-curated courses, and learn smarter together.",
+        "AGREEMENT_START_PHRASE": "By continuing, you agree to our",
+        "TERMS": "Terms",
+        "PRIVACY": "Privacy Policy",
+        "HAVE_ACCOUNT": "Dont have an account?",
+        "ALREADY_HAVE_AN_ACCOUNT": "Already have an account?",
+        "REGISTER": "register"
+    },
+    "AND": "and"
 }
