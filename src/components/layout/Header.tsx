@@ -1,18 +1,15 @@
 import LanguageSelector from "@/components/layout/LanguageSelector";
 import { PublicRoutes } from "@/routes";
-import { Button } from "@mui/material";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import Image from "next/image";
-import Link from "next/link";
 import GoogleOneTapWrapper from "../auth/GoogleOneTapWrapper";
+import CTAORProfie from "./CTAoRProfile";
 
-type params = {
-  locale: string;
-};
+type params = {};
 
-const PublicHeader: React.FC<params> = ({ locale }) => {
-  const t = useTranslations("PUBLIC_HEADER");
-  const routes = new PublicRoutes(locale).getRoutes();
+const PublicHeader: React.FC<params> = async () => {
+  const t = await getTranslations("PUBLIC_HEADER");
+
   return (
     <header className="flex items-center h-[90px] py-4 px-4 md:px-8 xl:px-16">
       <div className="flex items-baseline">
@@ -23,7 +20,7 @@ const PublicHeader: React.FC<params> = ({ locale }) => {
       <nav className="mx-16">
         <ul className="flex space-x-8">
           {[
-            { href: "/courses", label: t("ABOUT") },
+            { href: PublicRoutes.ABOUT, label: t("ABOUT") },
             { href: "/about", label: t("EXPLORE") },
             { href: "/contact", label: t("PAID_COURSES") },
             { href: "/contact", label: t("CREATE") },
@@ -47,24 +44,7 @@ const PublicHeader: React.FC<params> = ({ locale }) => {
       <div className="ml-auto flex items-center gap-2">
         <GoogleOneTapWrapper />
         <LanguageSelector />
-        <Link href={routes.REGISTER}>
-          <Button
-            size="large"
-            variant="text"
-            color="inherit"
-            sx={{ textTransform: "capitalize" }}
-          >
-            {t("REGISTER")}
-          </Button>
-        </Link>
-        <Link href={routes.LOGIN}>
-          <Button
-            size="large"
-            sx={{ borderRadius: "20px", textTransform: "capitalize" }}
-          >
-            {t("LOGIN")}
-          </Button>
-        </Link>
+        <CTAORProfie />
       </div>
     </header>
   );

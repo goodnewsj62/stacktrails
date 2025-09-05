@@ -6,6 +6,8 @@ import Select from "@mui/material/Select";
 import { getTranslations } from "next-intl/server";
 import { FaPlus } from "react-icons/fa";
 
+export const experimental_ppr = true;
+
 export default async function Page() {
   const t = await getTranslations();
 

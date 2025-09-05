@@ -4,15 +4,13 @@ import PublicHeader from "@/components/layout/Header";
 
 export default async function Layout({
   children,
-  params,
 }: Readonly<{
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }>) {
-  const { locale } = await params;
   return (
     <>
-      <PublicHeader locale={locale} />
+      <PublicHeader />
       <CenterOnLgScreen props={{ component: "main" }}>
         {children}
       </CenterOnLgScreen>

@@ -74,5 +74,18 @@
         "CONTINUE_WITH_GITHUB": "Continue with GitHub",
         "OR": "or"
     },
-    "AND": "and"
+    "AND": "and",
+    "GOOGLE_AUTH_MESSAGES": {
+        "ERRORS": {
+            "ERROR_LOGIN": "Oops an error occurred contact support team"
+        }
+    },
+    "NAVS": {
+        "DASHBOARD": "Dashboard",
+        "ENROLLED": "Enrolled",
+        "PROFILE": "Profile",
+        "CREATED": "Created",
+        "CREATE": "Create",
+        "LOGOUT": "Log out"
+    }
 }

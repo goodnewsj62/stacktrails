@@ -3,12 +3,21 @@
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import CountryList from "country-list-with-dial-code-and-flag";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useMemo, useState } from "react";
 import { CiGlobe } from "react-icons/ci";
 
 const AVAILABLE_LOCALES = ["en", "de", "es", "fr"]; // adjust to your supported locales
+
+// Map locales to their corresponding country codes
+const LOCALE_TO_COUNTRY: Record<string, string> = {
+  en: "US", // English - United States
+  de: "DE", // German - Germany
+  es: "ES", // Spanish - Spain
+  fr: "FR", // French - France
+};
 
 export default function LanguageSelector() {
   const t = useTranslations("LANGUAGE_SELECT");
@@ -23,8 +32,10 @@ export default function LanguageSelector() {
       es: t("SPANISH"),
       de: t("GERMAN"),
     }),
-    []
+    [t]
   );
+
+  const countries = useMemo(() => CountryList.getAll(), []);
 
   const currentLocale = pathname.split("/")[1] || "en";
 
@@ -63,16 +74,49 @@ export default function LanguageSelector() {
         <CiGlobe />
       </IconButton>
 
-      <Menu anchorEl={anchorEl} open={open} onClose={onClose}>
-        {AVAILABLE_LOCALES.map((loc) => (
-          <MenuItem
-            key={loc}
-            selected={loc === currentLocale}
-            onClick={() => handleSelect(loc)}
-          >
-            {LOCALE_LABELS[loc] ?? loc}
-          </MenuItem>
-        ))}
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={onClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        slotProps={{
+          paper: {
+            sx: {
+              transform: "translateX(-160px)",
+            },
+          },
+        }}
+      >
+        {AVAILABLE_LOCALES.map((loc) => {
+          const countryCode = LOCALE_TO_COUNTRY[loc];
+          const countryData = countries.find(
+            (country) => country.code === countryCode
+          );
+          const flag = countryData?.flag;
+
+          return (
+            <MenuItem
+              key={loc}
+              selected={loc === currentLocale}
+              onClick={() => handleSelect(loc)}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              {flag && <span style={{ fontSize: "1.2em" }}>{flag}</span>}
+              {LOCALE_LABELS[loc] ?? loc}
+            </MenuItem>
+          );
+        })}
       </Menu>
     </>
   );

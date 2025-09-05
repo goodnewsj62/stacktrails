@@ -1,21 +1,23 @@
 "use client";
 
-import { PublicRoutes } from "@/routes";
+import { Link } from "@/i18n/navigation";
+import { appToast } from "@/lib/appToast";
+import { googleOneTapForm } from "@/lib/utils";
+import { BackendRoutes, PublicRoutes } from "@/routes";
 import { GoogleLogin } from "@react-oauth/google";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
-import Link from "next/link";
 
 type SocialAuthProps = {
   login?: boolean;
 };
 const SocialAuth: React.FC<SocialAuthProps> = ({ login }) => {
   const locale = useLocale();
-  const router = new PublicRoutes(locale).getRoutes();
+
   const t = useTranslations();
   return (
     <div className="max-w-[68ch] flex flex-col  gap-4 w-full h-full items-center justify-center">
-      <Link href={router.HOME}>
+      <Link href={PublicRoutes.HOME}>
         <Image
           src={"/black-logo.svg"}
           width={60}
@@ -33,14 +35,21 @@ const SocialAuth: React.FC<SocialAuthProps> = ({ login }) => {
         </p>
       )}
 
-      <div className="w-full max-w-sm space-y-4">
+      <div className="w-full flex flex-col items-center max-w-sm space-y-4">
         {/* Google Login Button */}
         <GoogleLogin
+          locale={locale}
+          theme={"outline"}
+          shape="circle"
+          size="large"
+          width="350"
           onSuccess={(credentialResponse) => {
-            console.log(credentialResponse);
+            if (credentialResponse.credential)
+              googleOneTapForm(credentialResponse.credential);
+            else appToast.Error("Oops an error occurred contact support team");
           }}
           onError={() => {
-            console.log("Login Failed");
+            appToast.Error("Oops an error occurred contact support team");
           }}
         />
 
@@ -57,8 +66,7 @@ const SocialAuth: React.FC<SocialAuthProps> = ({ login }) => {
         {/* GitHub Login Button */}
         <button
           onClick={() => {
-            // TODO: Implement GitHub OAuth
-            console.log("GitHub login clicked");
+            location.href = `${process.env.NEXT_PUBLIC_API_URL}${BackendRoutes.GITHUB_LOGIN}?should_redirect=true`;
           }}
           className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
@@ -77,11 +85,11 @@ const SocialAuth: React.FC<SocialAuthProps> = ({ login }) => {
 
       <div className="text-[#6c757d] max-w-[60ch] font-light  text-center text-sm">
         {t("AUTH.AGREEMENT_START_PHRASE")}{" "}
-        <Link href={router.TERMS} className="text-primary">
+        <Link href={PublicRoutes.TERMS} className="text-primary">
           {t("AUTH.TERMS")}
         </Link>{" "}
         {t("AND")}{" "}
-        <Link href={router.POLICY} className="text-primary">
+        <Link href={PublicRoutes.POLICY} className="text-primary">
           {t("AUTH.PRIVACY")}
         </Link>
       </div>
@@ -89,14 +97,14 @@ const SocialAuth: React.FC<SocialAuthProps> = ({ login }) => {
       {login ? (
         <div className="text-[#6c757d] max-w-[60ch] font-light  text-center text-sm">
           {t("AUTH.HAVE_ACCOUNT")}{" "}
-          <Link href={router.REGISTER} className="underline">
+          <Link href={PublicRoutes.REGISTER} className="underline">
             {t("AUTH.REGISTER")}
           </Link>
         </div>
       ) : (
         <div className="text-[#6c757d] max-w-[60ch] font-light  text-center text-sm">
           {t("AUTH.ALREADY_HAVE_AN_ACCOUNT")}{" "}
-          <Link href={router.LOGIN} className="underline">
+          <Link href={PublicRoutes.LOGIN} className="underline">
             {t("PUBLIC_HEADER.LOGIN")}
           </Link>
         </div>

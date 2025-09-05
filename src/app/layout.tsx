@@ -1,9 +1,13 @@
+import AuthWrapper from "@/components/auth/AuthWrapper";
+import Providers from "@/lib/QueryProvider";
+import { StoreProvider } from "@/store/provider";
 import { ThemeProvider } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { Bebas_Neue, Lexend } from "next/font/google";
+import { Toaster } from "sonner";
 import theme from "../theme";
 import "./globals.css";
 
@@ -41,7 +45,14 @@ export default function RootLayout({
               <GoogleOAuthProvider
                 clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
               >
-                {children}
+                <StoreProvider>
+                  <Providers>
+                    <AuthWrapper>
+                      {children}
+                      <Toaster expand position="top-right" />
+                    </AuthWrapper>
+                  </Providers>
+                </StoreProvider>
               </GoogleOAuthProvider>
             </NextIntlClientProvider>
           </ThemeProvider>
@@ -64,6 +75,18 @@ export default function RootLayout({
         </a>
         <a href="https://storyset.com/home" className="hidden">
           Home illustrations by Storyset
+        </a>
+        <a href="https://storyset.com/space" className="hidden">
+          Space illustrations by Storyset
+        </a>
+        <a href="https://storyset.com/multi-purpose" className="hidden">
+          Multi-purpose illustrations by Storyset
+        </a>
+        <a href="https://storyset.com/transport" className="hidden">
+          Transport illustrations by Storyset
+        </a>
+        <a href="https://storyset.com/celebration" className="hidden">
+          Celebration illustrations by Storyset
         </a>
         {/* <script
           src="https://accounts.google.com/gsi/client"
