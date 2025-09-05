@@ -88,7 +88,7 @@
         "CREATE": "Create",
         "LOGOUT": "Log out"
     },
-    "EXCEPTION": {
+    "EXCEPTIONS": {
         "NO_CONTENT": "No Content",
         "ERROR_OCCURRED": "An Error Occurred",
         "NOT_FOUND": "Resource not found",
