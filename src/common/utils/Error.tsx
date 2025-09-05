@@ -1,14 +1,18 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 type props = {
   title?: string;
   message?: string;
 };
 
-export default function Error({
-  title = "An Error Occurred",
-  message = "",
-}: props) {
+export default function Error({ title: inputTitle, message = "" }: props) {
   const images = ["/empty_ghost.svg", "/empty_ufo.svg"];
   const randomImage = images[Math.floor(Math.random() * images.length)];
+  const t = useTranslations("EXCEPTIONS");
+
+  const title = inputTitle || t("ERROR_OCCURRED");
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[200px] p-8">

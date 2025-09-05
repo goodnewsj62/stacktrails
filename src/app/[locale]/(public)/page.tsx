@@ -1,15 +1,27 @@
-import CourseCard from "@/common/cards/CourseCard";
+import ListCourse from "@/components/courses/ListCourses";
 import Hero from "@/components/layout/Hero";
+import { cacheKeys } from "@/lib/cacheKeys";
+import { getQueryClient } from "@/lib/get-query-client";
+import { getCoursesQueryFn } from "@/lib/http/coursesFetchFunc";
+
 import { Button } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getTranslations } from "next-intl/server";
 import { FaPlus } from "react-icons/fa";
 
-export const experimental_ppr = true;
+// export const experimental_ppr = true;
 
 export default async function Page() {
   const t = await getTranslations();
+  const queryClient = getQueryClient();
+
+  queryClient.prefetchInfiniteQuery({
+    queryKey: [cacheKeys.ALL_COURSES],
+    queryFn: getCoursesQueryFn(),
+    initialPageParam: 1,
+  });
 
   const difficultyLevels = [
     { name: t("DIFFICULTY_LEVEL.BEGINNER"), value: "beginner" },
@@ -80,15 +92,10 @@ export default async function Page() {
             </Button>
           </div>
         </div>
-        <div className="w-full grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
-          <CourseCard
-            imageSrc="/1.png"
-            title="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sapiente ut doloremque commodi et, vitae rerum. Magni, rerum cupiditate consequatur odit totam commodi ea nesciunt tempore doloribus iusto in fugiat labore?"
-          />
-          <CourseCard imageSrc="/2.png" />
-          <CourseCard imageSrc="/3.png" />
-          <CourseCard imageSrc="/1.png" />
-        </div>
+
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <ListCourse />
+        </HydrationBoundary>
       </section>
     </>
   );

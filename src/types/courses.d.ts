@@ -21,6 +21,7 @@ type Course = {
   stars: number;
   enrollment_count: number;
   comment_count: number;
+  updated_at: string;
 };
 
 type Author = {

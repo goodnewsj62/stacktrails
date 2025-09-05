@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 import CenterOnLgScreen from "./CenterOnLgScreen";
+import Empty from "./Empty";
 
 type LoadingComponentProps<T> = {
   loading: boolean;
@@ -36,7 +37,7 @@ const LoadingComponent = <T,>({
     return (
       emptyComponent ?? (
         <CenterOnLgScreen>
-          <EmptyComponent />
+          <Empty />
         </CenterOnLgScreen>
       )
     );

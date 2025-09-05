@@ -87,5 +87,15 @@
         "CREATED": "Created",
         "CREATE": "Create",
         "LOGOUT": "Log out"
+    },
+    "EXCEPTION": {
+        "NO_CONTENT": "No Content",
+        "ERROR_OCCURRED": "An Error Occurred",
+        "NOT_FOUND": "Resource not found",
+        "ERROR_404": "Error 404"
+    },
+    "LOADING": {
+        "LOADING": "Loading",
+        "LOAD_MORE": "Load More"
     }
 }

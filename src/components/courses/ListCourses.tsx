@@ -1,31 +1,24 @@
+"use client";
+
 import CourseCard from "@/common/cards/CourseCard";
-import appAxios from "@/lib/axiosClient";
 import { cacheKeys } from "@/lib/cacheKeys";
-import { BackendRoutes } from "@/routes";
+import { getCoursesQueryFn } from "@/lib/http/coursesFetchFunc";
 import { Button } from "@mui/material";
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
-import { AxiosResponse } from "axios";
+import { useTranslations } from "next-intl";
 
 type Props = {
   params?: Record<string, any>;
 };
 
 const ListCourse: React.FC<Props> = ({ params }) => {
+  const t = useTranslations("LOADING");
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSuspenseInfiniteQuery({
-      queryKey: [cacheKeys.ALL_COURSES, params],
-      queryFn: async ({
-        pageParam = 1,
-      }): Promise<AxiosResponse<Paginated<Course>>> => {
-        return await appAxios.get(BackendRoutes.ALL_COURSES, {
-          params: {
-            ...params,
-            page: pageParam,
-          },
-        });
-      },
+      queryKey: [cacheKeys.ALL_COURSES],
+      queryFn: getCoursesQueryFn(),
       getNextPageParam: (lastPage) => {
-        return lastPage.data.has_next ? lastPage.data.page + 1 : undefined;
+        return lastPage.has_next ? lastPage.page + 1 : undefined;
       },
       initialPageParam: 1,
     });
@@ -33,13 +26,12 @@ const ListCourse: React.FC<Props> = ({ params }) => {
   return (
     <div className="space-y-4">
       {data.pages.map((page, i) => (
-        <div key={i} className="grid gap-4">
-          {page.data.items.map((course: Course) => (
-            <CourseCard
-              key={course.id}
-              imageSrc={course.image || "/placeholder.png"}
-              title={course.title}
-            />
+        <div
+          key={"page__" + i}
+          className="w-full grid gap-6 [grid-template-columns:repeat(auto-fill,minmax(260px,1fr))]"
+        >
+          {page.items.map((course: Course) => (
+            <CourseCard key={course.id} course={course} />
           ))}
         </div>
       ))}
@@ -51,7 +43,7 @@ const ListCourse: React.FC<Props> = ({ params }) => {
             disabled={isFetchingNextPage}
             variant="outlined"
           >
-            {isFetchingNextPage ? "Loading..." : "Load More"}
+            {isFetchingNextPage ? `${t("LOADING")}...` : t("LOAD_MORE")}
           </Button>
         </div>
       )}

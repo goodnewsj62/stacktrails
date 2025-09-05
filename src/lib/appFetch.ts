@@ -7,7 +7,7 @@ export async function appFetch(
   init?: RequestInit & {
     next?: { revalidate?: number; tags?: string[] };
   }
-): Promise<Response> {
+): Promise<any> {
   const makeRequest = async () => {
     return fetch(`${baseURL}${input}`, {
       ...init,
