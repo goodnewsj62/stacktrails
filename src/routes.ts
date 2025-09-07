@@ -15,6 +15,9 @@ export class PublicRoutes {
   static getTopicRoute(slug: string) {
     return `/topic/${slug}`;
   }
+  static getAuthor(u: string) {
+    return `/author/${u}`;
+  }
 }
 export class AppRoutes {
   static DASHBOARD = `/dashboard/`;

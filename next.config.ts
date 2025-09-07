@@ -26,6 +26,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.lottie$/,
+      type: "asset/resource", // tells Next.js to emit the file and return a URL
+    });
+
+    return config;
+  },
 };
 
 const withNextIntl = createNextIntlPlugin();

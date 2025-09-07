@@ -32,9 +32,9 @@ export default async function Hero() {
             <IoSearch size={"20px"} color="white" />
           </button>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center flex-wrap gap-2">
           <span>{t("TAGS")}: </span>
-          <span className="flex items-center gap-2 px-2">
+          <span className="flex items-center gap-2 px-2 flex-wrap">
             {tags.map((val, i) => (
               <Tag name={val} key={`tag-${i}`} />
             ))}

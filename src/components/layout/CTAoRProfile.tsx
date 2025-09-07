@@ -3,18 +3,31 @@
 import { Link } from "@/i18n/navigation";
 import { PublicRoutes } from "@/routes";
 import { useAppStore } from "@/store";
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { useTranslations } from "next-intl";
+import { FaBars } from "react-icons/fa";
 import Profile from "./Profile";
 
 export default function CTAORProfie() {
   const user = useAppStore((state) => state.user);
+  const toggleBar = useAppStore((state) => state.toggleBar);
   const t = useTranslations("PUBLIC_HEADER");
+
   return (
     <>
+      {/* Hamburger menu - only visible on mobile */}
+      <div className="lg:hidden">
+        <IconButton
+          onClick={() => toggleBar({})}
+          sx={{ color: "inherit" }}
+          aria-label="Toggle menu"
+        >
+          <FaBars size={24} />
+        </IconButton>
+      </div>
       {!user && (
         <>
-          <Link href={PublicRoutes.REGISTER}>
+          <Link href={PublicRoutes.REGISTER} className="hidden md:inline-block">
             <Button
               size="large"
               variant="text"
@@ -24,7 +37,7 @@ export default function CTAORProfie() {
               {t("REGISTER")}
             </Button>
           </Link>
-          <Link href={PublicRoutes.LOGIN}>
+          <Link href={PublicRoutes.LOGIN} className="hidden md:inline-block">
             <Button
               size="large"
               sx={{ borderRadius: "20px", textTransform: "capitalize" }}

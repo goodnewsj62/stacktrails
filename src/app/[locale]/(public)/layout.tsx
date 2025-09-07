@@ -1,6 +1,6 @@
-import CenterOnLgScreen from "@/common/utils/CenterOnLgScreen";
 import PublicFooter from "@/components/layout/Footer";
 import PublicHeader from "@/components/layout/Header";
+import Sidebar from "@/components/layout/Sidebar";
 
 export default async function Layout({
   children,
@@ -11,9 +11,10 @@ export default async function Layout({
   return (
     <>
       <PublicHeader />
-      <CenterOnLgScreen props={{ component: "main" }}>
-        {children}
-      </CenterOnLgScreen>
+      <Sidebar />
+
+      {children}
+
       <PublicFooter />
     </>
   );

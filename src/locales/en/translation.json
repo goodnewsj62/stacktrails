@@ -39,7 +39,8 @@
         "BEGINNER": "Beginner friendly",
         "INTERMEDIATE": "Intermediate",
         "ADVANCED": "Advanced",
-        "EXPERT": "Expert"
+        "EXPERT": "Expert",
+        "ALL": "All"
     },
     "TIME_TEXT": {
         "MIN": "min",
@@ -96,6 +97,7 @@
     },
     "LOADING": {
         "LOADING": "Loading",
-        "LOAD_MORE": "Load More"
+        "LOAD_MORE": "Load More",
+        "PLEASE_WAIT": "Loading Please wait"
     }
 }

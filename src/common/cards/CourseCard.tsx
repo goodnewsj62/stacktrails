@@ -2,6 +2,7 @@
 
 import { Link } from "@/i18n/navigation";
 import { getImageProxyUrl, getNumberUnit, timeAgo } from "@/lib/utils";
+import { PublicRoutes } from "@/routes";
 import Image from "next/image";
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
@@ -28,7 +29,10 @@ const CourseCard: React.FC<CourseCardProps> = ({
       className={`w-full ${heightClass}    overflow-hidden rounded-lg  ${className}`}
     >
       {/* Image area = 70% of height flex-[7] */}
-      <Link href={"/"} className="block relative h-[62%] w-full">
+      <Link
+        href={PublicRoutes.getCourseRoute(course.slug)}
+        className="block relative h-[62%] w-full"
+      >
         <Image
           src={imgSrc}
           alt={"course thumbnail"}
@@ -43,10 +47,13 @@ const CourseCard: React.FC<CourseCardProps> = ({
       {/* Content area = remaining 30% flex-[3] */}
       <div className="p-4 flex flex-col justify-between">
         <div>
-          <Link href={"/"}>
+          <Link href={PublicRoutes.getCourseRoute(course.slug)}>
             <h3 className="font-semibold line-clamp-2">{course.title}</h3>
           </Link>
-          <Link href={`/`} className="text-sm text-blue-600 hover:underline">
+          <Link
+            href={PublicRoutes.getAuthor(course.author.username)}
+            className="text-sm text-blue-600 hover:underline"
+          >
             {course.author.username}
           </Link>
         </div>

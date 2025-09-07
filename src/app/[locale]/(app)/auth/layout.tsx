@@ -7,7 +7,7 @@ export default function Layout({
 }>) {
   return (
     <main className="flex">
-      <aside className="basis-[50%] max-w-[600px] h-screen">
+      <aside className="hidden basis-[50%] max-w-[600px] h-screen lg:block">
         <SideDesign />
       </aside>
       <section className="grow h-screen">{children}</section>

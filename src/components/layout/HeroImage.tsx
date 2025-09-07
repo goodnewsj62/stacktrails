@@ -32,7 +32,7 @@ const HeroImage: React.FC<HeroImageProps> = ({}) => {
   }, []);
 
   return (
-    <div className="w-full md:w-1/2 max-w-[520px]">
+    <div className="hidden w-full md:w-1/2 max-w-[520px] lg:block">
       <img
         src={heroImages[index]}
         alt="hero image"

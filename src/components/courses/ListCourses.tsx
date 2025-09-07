@@ -14,10 +14,13 @@ type Props = {
 
 const ListCourse: React.FC<Props> = ({ params }) => {
   const t = useTranslations("LOADING");
+  const key_ = params
+    ? [cacheKeys.ALL_COURSES, params]
+    : [cacheKeys.ALL_COURSES];
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSuspenseInfiniteQuery({
-      queryKey: [cacheKeys.ALL_COURSES],
-      queryFn: getCoursesQueryFn(),
+      queryKey: key_,
+      queryFn: getCoursesQueryFn({ params }),
       getNextPageParam: (lastPage) => {
         return lastPage.has_next ? lastPage.page + 1 : undefined;
       },
