@@ -44,11 +44,11 @@ export function getImageProxyUrl(url?: string, defaultImg = undefined) {
 
 export function getNumberUnit(num: number): "1K" | "1M" | "1B" | string {
   if (num >= 1_000_000_000) {
-    return "1B";
+    return `${Number((num / 1000000000).toFixed(1))}B`;
   } else if (num >= 1_000_000) {
-    return "1M";
+    return `${Number((num / 1000000).toFixed(1))}M`;
   } else if (num >= 1_000) {
-    return "1K";
+    return `${Number((num / 1000).toFixed(1))}K`;
   }
   return num.toString();
 }
@@ -64,4 +64,9 @@ export function timeAgo(isoDate: string): string {
     .replace(/\bhour\b/g, "hr");
 
   return result;
+}
+// Convert ISO 639-1 code to full language name
+export function getLanguageName(code: string, displayLocale = "en"): string {
+  const dn = new Intl.DisplayNames([displayLocale], { type: "language" });
+  return dn.of(code) ?? code;
 }

@@ -1,21 +1,26 @@
 "use client";
+import { cacheKeys } from "@/lib/cacheKeys";
+import { getMinimalCourseContent } from "@/lib/http/coursesFetchFunc";
 import { Button } from "@mui/material";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import Module from "./detail-parts/Module";
 import Section from "./detail-parts/Section";
 
 type CourseSectionsProps = {};
 
-const artificialSections = Array.from({ length: 30 }, (_, i) => ({
-  title: `Section ${i + 1}`,
-}));
-
 const CourseSections: React.FC<CourseSectionsProps> = () => {
+  const { slug_id: slug } = useParams<{ slug_id: string }>();
+
+  const { data } = useSuspenseQuery({
+    queryKey: [cacheKeys.COURSE_CONTENT_MINIMAL, slug],
+    queryFn: getMinimalCourseContent({ slug }),
+  });
+
   const [showAll, setShowAll] = useState(false);
-  const visibleSections = showAll
-    ? artificialSections
-    : artificialSections.slice(0, 10);
-  const remaining = artificialSections.length - 10;
+  const visibleSections = showAll ? data.sections : data.sections.slice(0, 10);
+  const remaining = data.sections.length - 10;
 
   return (
     <section className="">
@@ -26,14 +31,18 @@ const CourseSections: React.FC<CourseSectionsProps> = () => {
       <div className="space-y-2">
         {visibleSections.map((section, i) => (
           <Section
-            key={section.title}
+            key={section.id}
             title={section.title}
             defaultExpanded={i === 0}
           >
-            <Module showDescription />
+            <div className="grid gap-2">
+              {section.modules.map((data) => (
+                <Module key={data.id} data={data} showDescription />
+              ))}
+            </div>
           </Section>
         ))}
-        {!showAll && artificialSections.length > 10 && (
+        {!showAll && data.sections.length > 10 && (
           <Button
             fullWidth
             variant="outlined"

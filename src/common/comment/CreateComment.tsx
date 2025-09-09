@@ -1,5 +1,3 @@
-"use client";
-
 import { Avatar, Button, TextField } from "@mui/material";
 import { useState } from "react";
 

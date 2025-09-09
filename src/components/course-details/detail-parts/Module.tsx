@@ -14,8 +14,8 @@ import {
 } from "react-icons/md";
 
 type ModuleProps = {
+  data: Module;
   showDescription?: boolean;
-  contentType?: ModuleType;
 };
 const contentTypeIcons = {
   video: (
@@ -32,17 +32,14 @@ const contentTypeIcons = {
     <MdLink className="inline-block w-5 h-5 mr-2 text-purple-500" />
   ),
 };
-const Module: React.FC<ModuleProps> = ({
-  contentType = "video",
-  showDescription,
-}) => {
+const Module: React.FC<ModuleProps> = ({ data, showDescription }) => {
   const [fullDescription, setFullDescription] = useState(false);
 
   return (
-    <div className="text-sm  ">
+    <div className="text-sm p-2 px-6 border border-base rounded-md">
       <div className="flex items-center gap-8">
         <h3>
-          {contentTypeIcons[contentType]}
+          {contentTypeIcons[data.module_type]}
           Module title
         </h3>
         {showDescription && (
@@ -67,9 +64,7 @@ const Module: React.FC<ModuleProps> = ({
           headerBackgroundColor="transparent"
         >
           <MarkdownRenderer
-            content={
-              "This provides a clear visual cue for users to expand or collapse the module description. If you want to further style or animate the icon, just let me know!"
-            }
+            content={data.description || "creator did not add description"}
           />
         </ControlledAccordion>
       </div>

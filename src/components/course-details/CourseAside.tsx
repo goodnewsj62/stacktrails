@@ -1,7 +1,12 @@
 "use client";
 
+import { cacheKeys } from "@/lib/cacheKeys";
+import { getCourseDetailFn } from "@/lib/http/coursesFetchFunc";
+import { getImageProxyUrl, getNumberUnit } from "@/lib/utils";
 import { Button, IconButton } from "@mui/material";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   FaFacebookF,
@@ -16,8 +21,25 @@ import IconAndText from "./IconAndText";
 
 type CourseAsideProps = {};
 
+const level = {
+  beginner: "Beginner Friendly",
+  intermediate: "Intermediate",
+  advanced: "Advanced ",
+  expert: "Expert",
+};
+
 const CourseAside: React.FC<CourseAsideProps> = () => {
+  const { slug_id } = useParams<{ slug_id: string }>();
+
+  const { data } = useSuspenseQuery({
+    queryKey: [cacheKeys.COURSE_DETAIL, slug_id],
+    queryFn: getCourseDetailFn({ slug: slug_id }),
+  });
+
   const [isSticky, setIsSticky] = useState(false);
+  const [imageSrc, setImgSrc] = useState(
+    getImageProxyUrl(data.image) || "/1.png"
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,26 +59,23 @@ const CourseAside: React.FC<CourseAsideProps> = () => {
     >
       <div className="relative w-full aspect-video overflow-hidden ">
         <Image
-          src={"/1.png"}
+          src={imageSrc}
           alt={"course thumbnail"}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
           style={{ objectFit: "cover" }}
           className="block"
-          // onError={() => setImgSrc("/placeholder.png")}
+          onError={() => setImgSrc("/1.png")}
         />
       </div>
 
       <div className="p-4 flex flex-col gap-4 font-light">
-        <p className="text-sm">
-          Become a Full-Stack Web Developer with just ONE course. HTML, CSS,
-          Javascript, Node, React, PostgreSQL, Web3 and DApps
-        </p>
+        <p className="text-sm">{data.short_description}</p>
         <EnrollCTAButton />
 
         <div className="flex items-center gap-1">
-          <StarRating rating={4.5} size="medium" />
-          <span className="font-medium">4.5</span>
+          <StarRating rating={data.average_rating} size="medium" />
+          <span className="font-medium">{data.average_rating}</span>
         </div>
 
         <div className="flex justify-between items-center">
@@ -66,7 +85,7 @@ const CourseAside: React.FC<CourseAsideProps> = () => {
                 <MdGroups />
               </IconButton>
             }
-            text={<span>3M enrolled</span>}
+            text={<span>{getNumberUnit(data.enrollment_count)} enrolled</span>}
           />
           <IconAndText
             icon={
@@ -74,7 +93,9 @@ const CourseAside: React.FC<CourseAsideProps> = () => {
                 <FaLayerGroup />
               </IconButton>
             }
-            text={<span>Beginner friendly</span>}
+            text={
+              <span>{level[data.difficulty_level as keyof typeof level]}</span>
+            }
           />
         </div>
         <div>

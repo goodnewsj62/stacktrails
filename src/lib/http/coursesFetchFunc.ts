@@ -17,3 +17,20 @@ export function getCoursesQueryFn({
     return res.data;
   };
 }
+
+export function getCourseDetailFn({ slug }: { slug: string }) {
+  return async (): Promise<Course> => {
+    const res = await appAxios.get<Course>(BackendRoutes.COURSE_DETAIL(slug));
+
+    return res.data;
+  };
+}
+export function getMinimalCourseContent({ slug }: { slug: string }) {
+  return async (): Promise<CourseContentMin> => {
+    const res = await appAxios.get<CourseContentMin>(
+      BackendRoutes.COURSE_CONTENT_MINIMAL(slug)
+    );
+
+    return res.data;
+  };
+}

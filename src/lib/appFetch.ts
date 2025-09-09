@@ -1,13 +1,21 @@
 const baseURL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8020/api/v1";
 
+export interface FetchResponse<T> {
+  data: T; // The parsed response body
+  status: number; // HTTP status code
+  ok: boolean; // Equivalent to response.ok
+  headers: Headers; // Response headers
+  raw: Response; // Original Response object
+}
+
 // utils/customFetch.ts
-export async function appFetch(
+export async function appFetch<T>(
   input: RequestInfo | URL,
   init?: RequestInit & {
     next?: { revalidate?: number; tags?: string[] };
   }
-): Promise<any> {
+): Promise<FetchResponse<T>> {
   const makeRequest = async () => {
     return fetch(`${baseURL}${input}`, {
       ...init,
@@ -41,5 +49,13 @@ export async function appFetch(
     response = await makeRequest();
   }
 
-  return response;
+  const data = (await response.json()) as T;
+
+  return {
+    data,
+    status: response.status,
+    ok: response.ok,
+    headers: response.headers,
+    raw: response,
+  };
 }

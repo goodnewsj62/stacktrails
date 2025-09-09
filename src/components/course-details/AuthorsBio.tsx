@@ -2,14 +2,16 @@
 import ExpandableContent from "@/common/utils/ExpandableContent";
 import { Avatar } from "@mui/material";
 
-type AuthorsBioProps = {};
-const AuthorsBio: React.FC<AuthorsBioProps> = ({}) => {
+type AuthorsBioProps = {
+  data: Course;
+};
+const AuthorsBio: React.FC<AuthorsBioProps> = ({ data }) => {
   return (
     <section>
       <ExpandableContent maxLines={8}>
         <div className="flex mb-4 gap-2 items-center">
           <Avatar
-            src=""
+            src={data.author.profile.avatar}
             sx={{
               height: 70,
               width: 70,
@@ -18,22 +20,22 @@ const AuthorsBio: React.FC<AuthorsBioProps> = ({}) => {
               fontWeight: 600,
             }}
           >
-            EA
+            {data.author.username.substring(0, 2).toUpperCase()}
           </Avatar>
           <div className="">
-            <h3 className="font-bold">Long head ball</h3>
-            <small>mine username</small>
+            <h3 className="font-bold">
+              {" "}
+              {data.author.profile?.display_name || data.author.username}
+            </h3>
+            <small>{data.author.username}</small>
           </div>
         </div>
-        <div className="space-y-2 pl-2">
-          <h3 className="font-bold mb-4">Bio</h3>
-          <p>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-            Consectetur eveniet voluptatibus, repellendus consequuntur ipsum
-            nihil praesentium fugit suscipit ducimus vero exercitationem beatae
-            maiores maxime blanditiis assumenda. Incidunt magni quidem quae.
-          </p>
-        </div>
+        {data.author.profile.bio && (
+          <div className="space-y-2 pl-2">
+            <h3 className="font-bold mb-4">Bio</h3>
+            <p>{data.author.profile.bio}</p>
+          </div>
+        )}
       </ExpandableContent>
     </section>
   );

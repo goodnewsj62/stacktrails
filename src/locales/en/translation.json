@@ -99,5 +99,14 @@
         "LOADING": "Loading",
         "LOAD_MORE": "Load More",
         "PLEASE_WAIT": "Loading Please wait"
+    },
+    "COMMENTS_RATING": {
+        "HEADER_TEXT": "comments & ratings",
+        "REVIEWS_AND_RATING": "Reviews & Ratings",
+        "COMMUNITY_COMMENTS": "Community Comments",
+        "LOADING_REVIEWS": "Loading reviews",
+        "LOAD_MORE_REVIEWS": "Load more reviews",
+        "LOADING_COMMENTS": "Loading Comments",
+        "LOAD_MORE_COMMENT": "Load more comments"
     }
 }

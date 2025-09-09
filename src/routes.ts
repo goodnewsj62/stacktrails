@@ -57,4 +57,10 @@ export class BackendRoutes {
   static GOOGLE_ONE_TAP = "/auth/google-one-tap";
   static LOGOUT = "/auth/logout";
   static ALL_COURSES = "/courses";
+  static COURSE_DETAIL = (slug: string) => `/courses/${slug}`;
+  static COURSE_CONTENT_MINIMAL = (slug: string) =>
+    `/courses/${slug}/content/minimal`;
+  static COURSE_COMMENTS = (course_id: string) =>
+    `/courses/${course_id}/comments`;
+  static COURSE_REVIEW = (course_id: string) => `/courses/${course_id}/ratings`;
 }

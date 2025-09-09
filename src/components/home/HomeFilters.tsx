@@ -69,7 +69,6 @@ export default function HomeFilter(params_: params) {
         </div>
         <select
           className="lg:hidden w-full p-2 rounded-md border"
-          defaultValue=""
           value={level || "default"}
           onChange={(e) =>
             setValue({
