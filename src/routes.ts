@@ -62,5 +62,15 @@ export class BackendRoutes {
     `/courses/${slug}/content/minimal`;
   static COURSE_COMMENTS = (course_id: string) =>
     `/courses/${course_id}/comments`;
+  static COMMENT_REPLIES = (comment_id: string) =>
+    `/courses/${comment_id}/replies`;
+  static LIKE_COMMENT = (comment_id: string) =>
+    `/courses/${comment_id}/like-unlike`;
   static COURSE_REVIEW = (course_id: string) => `/courses/${course_id}/ratings`;
+
+  static CREATE_RATING = "/courses/ratings";
+  static ENROLL = "/courses/enroll";
+  static CREATE_COMMENT = "/courses/comments";
+  static GET_COURSE_ENROLLMENT = (course_id: string) =>
+    `/courses/${course_id}/enroll`;
 }

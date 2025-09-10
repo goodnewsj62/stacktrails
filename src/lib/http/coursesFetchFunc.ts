@@ -34,3 +34,28 @@ export function getMinimalCourseContent({ slug }: { slug: string }) {
     return res.data;
   };
 }
+
+export function hasEnrolled({ courseId }: { courseId: string }) {
+  return async (): Promise<EnrollmentResp> => {
+    const res = await appAxios.get<EnrollmentResp>(
+      BackendRoutes.GET_COURSE_ENROLLMENT(courseId)
+    );
+
+    return res.data;
+  };
+}
+
+export async function freeEnrollment({
+  course_id,
+  account_id,
+}: {
+  course_id: string;
+  account_id: string;
+}): Promise<EnrollmentResp> {
+  const res = await appAxios.post<any>(BackendRoutes.ENROLL, {
+    course_id,
+    account_id,
+  });
+
+  return res.data;
+}

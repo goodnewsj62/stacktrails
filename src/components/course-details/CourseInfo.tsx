@@ -7,6 +7,7 @@ import { IoCheckmarkDoneOutline } from "react-icons/io5";
 
 type CourseInfoProps = {
   data: Course;
+  t: Function;
 };
 
 // objectives = [
@@ -32,7 +33,7 @@ const level = {
   expert: "Expert",
 };
 
-const CourseInfo: React.FC<CourseInfoProps> = ({ data }) => {
+const CourseInfo: React.FC<CourseInfoProps> = ({ data, t }) => {
   const features = [
     {
       value: level[data.difficulty_level as keyof typeof level],
@@ -41,12 +42,14 @@ const CourseInfo: React.FC<CourseInfoProps> = ({ data }) => {
     {
       value:
         data.enrollment_type === "open"
-          ? "Free enrollment"
+          ? t("COURSE_DETAIL.BEGINNER_FRIENDLY")
           : data.enrollment_type,
       icon: <BsBackpack2Fill />,
     },
     {
-      value: `approximately ${data.estimated_duration_hours} hours of content`,
+      value: t("COURSE_DETAIL.APPROXIMATELY", {
+        num: data.estimated_duration_hours,
+      }),
       icon: <IoIosAlarm />,
     },
   ];
@@ -56,7 +59,7 @@ const CourseInfo: React.FC<CourseInfoProps> = ({ data }) => {
       {/* What You'll Learn */}
       <div className="rounded-xl border border-gray-300 p-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          What you'll learn
+          {t("COURSE_DETAIL.WHAT_YOU_WILL_LEARN")}
         </h2>
         <div className="grid gap-4 text-sm font-light grid-cols-1 md:grid-cols-2 ">
           {data.learning_objectives?.map((objective, index) => (
@@ -81,7 +84,7 @@ const CourseInfo: React.FC<CourseInfoProps> = ({ data }) => {
       {Array.isArray(data.prerequisites) && (
         <div className="rounded-xl  py-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Requirements
+            {t("COURSE_DETAIL.REQUIREMENTS")}
           </h2>
           <ul className="space-y-3">
             {data.prerequisites?.map((prerequisite, index) => (
@@ -100,7 +103,7 @@ const CourseInfo: React.FC<CourseInfoProps> = ({ data }) => {
       {/* Course Features */}
       <div className="rounded-xl py-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          Course Features
+          {t("COURSE_DETAIL.COURSE_FEATURES")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {data.certification_enabled && (
@@ -114,7 +117,7 @@ const CourseInfo: React.FC<CourseInfoProps> = ({ data }) => {
                 {<FaMedal />}
               </IconButton>
               <span className="text-gray-700 text-sm">
-                {"Certificate of completion"}
+                {t("COURSE_DETAIL.CERTIFICATE")}
               </span>
             </div>
           )}

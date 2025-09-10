@@ -13,9 +13,10 @@ import StarRating from "../courses/Stars";
 
 type CourseDetailHeaderProps = {
   data: Course;
+  t: Function;
 };
 
-const CourseDetailHeader: React.FC<CourseDetailHeaderProps> = ({ data }) => {
+const CourseDetailHeader: React.FC<CourseDetailHeaderProps> = ({ data, t }) => {
   return (
     <div className="flex flex-col gap-6 relative">
       <h1 className="text-2xl font-black  md:text-3xl  lg:text-4xl">
@@ -23,7 +24,7 @@ const CourseDetailHeader: React.FC<CourseDetailHeaderProps> = ({ data }) => {
       </h1>
       <p className="line-clamp-3">{data.short_description}</p>
       <p>
-        <span>created by: </span>
+        <span>{t("COURSE_DETAIL.CREATED_BY")}: </span>
         <Link href={PublicRoutes.getAuthor(data.author.username)}>
           {data.author.profile.display_name}
         </Link>
@@ -45,7 +46,8 @@ const CourseDetailHeader: React.FC<CourseDetailHeaderProps> = ({ data }) => {
           }
           text={
             <span>
-              Last updated {format(parseISO(data.updated_at), "MMMM yyyy")}
+              {t("COURSE_DETAIL.LAST_UPDATED")}{" "}
+              {format(parseISO(data.updated_at), "MMMM yyyy")}
             </span>
           }
         />
@@ -57,7 +59,7 @@ const CourseDetailHeader: React.FC<CourseDetailHeaderProps> = ({ data }) => {
           </h2>
           <StarRating size="medium" rating={data.average_rating} />
           <p className="text-center text-xs  font-light py-1">
-            {getNumberUnit(data.total_rating)} ratings
+            {getNumberUnit(data.total_rating)} {t("COURSE_DETAIL.RATINGS")}
           </p>
         </div>
         <Divider
@@ -77,7 +79,9 @@ const CourseDetailHeader: React.FC<CourseDetailHeaderProps> = ({ data }) => {
           <div className=" font-semibold">
             {data.enrollment_count.toLocaleString()}
           </div>
-          <div className="text-xs font-light">enrolled</div>
+          <div className="text-xs font-light">
+            {t("COURSE_DETAIL.ENROLLED")}
+          </div>
         </div>
 
         <Divider
@@ -97,7 +101,9 @@ const CourseDetailHeader: React.FC<CourseDetailHeaderProps> = ({ data }) => {
           <div className=" font-semibold">
             {data.comment_count.toLocaleString()}
           </div>
-          <div className="text-xs font-light">community comments</div>
+          <div className="text-xs font-light">
+            {t("COURSE_DETAIL.COMMUNITY_COMMENTS")}
+          </div>
         </div>
       </div>
     </div>

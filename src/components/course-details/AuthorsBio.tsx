@@ -1,11 +1,13 @@
 "use client";
 import ExpandableContent from "@/common/utils/ExpandableContent";
 import { Avatar } from "@mui/material";
+import { useTranslations } from "next-intl";
 
 type AuthorsBioProps = {
   data: Course;
 };
 const AuthorsBio: React.FC<AuthorsBioProps> = ({ data }) => {
+  const t = useTranslations();
   return (
     <section>
       <ExpandableContent maxLines={8}>
@@ -32,7 +34,7 @@ const AuthorsBio: React.FC<AuthorsBioProps> = ({ data }) => {
         </div>
         {data.author.profile.bio && (
           <div className="space-y-2 pl-2">
-            <h3 className="font-bold mb-4">Bio</h3>
+            <h3 className="font-bold mb-4">{t("COURSE_DETAIL.BIO")}</h3>
             <p>{data.author.profile.bio}</p>
           </div>
         )}

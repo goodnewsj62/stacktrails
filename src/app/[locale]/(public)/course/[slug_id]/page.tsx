@@ -9,7 +9,6 @@ import FullDescription from "@/components/course-details/FullDescription";
 import { appFetch } from "@/lib/appFetch";
 import { cacheKeys } from "@/lib/cacheKeys";
 import { getQueryClient } from "@/lib/get-query-client";
-import { getCourseComments, getCourseReviews } from "@/lib/http/commentFunc";
 import {
   getCourseDetailFn,
   getMinimalCourseContent,
@@ -17,6 +16,7 @@ import {
 import { BackendRoutes } from "@/routes";
 import { Skeleton } from "@mui/material";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { PropsWithChildren, Suspense } from "react";
 
@@ -28,7 +28,7 @@ export const experimental_ppr = true;
 
 export default async function Page({ params }: props) {
   const { slug_id: slug } = await params;
-  // const t = await getTranslations("COURSE_DETAIL");
+  const t = await getTranslations();
 
   const queryClient = getQueryClient();
 
@@ -40,18 +40,6 @@ export default async function Page({ params }: props) {
   queryClient.prefetchQuery({
     queryKey: [cacheKeys.COURSE_CONTENT_MINIMAL, slug],
     queryFn: getMinimalCourseContent({ slug }),
-  });
-
-  queryClient.prefetchInfiniteQuery({
-    queryKey: [cacheKeys.COURSE_COMMENT, courseId],
-    queryFn: getCourseComments({ courseId }),
-    initialPageParam: 1,
-  });
-
-  queryClient.prefetchInfiniteQuery({
-    queryKey: [cacheKeys.COURSE_REVIEW, courseId],
-    queryFn: getCourseReviews({ courseId }),
-    initialPageParam: 1,
   });
 
   const resp = await appFetch<Course>(BackendRoutes.COURSE_DETAIL(slug));
@@ -66,7 +54,7 @@ export default async function Page({ params }: props) {
       <section className={"w-full   bg-[#04111F] text-[#fffdfd]"}>
         <CenterOnLgScreen props={{ component: "div" }} className="">
           <ContentContainer>
-            <CourseDetailHeader data={data} />
+            <CourseDetailHeader data={data} t={t} />
           </ContentContainer>
 
           <HydrationBoundary state={dehydrate(queryClient)}>
@@ -88,7 +76,7 @@ export default async function Page({ params }: props) {
       >
         <ContentContainer>
           <div className="w-full flex flex-col gap-10 py-16 xl:pr-8">
-            <CourseInfo data={data} />
+            <CourseInfo data={data} t={t} />
 
             <HydrationBoundary state={dehydrate(queryClient)}>
               <Suspense
@@ -107,26 +95,24 @@ export default async function Page({ params }: props) {
               </Suspense>
             </HydrationBoundary>
 
-            <FullDescription data={data} />
+            <FullDescription data={data} t={t} />
 
             <AuthorsBio data={data} />
 
-            <HydrationBoundary state={dehydrate(queryClient)}>
-              <Suspense
-                fallback={
-                  <div className="w-full flex flex-col gap-4">
-                    {Array.from({ length: 10 }, (_, i) => (
-                      <Skeleton
-                        key={`section-comment${i}`}
-                        className="w-full h-8"
-                      />
-                    ))}
-                  </div>
-                }
-              >
-                <CommentsReview courseId={courseId} />
-              </Suspense>
-            </HydrationBoundary>
+            <Suspense
+              fallback={
+                <div className="w-full flex flex-col gap-4">
+                  {Array.from({ length: 10 }, (_, i) => (
+                    <Skeleton
+                      key={`section-comment${i}`}
+                      className="w-full h-8"
+                    />
+                  ))}
+                </div>
+              }
+            >
+              <CommentsReview courseId={courseId} />
+            </Suspense>
           </div>
         </ContentContainer>
       </CenterOnLgScreen>

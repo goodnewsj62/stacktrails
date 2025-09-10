@@ -1,6 +1,7 @@
 "use client";
 
 import Comment from "@/common/comment/Comment";
+import CreateComment from "@/common/comment/CreateComment";
 import ReviewComponent from "@/common/comment/ReviewComponent";
 import LoadingComponent from "@/common/utils/LoadingComponent";
 import { cacheKeys } from "@/lib/cacheKeys";
@@ -31,9 +32,17 @@ function CustomTabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {!hideContent && value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {!hideContent && value === index && (
+        <Box sx={{ p: 3, width: "100%" }}>{children}</Box>
+      )}
       {hideContent && (
-        <Box sx={{ p: 3, display: value === index ? "block" : "none" }}>
+        <Box
+          sx={{
+            p: 3,
+            display: value === index ? "block" : "none",
+            width: "100%",
+          }}
+        >
           {children}
         </Box>
       )}
@@ -88,7 +97,7 @@ const CommentsReview: React.FC<CommentsReviewProps> = ({ courseId }) => {
   };
 
   return (
-    <section>
+    <section className="w-full">
       <h2 className="text-2xl font-bold mb-4">{t("HEADER_TEXT")}</h2>
       <Box sx={{ width: "100%" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -106,12 +115,9 @@ const CommentsReview: React.FC<CommentsReviewProps> = ({ courseId }) => {
             loading={false}
             empty={reviewData.pages[0].total < 1}
           >
-            <div className="space-y-4">
+            <div className="w-full space-y-4">
               {reviewData.pages.map((page, i) => (
-                <div
-                  key={"page_review__" + i}
-                  className="w-full grid gap-6 [grid-template-columns:repeat(auto-fill,minmax(260px,1fr))]"
-                >
+                <div key={"page_review__" + i} className="">
                   {page.items.map((review: CourseReview) => (
                     <ReviewComponent key={review.id} data={review} />
                   ))}
@@ -139,12 +145,10 @@ const CommentsReview: React.FC<CommentsReviewProps> = ({ courseId }) => {
             loading={false}
             empty={commentData.pages[0].total < 1}
           >
-            <div className="space-y-4">
+            <CreateComment courseId={courseId} />
+            <div className="w-full space-y-4">
               {commentData.pages.map((page, i) => (
-                <div
-                  key={"page_comment__" + i}
-                  className="w-full grid gap-6 [grid-template-columns:repeat(auto-fill,minmax(260px,1fr))]"
-                >
+                <div key={"page_comment__" + i} className="">
                   {page.items.map((comment: CourseComment) => (
                     <Comment key={comment.id} data={comment} />
                   ))}
@@ -154,7 +158,7 @@ const CommentsReview: React.FC<CommentsReviewProps> = ({ courseId }) => {
               {hasNextCommentPage && (
                 <div className="flex justify-center pt-4">
                   <Button
-                    onClick={() => fetchNextReviewPage()}
+                    onClick={() => fetchNextCommentPage()}
                     disabled={isFetchingNextCommentPage}
                     variant="outlined"
                   >

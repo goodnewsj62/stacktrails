@@ -93,7 +93,8 @@
         "NO_CONTENT": "No Content",
         "ERROR_OCCURRED": "An Error Occurred",
         "NOT_FOUND": "Resource not found",
-        "ERROR_404": "Error 404"
+        "ERROR_404": "Error 404",
+        "PLEASE_TRY_AGAIN": "An error occurred! please try again"
     },
     "LOADING": {
         "LOADING": "Loading",
@@ -108,5 +109,35 @@
         "LOAD_MORE_REVIEWS": "Load more reviews",
         "LOADING_COMMENTS": "Loading Comments",
         "LOAD_MORE_COMMENT": "Load more comments"
-    }
+    },
+    "COURSE_DETAIL": {
+        "CREATED_BY": "created by",
+        "LAST_UPDATED": "Last updated",
+        "RATINGS": "ratings",
+        "ENROLLED": "enrolled",
+        "COMMUNITY_COMMENTS": "community comments",
+        "WHAT_YOU_WILL_LEARN": "What you'll  learn",
+        "COURSE_FEATURES": "Course Features",
+        "BEGINNER_FRIENDLY": "Beginner Friendly",
+        "FREE_ENROLLMENT": "Free enrollment",
+        "APPROXIMATELY": "Approximately {num} hours of content",
+        "CERTIFICATE": "Certificate on completion",
+        "COURSE_SECTIONS": "Course Sections",
+        "FULL_DESCRIPTION": "Full Description",
+        "BIO": "bio",
+        "ENROLL_NOW": "Enroll now",
+        "HEAD_TO_COURSE": "Go to course",
+        "LIFETIME_ACCESS": "Full lifetime access",
+        "SHARE_ON": "share on",
+        "REQUIREMENTS": "Requirements",
+        "SEE_ALL_REMAINING": "See all remaining"
+    },
+    "COMMENT": {
+        "COMMENT_CREATION_FAILED": "An error occurred! comment creation failed",
+        "SIGN_IN_TO_COMMENT": "Please sign in to comment",
+        "ADD_COMMENT": "Add a comment...",
+        "COMMENT": "Comment",
+        "REPLY": "Reply"
+    },
+    "CANCEL": "Cancel"
 }

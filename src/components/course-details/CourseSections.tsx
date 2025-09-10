@@ -3,6 +3,7 @@ import { cacheKeys } from "@/lib/cacheKeys";
 import { getMinimalCourseContent } from "@/lib/http/coursesFetchFunc";
 import { Button } from "@mui/material";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import Module from "./detail-parts/Module";
@@ -11,6 +12,7 @@ import Section from "./detail-parts/Section";
 type CourseSectionsProps = {};
 
 const CourseSections: React.FC<CourseSectionsProps> = () => {
+  const t = useTranslations();
   const { slug_id: slug } = useParams<{ slug_id: string }>();
 
   const { data } = useSuspenseQuery({
@@ -25,7 +27,7 @@ const CourseSections: React.FC<CourseSectionsProps> = () => {
   return (
     <section className="">
       <h2 className="text-2xl capitalize font-bold text-gray-900 mb-6">
-        course sections
+        {t("COURSE_DETAIL.COURSE_SECTIONS")}
       </h2>
 
       <div className="space-y-2">
@@ -49,7 +51,7 @@ const CourseSections: React.FC<CourseSectionsProps> = () => {
             onClick={() => setShowAll(true)}
             sx={{ mt: 2 }}
           >
-            See all remaining {remaining}{" "}
+            {t("COURSE_DETAIL.SEE_ALL_REMAINING")} {remaining}{" "}
             {remaining === 1 ? "section" : "sections"}
           </Button>
         )}

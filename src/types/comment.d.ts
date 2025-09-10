@@ -12,6 +12,7 @@ type CourseComment = {
   mention: Mention;
   account: User;
   created_at: string;
+  is_liked?: boolean;
 };
 
 type Mention = {

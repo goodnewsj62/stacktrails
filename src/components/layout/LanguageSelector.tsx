@@ -6,10 +6,10 @@ import MenuItem from "@mui/material/MenuItem";
 import CountryList from "country-list-with-dial-code-and-flag";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { CiGlobe } from "react-icons/ci";
 
-const AVAILABLE_LOCALES = ["en", "de", "es", "fr"]; // adjust to your supported locales
+const AVAILABLE_LOCALES = ["en", "de", "es", "fr"];
 
 // Map locales to their corresponding country codes
 const LOCALE_TO_COUNTRY: Record<string, string> = {
@@ -25,6 +25,14 @@ export default function LanguageSelector() {
   const pathname = usePathname() || "/";
   const searchParams = useSearchParams();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  // Force re-render when pathname changes
+  const [key, setKey] = useState(0);
+
+  useEffect(() => {
+    setKey((prev) => prev + 1);
+  }, [pathname]);
+
   const LOCALE_LABELS: Record<string, string> = useMemo(
     () => ({
       en: t("ENGLISH"),
@@ -32,14 +40,13 @@ export default function LanguageSelector() {
       es: t("SPANISH"),
       de: t("GERMAN"),
     }),
-    [t]
+    [t, key] // Add key as dependency to force re-computation
   );
 
   const countries = useMemo(() => CountryList.getAll(), []);
-
   const currentLocale = pathname.split("/")[1] || "en";
-
   const open = Boolean(anchorEl);
+
   const onOpen = (e: React.MouseEvent<HTMLElement>) =>
     setAnchorEl(e.currentTarget);
   const onClose = () => setAnchorEl(null);
@@ -58,9 +65,17 @@ export default function LanguageSelector() {
   const handleSelect = (locale: string) => {
     onClose();
     if (locale === currentLocale) return;
+
     const newPath = buildNewPath(locale);
     const qs = searchParams?.toString();
-    router.push(qs ? `${newPath}?${qs}` : newPath);
+
+    // Option 1: Use window.location for hard navigation (forces re-render)
+    const fullUrl = qs ? `${newPath}?${qs}` : newPath;
+    window.location.href = fullUrl;
+
+    // Option 2: Alternative - use router.push with refresh
+    // router.push(qs ? `${newPath}?${qs}` : newPath);
+    // router.refresh();
   };
 
   return (
@@ -73,7 +88,6 @@ export default function LanguageSelector() {
       >
         <CiGlobe />
       </IconButton>
-
       <Menu
         anchorEl={anchorEl}
         open={open}

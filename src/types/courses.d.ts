@@ -96,3 +96,10 @@ type Contentdata = {
   additionalProp1: AdditionalProp1;
 };
 type AdditionalProp1 = {};
+
+type EnrollmentResp = {
+  status: string;
+  id: string;
+  account_id: string;
+  course_id: string;
+};

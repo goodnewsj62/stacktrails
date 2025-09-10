@@ -1,13 +1,27 @@
 "use client";
 
+import { Link } from "@/i18n/navigation";
+import { appToast } from "@/lib/appToast";
 import { cacheKeys } from "@/lib/cacheKeys";
-import { getCourseDetailFn } from "@/lib/http/coursesFetchFunc";
+import {
+  freeEnrollment,
+  getCourseDetailFn,
+  hasEnrolled,
+} from "@/lib/http/coursesFetchFunc";
 import { getImageProxyUrl, getNumberUnit } from "@/lib/utils";
-import { Button, IconButton } from "@mui/material";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { AppRoutes } from "@/routes";
+import { useAppStore } from "@/store";
+import { Button, IconButton, Skeleton } from "@mui/material";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FaFacebookF,
   FaLayerGroup,
@@ -21,14 +35,9 @@ import IconAndText from "./IconAndText";
 
 type CourseAsideProps = {};
 
-const level = {
-  beginner: "Beginner Friendly",
-  intermediate: "Intermediate",
-  advanced: "Advanced ",
-  expert: "Expert",
-};
-
 const CourseAside: React.FC<CourseAsideProps> = () => {
+  const t = useTranslations("COURSE_DETAIL");
+  const tl = useTranslations("DIFFICULTY_LEVEL");
   const { slug_id } = useParams<{ slug_id: string }>();
 
   const { data } = useSuspenseQuery({
@@ -51,6 +60,17 @@ const CourseAside: React.FC<CourseAsideProps> = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const level = useMemo(
+    () => ({
+      beginner: tl("BEGINNER"),
+      intermediate: tl("INTERMEDIATE"),
+      advanced: tl("ADVANCED"),
+      expert: tl("EXPERT"),
+      all: tl("ALL"),
+    }),
+    [tl]
+  );
+
   return (
     <div
       className={`fixed hidden w-[400px]  ${
@@ -71,21 +91,25 @@ const CourseAside: React.FC<CourseAsideProps> = () => {
 
       <div className="p-4 flex flex-col gap-4 font-light">
         <p className="text-sm">{data.short_description}</p>
-        <EnrollCTAButton />
+        <EnrollCTAButton course_id={data.id} slug={slug_id} />
 
         <div className="flex items-center gap-1">
           <StarRating rating={data.average_rating} size="medium" />
           <span className="font-medium">{data.average_rating}</span>
         </div>
 
-        <div className="flex justify-between items-center">
+        <div className="flex text-sm justify-between items-center">
           <IconAndText
             icon={
               <IconButton aria-label="Enrolled" size="small" color="inherit">
                 <MdGroups />
               </IconButton>
             }
-            text={<span>{getNumberUnit(data.enrollment_count)} enrolled</span>}
+            text={
+              <span>
+                {getNumberUnit(data.enrollment_count)} {t("ENROLLED")}
+              </span>
+            }
           />
           <IconAndText
             icon={
@@ -99,8 +123,8 @@ const CourseAside: React.FC<CourseAsideProps> = () => {
           />
         </div>
         <div>
-          <div className="text-center text-sm">Full Lifetime Access</div>
-          <div className="text-center text-sm">share on</div>
+          <div className="text-center text-sm">{t("LIFETIME_ACCESS")}</div>
+          <div className="text-center text-sm">{t("SHARE_ON")}</div>
         </div>
 
         {/* Social Share Icons */}
@@ -166,15 +190,73 @@ const CourseAside: React.FC<CourseAsideProps> = () => {
 
 export default CourseAside;
 
-function EnrollCTAButton() {
+function EnrollCTAButton({
+  course_id,
+  slug,
+}: {
+  course_id: string;
+  slug: string;
+}) {
+  const account_id = useAppStore((state) => state.user?.id);
+  const queryClient = useQueryClient();
+  const t = useTranslations();
+
+  const { data, isLoading } = useQuery({
+    queryKey: [cacheKeys.GET_ENROLLMENT, course_id],
+    queryFn: hasEnrolled({ courseId: course_id }),
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: freeEnrollment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [cacheKeys.COURSE_DETAIL],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [cacheKeys.GET_ENROLLMENT, course_id],
+      });
+
+      appToast.Success("Enrollment successful!");
+    },
+    onError: () => {
+      appToast.Error("An error occurred! please try again or contact support!");
+    },
+  });
+
+  if (isLoading) {
+    return <Skeleton className="!w-full !rounded-md  !h-16" />;
+  }
+
+  if (data?.course_id === course_id) {
+    return (
+      <Link href={AppRoutes.getEnrolledCourseRoute(slug)}>
+        <Button
+          fullWidth
+          size="large"
+          color={"accentColor" as any}
+          className=" !font-bold  !text-white"
+        >
+          {t("COURSE_DETAIL.HEAD_TO_COURSE")}
+        </Button>
+      </Link>
+    );
+  }
+
+  const mutateHandler = () => {
+    if (!account_id) return appToast.Info("Log in to enroll");
+    mutate({ account_id, course_id });
+  };
+
   return (
     <Button
       fullWidth
       size="large"
       color={"accentColor" as any}
       className=" !font-bold  !text-white"
+      onClick={mutateHandler}
+      disabled={isPending}
     >
-      Enroll Now
+      {t("COURSE_DETAIL.ENROLL_NOW")}
     </Button>
   );
 }
