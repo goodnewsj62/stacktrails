@@ -4,7 +4,6 @@ import { Link } from "@/i18n/navigation";
 import { AppRoutes, BackendRoutes, PublicRoutes } from "@/routes";
 import { useAppStore } from "@/store";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BsBackpack2Fill, BsPassportFill } from "react-icons/bs";
 import { GiScrollQuill } from "react-icons/gi";
@@ -13,6 +12,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 
 import { appFetch } from "@/lib/appFetch";
 import { appToast } from "@/lib/appToast";
+import { Avatar } from "@mui/material";
 import type { ReactNode } from "react";
 
 type ProfileLink = {
@@ -49,7 +49,7 @@ const LINKS = [
 ];
 
 export default function Profile({ className }: ProfileProps) {
-  const { currentProfile } = useAppStore((state) => state);
+  const { currentProfile, user } = useAppStore((state) => state);
   const t = useTranslations("NAVS");
   const [isOpen, setIsOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -109,13 +109,19 @@ export default function Profile({ className }: ProfileProps) {
         onClick={toggleMenu}
         className="h-12 w-12 rounded-full overflow-hidden ring-1 ring-black/10 hover:ring-black/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
-        <Image
-          src={currentProfile?.avatar || "/default_dp.svg"}
+        <Avatar
+          src={currentProfile?.avatar}
           alt={"profile pic"}
-          width={48}
-          height={48}
-          className="h-12 w-12 rounded-full object-cover"
-        />
+          sx={{
+            width: "48px",
+            height: "48px",
+            background: (theme) => theme.palette.accentColor.main,
+            fontSize: "1rem",
+            fontWeight: "900",
+          }}
+        >
+          {user?.username?.substring(0, 2)?.toUpperCase()}
+        </Avatar>
       </button>
 
       <div

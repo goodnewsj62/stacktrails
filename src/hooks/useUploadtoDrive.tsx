@@ -1,0 +1,202 @@
+import { useUploads } from "./useUploads";
+
+type batchUploadReturnT = {
+  kind: string;
+  id: string;
+  fileId: string;
+  jobId: string;
+  mimeType: string;
+  name: string;
+};
+
+const useUploadToDrive = () => {
+  const ctx = useUploads();
+
+  return async ({
+    files,
+    concurrency,
+  }: {
+    files: File[];
+    concurrency?: number;
+  }) => {
+    const res = await batchResumableUpload(ctx, files, concurrency);
+    await Promise.all(res.map((d) => makeFilePublic(d.fileId)));
+    return res;
+  };
+};
+
+export default useUploadToDrive;
+
+// Create a resumable upload session for a file
+async function createResumableSession(accessToken: string, file: File) {
+  const res = await fetch(
+    "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+      body: JSON.stringify({
+        name: file.name,
+        mimeType: file.type,
+      }),
+    }
+  );
+
+  if (!res.ok) throw new Error("Failed to create resumable session");
+  const uploadUrl = res.headers.get("Location");
+  if (!uploadUrl) throw new Error("No upload URL returned");
+
+  return uploadUrl;
+}
+
+async function uploadFileChunks(
+  ctx: globalUploadStateT,
+  jobId: string,
+  uploadUrl: string,
+  file: File,
+  chunkSize = 256 * 1024,
+  signal?: AbortSignal
+) {
+  let start = 0;
+  const total = file.size;
+
+  while (start < total) {
+    const end = Math.min(start + chunkSize, total) - 1;
+    const chunk = file.slice(start, end + 1);
+
+    const res = await fetch(uploadUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Length": `${chunk.size}`,
+        "Content-Range": `bytes ${start}-${end}/${total}`,
+      },
+      body: chunk,
+      signal,
+    });
+
+    if (res.status === 200 || res.status === 201) {
+      ctx.updateJob(jobId, { status: "completed", progress: 100 });
+      setTimeout(() => ctx.removeJob(jobId), 5000);
+      return await res.json();
+    }
+
+    if (res.status !== 308) {
+      ctx.updateJob(jobId, { status: "failed" });
+      throw new Error(`Chunk upload failed with status ${res.status}`);
+    }
+
+    start = end + 1;
+    const percent = Math.round((start / total) * 100);
+    ctx.updateJob(jobId, { progress: percent, status: "uploading" });
+  }
+
+  throw new Error("Upload did not complete");
+}
+
+async function resumableUpload(
+  ctx: globalUploadStateT,
+  file: File,
+  accessToken: string
+): Promise<batchUploadReturnT> {
+  const jobId = ctx.addJob({
+    id: crypto.randomUUID(),
+    type: "drive",
+  });
+
+  const abortCtrl = new AbortController();
+  ctx.updateJob(jobId, {
+    status: "pending",
+    progress: 0,
+    cancel: () => abortCtrl.abort(),
+  });
+
+  try {
+    const uploadUrl = await createResumableSession(accessToken, file);
+    const result = await uploadFileChunks(
+      ctx,
+      jobId,
+      uploadUrl,
+      file,
+      256 * 1024,
+      abortCtrl.signal
+    );
+    return { ...result, jobId, fileId: result.id };
+  } catch (err) {
+    if ((err as any).name === "AbortError") {
+      ctx.updateJob(jobId, { status: "failed" });
+      setTimeout(() => ctx.removeJob(jobId), 5000);
+    }
+    throw err;
+  }
+}
+async function batchResumableUpload(
+  ctx: globalUploadStateT,
+  files: File[],
+  concurrency = 3
+) {
+  let accessToken = await fetch("/token/google")
+    .then((r) => r.json())
+    .then((d) => d.access_token);
+
+  const results: batchUploadReturnT[] = [];
+  let i = 0;
+
+  async function worker() {
+    while (i < files.length) {
+      const file = files[i++];
+      try {
+        const uploaded = await resumableUpload(ctx, file, accessToken);
+        results.push(uploaded);
+      } catch (err: any) {
+        if (err.message === "TOKEN_EXPIRED") {
+          accessToken = await fetch("/token/google")
+            .then((r) => r.json())
+            .then((d) => d.access_token);
+          const uploaded = await resumableUpload(ctx, file, accessToken);
+          results.push(uploaded);
+        } else {
+          console.error("Upload failed:", err);
+        }
+      }
+    }
+  }
+
+  await Promise.all(Array.from({ length: concurrency }, worker));
+  return results;
+}
+
+async function makeFilePublic(fileId: string) {
+  let accessToken = await fetch("/token/google")
+    .then((r) => r.json())
+    .then((d) => d.access_token);
+
+  try {
+    await fetch(
+      `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          role: "reader",
+          type: "anyone",
+        }),
+      }
+    );
+    console.log(`Made ${fileId} Public: `);
+  } catch (err: any) {
+    if (err.message === "TOKEN_EXPIRED") {
+      accessToken = await fetch("/token/google")
+        .then((r) => r.json())
+        .then((d) => d.access_token);
+    } else {
+      console.log(`Failed to make ${fileId} Public: `, err);
+    }
+  }
+
+  return `https://drive.google.com/file/d/${fileId}/view`;
+}

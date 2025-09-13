@@ -24,3 +24,10 @@ type Paginated<T> = {
   has_prev: boolean;
   items: T[];
 };
+
+type globalUploadStateT = {
+  addJob: (job: Omit<UploadJob, "status" | "progress">) => string;
+  updateJob: (id: string, data: Partial<UploadJob>) => void;
+  removeJob: (id: string) => void;
+  jobs: UploadJob[];
+};

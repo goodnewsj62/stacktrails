@@ -1,10 +1,10 @@
-import LanguageSelector from "@/components/layout/LanguageSelector";
 import { Link } from "@/i18n/navigation";
-import { PublicRoutes } from "@/routes";
+import { AppRoutes, PublicRoutes } from "@/routes";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import GoogleOneTapWrapper from "../auth/GoogleOneTapWrapper";
 import CTAORProfie from "./CTAoRProfile";
+import LanguageSelector from "./LanguageSelector";
 
 type params = {};
 
@@ -27,7 +27,7 @@ const PublicHeader: React.FC<params> = async () => {
               { href: PublicRoutes.ABOUT, label: t("ABOUT") },
               { href: "/about", label: t("EXPLORE") },
               { href: "/contact", label: t("PAID_COURSES") },
-              { href: "/contact", label: t("CREATE") },
+              { href: AppRoutes.CREATE_COURSE, label: t("CREATE") },
             ].map((item, idx) => (
               <li key={idx} className="relative">
                 <a

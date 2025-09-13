@@ -1,5 +1,7 @@
 "use client";
 
+import { Link } from "@/i18n/navigation";
+import { AppRoutes } from "@/routes";
 import { Button } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -86,9 +88,11 @@ export default function HomeFilter(params_: params) {
         </select>
       </div>
       <div className="hidden md:block">
-        <Button variant="contained" endIcon={<FaPlus size={"15px"} />}>
-          {t("PUBLIC_MAIN.CREATE_COURSE")}
-        </Button>
+        <Link href={AppRoutes.CREATE_COURSE}>
+          <Button variant="contained" endIcon={<FaPlus size={"15px"} />}>
+            {t("PUBLIC_MAIN.CREATE_COURSE")}
+          </Button>
+        </Link>
       </div>
     </div>
   );

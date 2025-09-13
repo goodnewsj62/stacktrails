@@ -15,14 +15,27 @@ export default function AuthWrapper({ children }: props) {
     queryKey: [cacheKeys.MY_ACCOUNT],
     queryFn: async (): Promise<AxiosResponse<User>> =>
       await appAxios.get(BackendRoutes.MY_ACCOUNT),
+    select: (data) => data.data,
+    retry: false,
   });
 
-  const { setUserData, setCurrentProfile } = useAppStore((state) => state);
+  const { setUserData, setCurrentProfile, setIsLoading } = useAppStore(
+    (state) => state
+  );
 
   useEffect(() => {
-    if (status === "success") {
-      setUserData(data.data);
-      setCurrentProfile(data.data.profile);
+    switch (status) {
+      case "success":
+        setUserData(data);
+        setCurrentProfile(data.profile);
+        setIsLoading(false);
+        break;
+      case "error":
+        setIsLoading(false);
+        break;
+      case "pending":
+        setIsLoading(true);
+        break;
     }
   }, [status]);
 

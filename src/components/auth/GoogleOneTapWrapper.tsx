@@ -5,16 +5,9 @@ import { googleOneTapForm } from "@/lib/utils";
 import { useAppStore } from "@/store";
 import { useGoogleOneTapLogin } from "@react-oauth/google";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
 
 export default function GoogleOneTapWrapper() {
-  const [disabled, setDisabled] = useState(true);
-  const user = useAppStore((state) => state.user);
-
-  useEffect(() => {
-    const wait = setTimeout(() => setDisabled(!user), 1000);
-    return () => clearTimeout(wait);
-  }, []);
+  const { user, isLoading } = useAppStore((state) => state);
 
   const t = useTranslations("GOOGLE_AUTH_MESSAGES.ERRORS");
   useGoogleOneTapLogin({
@@ -27,14 +20,8 @@ export default function GoogleOneTapWrapper() {
     onError: () => {
       appToast.Error(t("ERROR_LOGIN"));
     },
-    disabled,
+    disabled: isLoading || !!user,
   });
-  if (user) {
-    return <></>;
-  }
-  return user ? <></> : <Wrapped />;
-}
 
-function Wrapped() {
   return <></>;
 }

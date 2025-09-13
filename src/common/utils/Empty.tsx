@@ -10,6 +10,7 @@ type props = {
   height?: number;
   className?: string;
 };
+const rand = Math.random();
 
 export default function Empty({
   title: inputTitle,
@@ -19,7 +20,7 @@ export default function Empty({
   message = "",
 }: props) {
   const images = ["/empty_ghost.svg", "/empty_ufo.svg"];
-  const randomImage = images[Math.floor(Math.random() * images.length)];
+  const randomImage = images[Math.floor(rand * images.length)];
   const t = useTranslations("EXCEPTIONS");
 
   const title = inputTitle || t("NO_CONTENT");

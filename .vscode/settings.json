@@ -1,3 +1,7 @@
 {
-  "cSpell.words": ["stacktrails"]
+  "cSpell.words": ["stacktrails"],
+  "files.watcherExclude": {
+    "**/.next/*/**": true,
+    "**/node_modules/*/**": true
+  }
 }

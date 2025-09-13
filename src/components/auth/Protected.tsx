@@ -1,13 +1,33 @@
 "use client";
 
+import Loading from "@/app/[locale]/(public)/loading";
 import { useRouter } from "@/i18n/navigation";
 import { PublicRoutes } from "@/routes";
 import { useAppStore } from "@/store";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 
 export default function Protected({ children }: PropsWithChildren) {
-  const { user } = useAppStore((state) => state);
+  const { user, isLoading } = useAppStore((state) => state);
   const router = useRouter();
-  if (!user) return router.push(PublicRoutes.LOGIN);
+  const loadingComp = (
+    <div className="w-screen  h-screen grid place-items-center">
+      <Loading />
+    </div>
+  );
+
+  useEffect(() => {
+    if (!user && !isLoading) {
+      router.replace(PublicRoutes.LOGIN); // use replace so user can't go back
+    }
+  }, [user, router, isLoading]);
+
+  if (isLoading) {
+    return loadingComp;
+  }
+
+  if (!user) {
+    return loadingComp;
+  }
+
   return children;
 }

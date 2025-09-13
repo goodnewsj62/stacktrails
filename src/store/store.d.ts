@@ -3,6 +3,11 @@ type navStore = {
   toggleBar: (data: { val?: boolean }) => void;
 };
 
+type initStore = {
+  isLoading: boolean;
+  setIsLoading: (data: boolean) => void;
+};
+
 type userStore = {
   user: User | null;
   currentProfile: Profile | null;
@@ -19,5 +24,20 @@ interface authStore {
   }) => void;
 }
 
-type appStoreType = navStore & userStore;
+type UploadJob = {
+  id: string;
+  type: "drive" | "youtube" | "dropbox";
+  status: "pending" | "uploading" | "completed" | "failed";
+  progress: number;
+  cancel?: () => void;
+};
+
+type UploadStore = {
+  jobs: UploadJob[];
+  addJob: (job: Omit<UploadJob, "status" | "progress">) => string;
+  updateJob: (id: string, data: Partial<UploadJob>) => void;
+  removeJob: (id: string) => void;
+};
+
+type appStoreType = navStore & userStore & initStore & UploadStore;
 type mutationType = [];
