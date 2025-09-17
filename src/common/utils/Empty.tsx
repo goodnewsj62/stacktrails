@@ -33,7 +33,7 @@ export default function Empty({
           alt="Empty state"
           width={width || 320}
           height={height || 320}
-          className={`w-full max-w-[320px] ${className}`}
+          className={` max-w-[320px] ${className}`}
         />
       </div>
       <h3 className="text-lg font-semibold text-gray-600 mb-2">{title}</h3>

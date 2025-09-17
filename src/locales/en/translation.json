@@ -139,5 +139,32 @@
         "COMMENT": "Comment",
         "REPLY": "Reply"
     },
-    "CANCEL": "Cancel"
+    "CANCEL": "Cancel",
+    "POPUP": {
+        "NO_CANCEL": "No,  Cancel",
+        "YES_PROCEED": "Yes, Proceed"
+    },
+    "BACKEND_MESSAGES": {
+        "ACCOUNT_EXISTS": "Oops! an account with email already exists on our system",
+        "SIGN_IN_ERROR": "Sign in error!"
+    },
+    "CONTINUE": "Continue",
+    "REPLACE_ACCOUNT": {
+        "ACCOUNT_SWITCH": "Account Switch",
+        "WARNING": "You’re about to switch to a different {provider} account. This will replace your current connection. Do you want to continue?",
+        "SUCCESS": "Account replaced successfully"
+    },
+    "STORAGE": {
+        "SELECT_STORAGE": "Select Storage",
+        "SELECT_PLATFORM": "Select Platform"
+    },
+    "UPLOAD": {
+        "INVALID_LINK": "Invalid link for platform",
+        "UPLOAD": "Upload",
+        "ROOT": "root folder",
+        "CHOOSE_FILE": "Please choose a valid file",
+        "UPLOAD_FILE": "Upload File",
+        "SELECT": "Select file from {storage}",
+        "WARNING_TEXT": "Always select a publicly accessible file"
+    }
 }

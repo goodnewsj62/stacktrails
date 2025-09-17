@@ -1,4 +1,5 @@
 import AuthWrapper from "@/components/auth/AuthWrapper";
+import QueryMessagesWrapper from "@/components/auth/QueryMessagesWrapper";
 import Providers from "@/lib/QueryProvider";
 import { StoreProvider } from "@/store/provider";
 import { ThemeProvider } from "@mui/material";
@@ -48,8 +49,9 @@ export default function RootLayout({
                 <StoreProvider>
                   <Providers>
                     <AuthWrapper>
-                      {children}
                       <Toaster expand position="top-right" />
+                      <Toaster id={"canvas"} position="top-center" />
+                      <QueryMessagesWrapper>{children}</QueryMessagesWrapper>
                     </AuthWrapper>
                   </Providers>
                 </StoreProvider>
@@ -57,7 +59,6 @@ export default function RootLayout({
             </NextIntlClientProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
-
         <a href="https://storyset.com/education" className="hidden">
           Education illustrations by Storyset
         </a>
@@ -87,6 +88,61 @@ export default function RootLayout({
         </a>
         <a href="https://storyset.com/celebration" className="hidden">
           Celebration illustrations by Storyset
+        </a>
+        <a
+          target="_blank"
+          href="https://icons8.com/icon/13630/google-drive"
+          className="hidden"
+        >
+          Drive
+        </a>
+        icon by
+        <a target="_blank" href="https://icons8.com">
+          Icons8
+        </a>
+        <a
+          target="_blank"
+          href="https://icons8.com/icon/13657/dropbox"
+          className="hidden"
+        >
+          Dropbox
+        </a>
+        icon by
+        <a target="_blank" href="https://icons8.com">
+          Icons8
+        </a>
+        <a
+          target="_blank"
+          href="https://icons8.com/icon/JHFYPQIPcXti/folder"
+          className="hidden"
+        >
+          Folder
+        </a>{" "}
+        icon by{" "}
+        <a target="_blank" href="https://icons8.com" className="hidden">
+          Icons8
+        </a>
+        <a
+          target="_blank"
+          href="https://icons8.com/icon/19318/youtube"
+          className="hidden"
+        >
+          YouTube
+        </a>{" "}
+        icon by{" "}
+        <a target="_blank" href="https://icons8.com">
+          Icons8
+        </a>
+        <a
+          target="_blank"
+          href="https://icons8.com/icon/aZKKHRzL5LgV/alight-motion"
+          className="hidden"
+        >
+          Alight Motion
+        </a>{" "}
+        icon by{" "}
+        <a target="_blank" href="https://icons8.com">
+          Icons8
         </a>
         {/* <script
           src="https://accounts.google.com/gsi/client"

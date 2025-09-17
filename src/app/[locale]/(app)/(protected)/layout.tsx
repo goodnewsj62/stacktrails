@@ -1,4 +1,5 @@
 import Protected from "@/components/auth/Protected";
+import ReplaceProviderWarningWrapper from "@/components/auth/ReplaceProviderWarning";
 import { RouterWrapper } from "@/hooks/useBlockNavigation";
 
 export default async function Layout({
@@ -9,7 +10,11 @@ export default async function Layout({
 }>) {
   return (
     <Protected>
-      <RouterWrapper>{children}</RouterWrapper>
+      <RouterWrapper>
+        <ReplaceProviderWarningWrapper>
+          {children}
+        </ReplaceProviderWarningWrapper>
+      </RouterWrapper>
     </Protected>
   );
 }

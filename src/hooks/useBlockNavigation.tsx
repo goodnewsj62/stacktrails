@@ -1,7 +1,7 @@
 // hooks/useBlockingRouter.tsx
 "use client";
 
-import { useRouter as useNextRouter } from "next/navigation";
+import { useRouter as useNextRouter } from "@/i18n/navigation";
 import { createContext, PropsWithChildren, useContext, useEffect } from "react";
 import { useUploads } from "./useUploads";
 

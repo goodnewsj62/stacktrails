@@ -21,6 +21,8 @@ const useUploadToDrive = () => {
   }) => {
     const res = await batchResumableUpload(ctx, files, concurrency);
     await Promise.all(res.map((d) => makeFilePublic(d.fileId)));
+
+    // TODO:  construct url
     return res;
   };
 };

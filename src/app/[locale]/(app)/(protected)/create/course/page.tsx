@@ -7,6 +7,7 @@ import StringArrayInput from "@/common/forms/StringArrayInput";
 // create new course
 
 import AppMdEditor from "@/common/markdown/AppMdEditor";
+import UploadFile from "@/common/media/UploadFile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
@@ -81,7 +82,18 @@ export default function Page() {
 
   return (
     <FormProvider {...form}>
+      {/* <StorageFileDisplay
+        chosenFileHandler={() => {}}
+        mimeType={MediaType.DOCUMENT}
+        onClose={() => {}}
+        provider={DocumentPlatform.GOOGLE_DRIVE}
+      /> */}
       <form className="py-16 grid gap-y-8">
+        <UploadFile
+          accept={["drop_box", "google_drive"]}
+          callback={() => {}}
+          mimeType="image"
+        />
         <section className="flex gap-8 flex-col xl:flex-row">
           <div className="xl:grow">
             <AppTitleInput

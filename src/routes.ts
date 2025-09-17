@@ -73,4 +73,13 @@ export class BackendRoutes {
   static CREATE_COMMENT = "/courses/comments";
   static GET_COURSE_ENROLLMENT = (course_id: string) =>
     `/courses/${course_id}/enroll`;
+
+  static LIST_ACTIVE_PROVIDERS = "/list-active-providers";
+  static LIST_ACTIVE_STORAGE_PROVIDERS = "/list-active-storage-providers";
+  static LIST_ALL_FOLDERS = "/folders";
+  static LIST_ALL_FILES = "/files";
+  static GOOGLE_INCREMENTAL = "/auth/google/increment";
+  static DROPBOX_AUTH = "/auth/providers/dropbox/login";
+  static REPLACE_PROVIDER = "/auth/replace-provider";
+  static LIST_SUB_FOLDERS_AND_FILES = "/subitems";
 }
