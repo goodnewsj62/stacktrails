@@ -255,7 +255,11 @@ async function batchUploadDropbox(
   async function worker() {
     while (i < files.length) {
       const file = files[i++];
-      const jobId = ctx.addJob({ id: crypto.randomUUID(), type: "dropbox" });
+      const jobId = ctx.addJob({
+        id: crypto.randomUUID(),
+        type: "dropbox",
+        name: files?.[0]?.name ?? "dropbox upload",
+      });
       const path = folderPath ? `${folderPath}/${file.name}` : `/${file.name}`;
 
       try {

@@ -26,7 +26,8 @@ interface authStore {
 
 type UploadJob = {
   id: string;
-  type: "drive" | "youtube" | "dropbox";
+  name?: string;
+  type: "google_drive" | "youtube" | "dropbox";
   status: "pending" | "uploading" | "completed" | "failed";
   progress: number;
   cancel?: () => void;

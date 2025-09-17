@@ -108,7 +108,8 @@ async function resumableUpload(
 ): Promise<batchUploadReturnT> {
   const jobId = ctx.addJob({
     id: crypto.randomUUID(),
-    type: "drive",
+    type: "google_drive",
+    name: file.name,
   });
 
   const abortCtrl = new AbortController();

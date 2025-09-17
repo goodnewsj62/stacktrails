@@ -1,3 +1,4 @@
+import UploadProgress from "@/common/media/UploadProgres";
 import AuthWrapper from "@/components/auth/AuthWrapper";
 import QueryMessagesWrapper from "@/components/auth/QueryMessagesWrapper";
 import Providers from "@/lib/QueryProvider";
@@ -52,6 +53,7 @@ export default function RootLayout({
                       <Toaster expand position="top-right" />
                       <Toaster id={"canvas"} position="top-center" />
                       <QueryMessagesWrapper>{children}</QueryMessagesWrapper>
+                      <UploadProgress />
                     </AuthWrapper>
                   </Providers>
                 </StoreProvider>
@@ -96,20 +98,12 @@ export default function RootLayout({
         >
           Drive
         </a>
-        icon by
-        <a target="_blank" href="https://icons8.com">
-          Icons8
-        </a>
         <a
           target="_blank"
           href="https://icons8.com/icon/13657/dropbox"
           className="hidden"
         >
           Dropbox
-        </a>
-        icon by
-        <a target="_blank" href="https://icons8.com">
-          Icons8
         </a>
         <a
           target="_blank"
@@ -118,10 +112,6 @@ export default function RootLayout({
         >
           Folder
         </a>{" "}
-        icon by{" "}
-        <a target="_blank" href="https://icons8.com" className="hidden">
-          Icons8
-        </a>
         <a
           target="_blank"
           href="https://icons8.com/icon/19318/youtube"
@@ -129,19 +119,14 @@ export default function RootLayout({
         >
           YouTube
         </a>{" "}
-        icon by{" "}
-        <a target="_blank" href="https://icons8.com">
-          Icons8
-        </a>
         <a
           target="_blank"
           href="https://icons8.com/icon/aZKKHRzL5LgV/alight-motion"
           className="hidden"
         >
           Alight Motion
-        </a>{" "}
-        icon by{" "}
-        <a target="_blank" href="https://icons8.com">
+        </a>
+        <a target="_blank" href="https://icons8.com" className="hidden">
           Icons8
         </a>
         {/* <script

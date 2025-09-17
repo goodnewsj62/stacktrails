@@ -22,7 +22,7 @@ interface FileWithMeta {
 
 type UploadJob = {
   id: string;
-  type: "drive" | "youtube" | "dropbox";
+  type: "google_drive" | "youtube" | "dropbox";
   status: "pending" | "uploading" | "completed" | "failed";
   progress: number;
   cancel?: () => void;

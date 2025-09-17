@@ -1,12 +1,13 @@
 "use client";
 
 import { DocumentPlatform } from "@/constants";
+import { useUploads } from "@/hooks/useUploads";
 import useUploadToDrive from "@/hooks/useUploadtoDrive";
 import useUploadToDropbox from "@/hooks/useUploadToDropBox";
 import { appToast } from "@/lib/appToast";
-import { Button, Modal } from "@mui/material";
+import { Button, LinearProgress, Modal } from "@mui/material";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import StorageFileDisplay from "../StorageFileDisplay";
 import FileUploadBox from "./FileUploadBox";
 
@@ -26,6 +27,16 @@ const GenericUpload: React.FC<GenericUploadProps> = ({
   const [file, setFile] = useState<File | null>();
   const uploadToDrive = useUploadToDrive();
   const uploadToDropBox = useUploadToDropbox();
+  const { jobs } = useUploads();
+
+  // TODO: !Important this should me jobId instead.  should find a way of tracking jobId
+  const currentJob = useMemo(
+    () =>
+      jobs.find(
+        (v) => v.name === (file?.name ?? "no_/name") && v.type === provider
+      ),
+    [provider, file?.name, jobs]
+  );
 
   const changeHandler = () => {
     if (!file) return appToast.Error(t("UPLOAD.CHOOSE_FILE"));
@@ -76,6 +87,29 @@ const GenericUpload: React.FC<GenericUploadProps> = ({
             {t("UPLOAD.UPLOAD")}
           </Button>
         </div>
+        {currentJob && (
+          <div className="mt-4">
+            <p className="text-xs text-gray-600 mb-1">
+              {t("UPLOAD.SAFELY_CLICK_AWAY")}
+            </p>
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-gray-700 mb-1">
+                {currentJob.progress}%
+              </span>
+              <LinearProgress
+                variant="determinate"
+                value={currentJob.progress}
+                sx={{
+                  height: 6,
+                  borderRadius: 3,
+                  "& .MuiLinearProgress-bar": {
+                    borderRadius: 3,
+                  },
+                }}
+              />
+            </div>
+          </div>
+        )}
       </section>
     </Modal>
   );
