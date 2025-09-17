@@ -166,13 +166,17 @@ function ListFiles() {
   });
 
   const onClick = (file: FileResp) => {
-    if (_mimeType === "folder" && file.type === "folder")
-      return callback(file, provider as any);
+    if (_mimeType === "folder" && file.type === "folder") {
+      callback(file, provider as any);
+      onClose();
+      return;
+    }
 
     if (file.type === "folder")
       setFolderHistory((state) => [...state, file.id]);
     else {
       callback(file, provider as any);
+      onClose();
     }
   };
 
@@ -297,7 +301,16 @@ function SideBar() {
   } = useContext(StorageContext);
 
   useEffect(() => {
-    if (status !== "pending") setIsLoadingProvider(false);
+    if (status !== "pending") {
+      setIsLoadingProvider(false);
+    }
+
+    if (provider && status !== "pending" && data) {
+      storageCheckOrRedirect(provider, data as any, () => {
+        setProvider(provider);
+        setValidStorages((state: any) => [...state, provider]);
+      });
+    }
   }, [status]);
 
   const handleSwitch = (value: DocumentPlatform | undefined) => {

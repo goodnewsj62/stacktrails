@@ -28,9 +28,9 @@ const UploadWrapper: React.FC<UploadWrapperProps> = ({
   const showPicker = type === "picker" && show;
   const showUploader = type === "upload" && show;
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <button
-        className="w-full h-[200px] border-gray-200 border-2  rounded-md flex flex-col items-center justify-center"
+        className="w-full h-[200px] border-gray-200 border-2 border-dashed rounded-md flex flex-col items-center justify-center"
         type="button"
         onClick={() => setShow(true)}
       >
@@ -46,7 +46,11 @@ const UploadWrapper: React.FC<UploadWrapperProps> = ({
       )}
 
       {showUploader && (
-        <SourcesSwitch onClose={() => setShow(false)} provider={provider} />
+        <SourcesSwitch
+          onClose={() => setShow(false)}
+          provider={provider}
+          onCompleted={onCompleted}
+        />
       )}
       {showPicker && (
         <StorageFileDisplay
@@ -72,17 +76,35 @@ export default UploadWrapper;
 function SourcesSwitch({
   onClose,
   provider,
+  onCompleted,
 }: {
   onClose: () => void;
   provider: AvailableSources;
+  onCompleted: (url: string, provider: AvailableSources) => void;
 }) {
   switch (provider) {
     case "daily_motion":
       return <></>;
     case "google_drive":
-      return <GenericUpload onClose={onClose} provider={"google_drive"} />;
+      return (
+        <GenericUpload
+          onClose={onClose}
+          provider={"google_drive"}
+          onCompleted={(urls) => {
+            onCompleted(urls?.[0] ?? "", provider);
+          }}
+        />
+      );
     case "drop_box":
-      return <GenericUpload onClose={onClose} provider={"dropbox"} />;
+      return (
+        <GenericUpload
+          onClose={onClose}
+          onCompleted={(urls) => {
+            onCompleted(urls?.[0] ?? "", provider);
+          }}
+          provider={"dropbox"}
+        />
+      );
     case "youtube":
       return <YoutubeUpload />;
   }

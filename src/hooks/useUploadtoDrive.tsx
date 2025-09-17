@@ -1,3 +1,5 @@
+import { appFetch } from "@/lib/appFetch";
+import { BackendRoutes } from "@/routes";
 import { useUploads } from "./useUploads";
 
 type batchUploadReturnT = {
@@ -20,10 +22,12 @@ const useUploadToDrive = () => {
     concurrency?: number;
   }) => {
     const res = await batchResumableUpload(ctx, files, concurrency);
-    await Promise.all(res.map((d) => makeFilePublic(d.fileId)));
+    const urls = await Promise.all(res.map((d) => makeFilePublic(d.fileId)));
 
     // TODO:  construct url
-    return res;
+
+    console.log("+++++++++++++++++++++++++++++++++++++++", res);
+    return urls;
   };
 };
 
@@ -138,10 +142,7 @@ async function batchResumableUpload(
   files: File[],
   concurrency = 3
 ) {
-  let accessToken = await fetch("/token/google")
-    .then((r) => r.json())
-    .then((d) => d.access_token);
-
+  let accessToken = await getFreshAccessToken();
   const results: batchUploadReturnT[] = [];
   let i = 0;
 
@@ -153,9 +154,7 @@ async function batchResumableUpload(
         results.push(uploaded);
       } catch (err: any) {
         if (err.message === "TOKEN_EXPIRED") {
-          accessToken = await fetch("/token/google")
-            .then((r) => r.json())
-            .then((d) => d.access_token);
+          accessToken = await getFreshAccessToken();
           const uploaded = await resumableUpload(ctx, file, accessToken);
           results.push(uploaded);
         } else {
@@ -170,9 +169,7 @@ async function batchResumableUpload(
 }
 
 async function makeFilePublic(fileId: string) {
-  let accessToken = await fetch("/token/google")
-    .then((r) => r.json())
-    .then((d) => d.access_token);
+  let accessToken = await getFreshAccessToken();
 
   try {
     await fetch(
@@ -192,13 +189,19 @@ async function makeFilePublic(fileId: string) {
     console.log(`Made ${fileId} Public: `);
   } catch (err: any) {
     if (err.message === "TOKEN_EXPIRED") {
-      accessToken = await fetch("/token/google")
-        .then((r) => r.json())
-        .then((d) => d.access_token);
+      accessToken = await getFreshAccessToken();
     } else {
       console.log(`Failed to make ${fileId} Public: `, err);
     }
   }
 
   return `https://drive.google.com/file/d/${fileId}/view`;
+}
+
+async function getFreshAccessToken() {
+  const { data } = await appFetch<ShortLivedToken>(
+    BackendRoutes.GOOGLE_SHORT_LIVED
+  );
+
+  return data.access_token;
 }

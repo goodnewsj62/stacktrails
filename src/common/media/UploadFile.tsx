@@ -68,8 +68,8 @@ const UploadFile: React.FC<UploadFileProps> = ({
   const plugins = strategies[source].plugins;
 
   return (
-    <div className="rounded-xl bg-background">
-      <div>
+    <div className="rounded-xl bg-background ">
+      <div className="py-4">
         <CustomMenu
           callback={(value: any) => setSource(value)}
           defaultVal={source}
@@ -77,7 +77,7 @@ const UploadFile: React.FC<UploadFileProps> = ({
         />
       </div>
 
-      <div>
+      <div className="flex flex-col gap-4">
         {plugins.map((val) => (
           <div className="" key={val}>
             {val === "upload" && (

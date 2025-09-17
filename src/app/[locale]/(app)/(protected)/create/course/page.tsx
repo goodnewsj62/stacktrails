@@ -91,7 +91,9 @@ export default function Page() {
       <form className="py-16 grid gap-y-8">
         <UploadFile
           accept={["drop_box", "google_drive"]}
-          callback={() => {}}
+          callback={(url) => {
+            console.log("+++++++++++++++++++++++", url);
+          }}
           mimeType="image"
         />
         <section className="flex gap-8 flex-col xl:flex-row">

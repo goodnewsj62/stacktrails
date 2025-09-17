@@ -1,3 +1,5 @@
+import { appFetch } from "@/lib/appFetch";
+import { BackendRoutes } from "@/routes";
 import { useUploads } from "./useUploads";
 
 export const useUploadToDropbox = (defaultFolder = "") => {
@@ -14,10 +16,11 @@ export const useUploadToDropbox = (defaultFolder = "") => {
   }) => {
     const res = await batchUploadDropbox(ctx, files, concurrency, folderPath);
     // Prefer filePath if present, otherwise fileId
-    await Promise.all(
+    const url = await Promise.all(
       res.map((d) => makeFilePublicDropbox(d.filePath ?? (d.fileId as string)))
     );
-    return res;
+
+    return url;
   };
 };
 
@@ -239,9 +242,7 @@ async function batchUploadDropbox(
   folderPath = "" // optional folder path root
 ) {
   // fetch token here (re-fetch on token errors)
-  let accessToken = await fetch("/token/dropbox")
-    .then((r) => r.json())
-    .then((d) => d.access_token);
+  let accessToken = await getFreshAccessToken();
 
   const results: {
     jobId: string;
@@ -277,9 +278,7 @@ async function batchUploadDropbox(
             err?.message?.toLowerCase?.().includes?.("token");
 
           if (isAuthErr) {
-            accessToken = await fetch("/token/dropbox")
-              .then((r) => r.json())
-              .then((d) => d.access_token);
+            accessToken = await getFreshAccessToken();
             fileMeta = await uploadFileDropbox(
               ctx,
               jobId,
@@ -323,9 +322,7 @@ async function batchUploadDropbox(
 export async function makeFilePublicDropbox(pathOrId: string) {
   if (!pathOrId) throw new Error("pathOrId required");
 
-  let accessToken = await fetch("/token/dropbox")
-    .then((r) => r.json())
-    .then((d) => d.access_token);
+  let accessToken = await getFreshAccessToken();
 
   // Try to create a shared link
   const createRes = await fetch(
@@ -371,4 +368,12 @@ export async function makeFilePublicDropbox(pathOrId: string) {
 
   // If it failed for other reasons, return the error body
   throw new Error(`Failed to create/get shared link: ${txt}`);
+}
+
+async function getFreshAccessToken() {
+  const { data } = await appFetch<ShortLivedToken>(
+    BackendRoutes.DROP_BOX_SHORT_LIVED
+  );
+
+  return data.access_token;
 }

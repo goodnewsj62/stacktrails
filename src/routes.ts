@@ -82,4 +82,6 @@ export class BackendRoutes {
   static DROPBOX_AUTH = "/auth/providers/dropbox/login";
   static REPLACE_PROVIDER = "/auth/replace-provider";
   static LIST_SUB_FOLDERS_AND_FILES = "/subitems";
+  static GOOGLE_SHORT_LIVED = "/auth/google/shortlived";
+  static DROP_BOX_SHORT_LIVED = "/auth/drobox/shortlived";
 }

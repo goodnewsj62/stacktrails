@@ -31,3 +31,8 @@ type globalUploadStateT = {
   removeJob: (id: string) => void;
   jobs: UploadJob[];
 };
+
+type ShortLivedToken = {
+  access_token: string;
+  expires_in: number;
+};
