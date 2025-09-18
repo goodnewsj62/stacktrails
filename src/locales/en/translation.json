@@ -1,1 +1,172 @@
-{}
+{
+    "HERO": {
+        "MAIN": "Redefining How We Learn, Together",
+        "SUB": "An open platform where communities organize study resources and learn smarter together with AI.",
+        "SEARCH": "what topic are you interested in?",
+        "TAGS": "tags"
+    },
+    "PUBLIC_HEADER": {
+        "REGISTER": "Sign up",
+        "LOGIN": "Log in",
+        "ABOUT": "About",
+        "EXPLORE": "Explore",
+        "PAID_COURSES": "Paid Courses",
+        "CREATE": "Create"
+    },
+    "LANGUAGE_SELECT": {
+        "ENGLISH": "English",
+        "GERMAN": "Deutsch",
+        "SPANISH": "Español",
+        "FRENCH": "Français",
+        "CHANGE_LANGUAGE": "Change language"
+    },
+    "PUBLIC_FOOTER": {
+        "ABOUT": "About us",
+        "BLOG": "Blog",
+        "CONTACT": "Contact",
+        "SUPPORT": "Support",
+        "PRIVACY": "Privacy",
+        "Terms": "Terms",
+        "FAQs": "FAQs",
+        "RIGHTS": "All rights reserved."
+    },
+    "HOME_SORT": {
+        "MOST_VIEWED": "Most Viewed",
+        "TOP_RATED": "Top Rated",
+        "RECENTLY_ADDED": "Recently Added"
+    },
+    "DIFFICULTY_LEVEL": {
+        "BEGINNER": "Beginner friendly",
+        "INTERMEDIATE": "Intermediate",
+        "ADVANCED": "Advanced",
+        "EXPERT": "Expert",
+        "ALL": "All"
+    },
+    "TIME_TEXT": {
+        "MIN": "min",
+        "MINS": "mins",
+        "JUST_NOW": "just now",
+        "HOUR": "hour",
+        "HOURS": "hours",
+        "DAY": "day",
+        "DAYS": "days",
+        "MONTH": "month",
+        "MONTHS": "months",
+        "YEAR": "year",
+        "YEARS": "years",
+        "SECOND": "second",
+        "SECONDS": "seconds"
+    },
+    "PUBLIC_MAIN": {
+        "CREATE_COURSE": "Create Course",
+        "SELECT_DIFFICULTY": "Select difficulty"
+    },
+    "AUTH": {
+        "WELCOME_BACK": "Welcome back",
+        "WELCOME": "Welcome to Stacktrials",
+        "INTRODUCTION": "Create an account to connect with like-minded individuals, explore well-curated courses, and learn smarter together.",
+        "AGREEMENT_START_PHRASE": "By continuing, you agree to our",
+        "TERMS": "Terms",
+        "PRIVACY": "Privacy Policy",
+        "HAVE_ACCOUNT": "Don't have an account?",
+        "ALREADY_HAVE_AN_ACCOUNT": "Already have an account?",
+        "REGISTER": "register",
+        "CONTINUE_WITH_GOOGLE": "Continue with Google",
+        "CONTINUE_WITH_GITHUB": "Continue with GitHub",
+        "OR": "or"
+    },
+    "AND": "and",
+    "GOOGLE_AUTH_MESSAGES": {
+        "ERRORS": {
+            "ERROR_LOGIN": "Oops an error occurred contact support team"
+        }
+    },
+    "NAVS": {
+        "DASHBOARD": "Dashboard",
+        "ENROLLED": "Enrolled",
+        "PROFILE": "Profile",
+        "CREATED": "Created",
+        "CREATE": "Create",
+        "LOGOUT": "Log out"
+    },
+    "EXCEPTIONS": {
+        "NO_CONTENT": "No Content",
+        "ERROR_OCCURRED": "An Error Occurred",
+        "NOT_FOUND": "Resource not found",
+        "ERROR_404": "Error 404",
+        "PLEASE_TRY_AGAIN": "An error occurred! please try again"
+    },
+    "LOADING": {
+        "LOADING": "Loading",
+        "LOAD_MORE": "Load More",
+        "PLEASE_WAIT": "Loading Please wait"
+    },
+    "COMMENTS_RATING": {
+        "HEADER_TEXT": "comments & ratings",
+        "REVIEWS_AND_RATING": "Reviews & Ratings",
+        "COMMUNITY_COMMENTS": "Community Comments",
+        "LOADING_REVIEWS": "Loading reviews",
+        "LOAD_MORE_REVIEWS": "Load more reviews",
+        "LOADING_COMMENTS": "Loading Comments",
+        "LOAD_MORE_COMMENT": "Load more comments"
+    },
+    "COURSE_DETAIL": {
+        "CREATED_BY": "created by",
+        "LAST_UPDATED": "Last updated",
+        "RATINGS": "ratings",
+        "ENROLLED": "enrolled",
+        "COMMUNITY_COMMENTS": "community comments",
+        "WHAT_YOU_WILL_LEARN": "What you'll  learn",
+        "COURSE_FEATURES": "Course Features",
+        "BEGINNER_FRIENDLY": "Beginner Friendly",
+        "FREE_ENROLLMENT": "Free enrollment",
+        "APPROXIMATELY": "Approximately {num} hours of content",
+        "CERTIFICATE": "Certificate on completion",
+        "COURSE_SECTIONS": "Course Sections",
+        "FULL_DESCRIPTION": "Full Description",
+        "BIO": "bio",
+        "ENROLL_NOW": "Enroll now",
+        "HEAD_TO_COURSE": "Go to course",
+        "LIFETIME_ACCESS": "Full lifetime access",
+        "SHARE_ON": "share on",
+        "REQUIREMENTS": "Requirements",
+        "SEE_ALL_REMAINING": "See all remaining"
+    },
+    "COMMENT": {
+        "COMMENT_CREATION_FAILED": "An error occurred! comment creation failed",
+        "SIGN_IN_TO_COMMENT": "Please sign in to comment",
+        "ADD_COMMENT": "Add a comment...",
+        "COMMENT": "Comment",
+        "REPLY": "Reply"
+    },
+    "CANCEL": "Cancel",
+    "POPUP": {
+        "NO_CANCEL": "No,  Cancel",
+        "YES_PROCEED": "Yes, Proceed"
+    },
+    "BACKEND_MESSAGES": {
+        "ACCOUNT_EXISTS": "Oops! an account with email already exists on our system",
+        "SIGN_IN_ERROR": "Sign in error!"
+    },
+    "CONTINUE": "Continue",
+    "REPLACE_ACCOUNT": {
+        "ACCOUNT_SWITCH": "Account Switch",
+        "WARNING": "You’re about to switch to a different {provider} account. This will replace your current connection. Do you want to continue?",
+        "SUCCESS": "Account replaced successfully"
+    },
+    "STORAGE": {
+        "SELECT_STORAGE": "Select Storage",
+        "SELECT_PLATFORM": "Select Platform"
+    },
+    "UPLOAD": {
+        "INVALID_LINK": "Invalid link for platform",
+        "UPLOAD": "Upload",
+        "ROOT": "root folder",
+        "CHOOSE_FILE": "Please choose a valid file",
+        "UPLOAD_FILE": "Upload File",
+        "SELECT": "Select file from {storage}",
+        "WARNING_TEXT": "Always select a publicly accessible file",
+        "SAFELY_CLICK_AWAY": " You can safely click or navigate away — your upload will continue in the background.",
+        "CANCEL_UPLOAD": "Cancel upload"
+    }
+}

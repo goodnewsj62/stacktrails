@@ -1,26 +1,44 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #fff; /* when ready use light-dark func*/
   --foreground: #171717;
+  --primary-color: #1e90ff;
+  --secondary-color: #a4bef3;
+  --neutral-black: #000000;
+  --base-color: #eee5e9;
+  --accent-color: #d44a70;
+
+  /* dark mode bg 030E19 */
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--primary-color);
+  --color-secondary: var(--secondary-color);
+  --color-neutral-black: var(--neutral-black);
+  --color-base: var(--base-color);
+  --color-accent: var(--accent-color);
+  --font-sans: var(--font-lexend), ui-sans-serif, system-ui, sans-serif,
+    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+  --font-display: var(--font-bebas);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
+@utility shadow-border {
+  /* 1px outline-like shadow; adjust color/alpha to taste */
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+
+  @variant hover {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.14);
+  }
+}
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-lexend);
 }

@@ -1,1 +1,78 @@
-{}
+{
+    "HERO": {
+        "MAIN": "Redefiniendo cómo aprendemos, juntos",
+        "SUB": "Una plataforma abierta donde las comunidades organizan recursos de estudio y aprenden de forma más inteligente con IA.",
+        "SEARCH": "¿Qué tema te interesa?",
+        "TAGS": "etiquetas"
+    },
+    "PUBLIC_HEADER": {
+        "REGISTER": "Registrarse",
+        "LOGIN": "Iniciar sesión",
+        "ABOUT": "Acerca de",
+        "EXPLORE": "Explorar",
+        "PAID_COURSES": "Cursos de pago",
+        "CREATE": "Crear"
+    },
+    "LANGUAGE_SELECT": {
+        "ENGLISH": "Inglés",
+        "GERMAN": "Alemán",
+        "SPANISH": "Español",
+        "FRENCH": "Francés",
+        "CHANGE_LANGUAGE": "Cambiar idioma"
+    },
+    "PUBLIC_FOOTER": {
+        "ABOUT": "Acerca de",
+        "BLOG": "Blog",
+        "CONTACT": "Contacto",
+        "SUPPORT": "Soporte",
+        "PRIVACY": "Privacidad",
+        "Terms": "Términos",
+        "FAQs": "Preguntas frecuentes",
+        "RIGHTS": "Todos los derechos reservados."
+    },
+    "HOME_SORT": {
+        "MOST_VIEWED": "Más vistos",
+        "TOP_RATED": "Mejor valorados",
+        "RECENTLY_ADDED": "Recientemente añadidos"
+    },
+    "DIFFICULTY_LEVEL": {
+        "BEGINNER": "Apto para principiantes",
+        "INTERMEDIATE": "Intermedio",
+        "ADVANCED": "Avanzado",
+        "EXPERT": "Experto"
+    },
+    "TIME_TEXT": {
+        "MIN": "min",
+        "MINS": "mins",
+        "JUST_NOW": "ahora mismo",
+        "HOUR": "hora",
+        "HOURS": "horas",
+        "DAY": "día",
+        "DAYS": "días",
+        "MONTH": "mes",
+        "MONTHS": "meses",
+        "YEAR": "año",
+        "YEARS": "años",
+        "SECOND": "segundo",
+        "SECONDS": "segundos"
+    },
+    "PUBLIC_MAIN": {
+        "CREATE_COURSE": "Crear curso",
+        "SELECT_DIFFICULTY": "Seleccionar nivel de dificultad"
+    },
+    "AUTH": {
+        "WELCOME_BACK": "Bienvenido de vuelta",
+        "WELCOME": "Bienvenido a Stacktrials",
+        "INTRODUCTION": "Crea una cuenta para conectar con personas afines, explorar cursos bien curados y aprender de forma más inteligente juntos.",
+        "AGREEMENT_START_PHRASE": "Al continuar, aceptas nuestros",
+        "TERMS": "Términos",
+        "PRIVACY": "Política de Privacidad",
+        "HAVE_ACCOUNT": "¿No tienes una cuenta?",
+        "ALREADY_HAVE_AN_ACCOUNT": "¿Ya tienes una cuenta?",
+        "REGISTER": "registrarse",
+        "CONTINUE_WITH_GOOGLE": "Continuar con Google",
+        "CONTINUE_WITH_GITHUB": "Continuar con GitHub",
+        "OR": "o"
+    },
+    "AND": "y"
+}

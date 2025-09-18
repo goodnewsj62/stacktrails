@@ -1,1 +1,143 @@
-{}
+{
+    "HERO": {
+        "MAIN": "Wir definieren Lernen neu — gemeinsam",
+        "SUB": "Eine offene Plattform, auf der Communities Lernressourcen organisieren und mithilfe von KI smarter lernen.",
+        "SEARCH": "Welches Thema interessiert dich?",
+        "TAGS": "Stichwörter"
+    },
+    "PUBLIC_HEADER": {
+        "REGISTER": "Registrieren",
+        "LOGIN": "Anmelden",
+        "ABOUT": "Über uns",
+        "EXPLORE": "Entdecken",
+        "PAID_COURSES": "Bezahlte Kurse",
+        "CREATE": "Erstellen"
+    },
+    "LANGUAGE_SELECT": {
+        "ENGLISH": "Englisch",
+        "GERMAN": "Deutsch",
+        "SPANISH": "Español",
+        "FRENCH": "Français",
+        "CHANGE_LANGUAGE": "Sprache ändern"
+    },
+    "PUBLIC_FOOTER": {
+        "ABOUT": "Über uns",
+        "BLOG": "Blog",
+        "CONTACT": "Kontakt",
+        "SUPPORT": "Support",
+        "PRIVACY": "Datenschutz",
+        "Terms": "Nutzungsbedingungen",
+        "FAQs": "FAQs",
+        "RIGHTS": "Alle Rechte vorbehalten."
+    },
+    "HOME_SORT": {
+        "MOST_VIEWED": "Meistgesehen",
+        "TOP_RATED": "Top bewertet",
+        "RECENTLY_ADDED": "Kürzlich hinzugefügt"
+    },
+    "DIFFICULTY_LEVEL": {
+        "BEGINNER": "Für Einsteiger geeignet",
+        "INTERMEDIATE": "Mittelstufe",
+        "ADVANCED": "Fortgeschritten",
+        "EXPERT": "Experte",
+        "ALL": "Alle"
+    },
+    "TIME_TEXT": {
+        "MIN": "min",
+        "MINS": "mins",
+        "JUST_NOW": "gerade eben",
+        "HOUR": "Stunde",
+        "HOURS": "Stunden",
+        "DAY": "Tag",
+        "DAYS": "Tage",
+        "MONTH": "Monat",
+        "MONTHS": "Monate",
+        "YEAR": "Jahr",
+        "YEARS": "Jahre",
+        "SECOND": "Sekunde",
+        "SECONDS": "Sekunden"
+    },
+    "PUBLIC_MAIN": {
+        "CREATE_COURSE": "Kurs erstellen",
+        "SELECT_DIFFICULTY": "Schwierigkeitsgrad auswählen"
+    },
+    "AUTH": {
+        "WELCOME_BACK": "Willkommen zurück",
+        "WELCOME": "Willkommen bei Stacktrials",
+        "INTRODUCTION": "Erstelle ein Konto, um dich mit Gleichgesinnten zu vernetzen, gut kuratierte Kurse zu entdecken und gemeinsam intelligenter zu lernen.",
+        "AGREEMENT_START_PHRASE": "Indem du fortfährst, stimmst du unseren",
+        "TERMS": "Nutzungsbedingungen",
+        "PRIVACY": "Datenschutzrichtlinien",
+        "HAVE_ACCOUNT": "Noch kein Konto?",
+        "ALREADY_HAVE_AN_ACCOUNT": "Bereits ein Konto?",
+        "REGISTER": "registrieren",
+        "CONTINUE_WITH_GOOGLE": "Mit Google fortfahren",
+        "CONTINUE_WITH_GITHUB": "Mit GitHub fortfahren",
+        "OR": "oder"
+    },
+    "AND": "und",
+    "GOOGLE_AUTH_MESSAGES": {
+        "ERRORS": {
+            "ERROR_LOGIN": "Ups, ein Fehler ist aufgetreten. Bitte kontaktiere das Support-Team."
+        }
+    },
+    "NAVS": {
+        "DASHBOARD": "Dashboard",
+        "ENROLLED": "Eingeschrieben",
+        "PROFILE": "Profil",
+        "CREATED": "Erstellt",
+        "CREATE": "Erstellen",
+        "LOGOUT": "Abmelden"
+    },
+    "EXCEPTIONS": {
+        "NO_CONTENT": "Kein Inhalt",
+        "ERROR_OCCURRED": "Ein Fehler ist aufgetreten",
+        "NOT_FOUND": "Ressource nicht gefunden",
+        "ERROR_404": "Fehler 404",
+        "PLEASE_TRY_AGAIN": "Ein Fehler ist aufgetreten! Bitte versuche es erneut"
+    },
+    "LOADING": {
+        "LOADING": "Lädt",
+        "LOAD_MORE": "Mehr laden",
+        "PLEASE_WAIT": "Lädt, bitte warten"
+    },
+    "COMMENTS_RATING": {
+        "HEADER_TEXT": "Kommentare & Bewertungen",
+        "REVIEWS_AND_RATING": "Bewertungen & Rezensionen",
+        "COMMUNITY_COMMENTS": "Community-Kommentare",
+        "LOADING_REVIEWS": "Bewertungen werden geladen",
+        "LOAD_MORE_REVIEWS": "Mehr Bewertungen laden",
+        "LOADING_COMMENTS": "Kommentare werden geladen",
+        "LOAD_MORE_COMMENT": "Mehr Kommentare laden"
+    },
+    "COURSE_DETAIL": {
+        "CREATED_BY": "Erstellt von",
+        "LAST_UPDATED": "Zuletzt aktualisiert",
+        "RATINGS": "Bewertungen",
+        "ENROLLED": "Eingeschrieben",
+        "COMMUNITY_COMMENTS": "Community-Kommentare",
+        "WHAT_YOU_WILL_LEARN": "Was du lernen wirst",
+        "COURSE_FEATURES": "Kursmerkmale",
+        "BEGINNER_FRIENDLY": "Für Anfänger geeignet",
+        "FREE_ENROLLMENT": "Kostenlose Einschreibung",
+        "APPROXIMATELY": "Ungefähr {num} Stunden Inhalt",
+        "CERTIFICATE": "Zertifikat nach Abschluss",
+        "COURSE_SECTIONS": "Kursabschnitte",
+        "FULL_DESCRIPTION": "Vollständige Beschreibung",
+        "BIO": "Biografie",
+        "ENROLL_NOW": "Jetzt einschreiben",
+        "HEAD_TO_COURSE": "Zum Kurs",
+        "LIFETIME_ACCESS": "Lebenslanger Vollzugang",
+        "SHARE_ON": "Teilen auf",
+        "REQUIREMENTS": "Voraussetzungen",
+        "SEE_ALL_REMAINING": "Alle verbleibenden anzeigen"
+    },
+    "COMMENT": {
+        "COMMENT_CREATION_FAILED": "Ein Fehler ist aufgetreten! Kommentar konnte nicht erstellt werden",
+        "SIGN_IN_TO_COMMENT": "Bitte melde dich an, um zu kommentieren",
+        "ADD_COMMENT": "Einen Kommentar hinzufügen...",
+        "COMMENT": "Kommentar",
+        "REPLY": "Antworten"
+    },
+    "CANCEL": "Abbrechen"
+}

@@ -1,25 +1,45 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const backendURL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8082";
+const IsDEV = backendURL.startsWith("http://localhost");
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  // async redirects() {
-  //   return [
-  //     {
-  //       source:
-  //         "/((?!(?:api|_next|static)(?:/|$)|favicon\\.ico$|robots\\.txt$|sitemap\\.xml$|.*\\.(?:js|css|map|json|txt|xml|png|jpg|jpeg|gif|svg|ico|webp|avif|mp3|mp4|wasm|webmanifest|woff2|woff|ttf|eot)$).*)",
-  //       // only apply when the request expects an HTML document
-  //       has: [
-  //         {
-  //           type: "header",
-  //           key: "accept",
-  //           value: "text/html",
-  //         },
-  //       ],
-  //       destination: "/en",
-  //       permanent: true,
-  //     },
-  //   ];
-  // },
+  experimental: {
+    ppr: "incremental",
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://localhost:8082/:path*", // backend
+      },
+    ];
+  },
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: IsDEV ? "http" : "https",
+        hostname: new URL(backendURL).hostname, // ✅ only your backend
+      },
+      {
+        protocol: "https",
+        hostname: "drive.google.com", // ✅ only your backend
+      },
+    ],
+  },
+
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.lottie$/,
+      type: "asset/resource", // tells Next.js to emit the file and return a URL
+    });
+
+    return config;
+  },
 };
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin();
+export default withNextIntl(nextConfig);
