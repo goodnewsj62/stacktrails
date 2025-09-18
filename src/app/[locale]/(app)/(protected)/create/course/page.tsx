@@ -96,10 +96,7 @@ export default function Page() {
         {param && (
           <UploadFileModal
             accept={["drop_box", "google_drive"]}
-            callback={(url) => {
-              console.log("+++++++++++++++++++++++", url);
-              setValue("image", url);
-            }}
+            callback={(url) => setValue("image", url)}
             mimeType="image"
             onClose={() => setParam(null)}
           />
@@ -123,7 +120,7 @@ export default function Page() {
           <div className="xl:basis-[30%]">
             {
               <button
-                className="w-full  h-[300px] bg-gray-50 border-dashed  border-2 border-secondary"
+                className="w-full  h-[210px] bg-gray-50 border-dashed  border-2 border-secondary"
                 type="button"
                 onClick={() => setParam()}
               >
