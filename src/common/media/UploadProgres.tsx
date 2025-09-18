@@ -1,12 +1,16 @@
 "use client";
 
 import { useUploads } from "@/hooks/useUploads"; // adjust import path
+import { Tooltip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
+import { useTranslations } from "next-intl";
 import React, { useState } from "react";
+import { IoClose } from "react-icons/io5";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 
 const UploadProgress: React.FC = () => {
+  const t = useTranslations();
   const { jobs } = useUploads(); // now we get jobs directly from zustand
   const [expanded, setExpanded] = useState(false);
 
@@ -29,8 +33,22 @@ const UploadProgress: React.FC = () => {
 
             {/* File info + progress bar */}
             <div className="flex-1">
-              <div className="text-sm text-gray-800 truncate mb-1">
-                {job.name || job.id}
+              <div className="text-sm text-gray-800  mb-1 flex  items-center gap-2 ">
+                <div className="grow truncate">
+                  {(job.name || job.id).length > 20
+                    ? (job.name || job.id).substring(0, 20) + "..."
+                    : job.name || job.id}
+                </div>
+
+                <Tooltip title={t("UPLOAD.CANCEL_UPLOAD")}>
+                  <button
+                    type="button"
+                    className="p-1 rounded-full cursor-pointer  bg-red-400"
+                    onClick={job.cancel}
+                  >
+                    <IoClose className="w-6 h-6" />
+                  </button>
+                </Tooltip>
               </div>
               <LinearProgress
                 variant="determinate"

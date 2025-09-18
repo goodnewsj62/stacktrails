@@ -166,6 +166,7 @@
         "UPLOAD_FILE": "Upload File",
         "SELECT": "Select file from {storage}",
         "WARNING_TEXT": "Always select a publicly accessible file",
-        "SAFELY_CLICK_AWAY": " You can safely click or navigate away — your upload will continue in the background."
+        "SAFELY_CLICK_AWAY": " You can safely click or navigate away — your upload will continue in the background.",
+        "CANCEL_UPLOAD": "Cancel upload"
     }
 }

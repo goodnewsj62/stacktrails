@@ -7,10 +7,13 @@ import StringArrayInput from "@/common/forms/StringArrayInput";
 // create new course
 
 import AppMdEditor from "@/common/markdown/AppMdEditor";
-import UploadFile from "@/common/media/UploadFile";
+import UploadFileModal from "@/common/media/UploadFileModal";
+import { useQueryParam } from "@/hooks/useQueryParams";
+import { getImageProxyUrl } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
+import { BsFillHandIndexFill } from "react-icons/bs";
 import z from "zod";
 
 // {
@@ -62,6 +65,7 @@ const schema = z.object({
 });
 
 export default function Page() {
+  const [param, setParam] = useQueryParam("picker");
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
       learning_objectives: [],
@@ -89,13 +93,17 @@ export default function Page() {
         provider={DocumentPlatform.GOOGLE_DRIVE}
       /> */}
       <form className="py-16 grid gap-y-8">
-        <UploadFile
-          accept={["drop_box", "google_drive"]}
-          callback={(url) => {
-            console.log("+++++++++++++++++++++++", url);
-          }}
-          mimeType="image"
-        />
+        {param && (
+          <UploadFileModal
+            accept={["drop_box", "google_drive"]}
+            callback={(url) => {
+              console.log("+++++++++++++++++++++++", url);
+              setValue("image", url);
+            }}
+            mimeType="image"
+            onClose={() => setParam(null)}
+          />
+        )}
         <section className="flex gap-8 flex-col xl:flex-row">
           <div className="xl:grow">
             <AppTitleInput
@@ -111,8 +119,33 @@ export default function Page() {
               message={errors.short_description?.message ?? ""}
             />
           </div>
-          <div className="xl:basis-[30%]"></div>
+
+          <div className="xl:basis-[30%]">
+            {
+              <button
+                className="w-full  h-[300px] bg-gray-50 border-dashed  border-2 border-secondary"
+                type="button"
+                onClick={() => setParam()}
+              >
+                {watch("image") ? (
+                  <img
+                    src={getImageProxyUrl(watch("image"))}
+                    alt="thumbnail"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <>
+                    <span>pick thumbnail from storage</span>
+                    <div className="grid place-items-center py-1">
+                      <BsFillHandIndexFill className="w-5 h-5" />
+                    </div>
+                  </>
+                )}
+              </button>
+            }
+          </div>
         </section>
+
         <section className="">
           <h2 className="text-xl font-bold pb-4">Full Course Description</h2>
           <div className="h-96  px-3 border border-base  overflow-y-auto rounded-md">

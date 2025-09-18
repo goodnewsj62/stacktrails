@@ -28,6 +28,7 @@ const GenericUpload: React.FC<GenericUploadProps> = ({
   const uploadToDrive = useUploadToDrive();
   const uploadToDropBox = useUploadToDropbox();
   const { jobs } = useUploads();
+  const [isLoading, setIsLoading] = useState(false);
 
   // TODO: !Important this should me jobId instead.  should find a way of tracking jobId
   const currentJob = useMemo(
@@ -40,18 +41,25 @@ const GenericUpload: React.FC<GenericUploadProps> = ({
 
   const changeHandler = () => {
     if (!file) return appToast.Error(t("UPLOAD.CHOOSE_FILE"));
+    setIsLoading(true);
 
     if (provider === "google_drive")
-      uploadToDrive({ files: [file] }).then((d) => {
-        onCompleted(d);
-        onClose();
-      });
+      uploadToDrive({ files: [file] })
+        .then((d) => {
+          onCompleted(d);
+          onClose();
+        })
+        .finally(() => setIsLoading(false));
     if (provider === "dropbox")
-      uploadToDropBox({ files: [file] }).then((d) => {
-        onCompleted(d);
-        onClose();
-      });
+      uploadToDropBox({ files: [file] })
+        .then((d) => {
+          onCompleted(d);
+          onClose();
+        })
+        .finally(() => setIsLoading(false));
   };
+
+  const showPanel = currentJob && isLoading;
 
   return (
     <Modal open onClose={onClose}>
@@ -83,30 +91,53 @@ const GenericUpload: React.FC<GenericUploadProps> = ({
           <FileUploadBox onChange={(file) => setFile(file)} />
         </div>
         <div className="py-2">
-          <Button className={""} fullWidth onClick={changeHandler}>
+          <Button
+            className={""}
+            fullWidth
+            onClick={changeHandler}
+            disabled={isLoading}
+          >
             {t("UPLOAD.UPLOAD")}
           </Button>
         </div>
-        {currentJob && (
-          <div className="mt-4">
-            <p className="text-xs text-gray-600 mb-1">
+
+        {showPanel && (
+          <div className="mt-4 text-center flex flex-col items-start">
+            <p className="text-xs text-gray-600 mb-1 self-center">
               {t("UPLOAD.SAFELY_CLICK_AWAY")}
             </p>
-            <div className="flex flex-col">
+
+            <Button
+              type="button"
+              color="error"
+              size="small"
+              className="!cursor-pointer !my-2 !capitalize !self-center "
+              onClick={() => {
+                currentJob?.cancel?.();
+                setIsLoading(false);
+              }}
+            >
+              {t("UPLOAD.CANCEL_UPLOAD")}
+            </Button>
+
+            <div className="flex flex-col justify-center">
               <span className="text-sm font-medium text-gray-700 mb-1">
                 {currentJob.progress}%
               </span>
-              <LinearProgress
-                variant="determinate"
-                value={currentJob.progress}
-                sx={{
-                  height: 6,
-                  borderRadius: 3,
-                  "& .MuiLinearProgress-bar": {
+              <div className="w-full">
+                <LinearProgress
+                  variant="determinate"
+                  value={currentJob.progress}
+                  sx={{
+                    height: 6,
                     borderRadius: 3,
-                  },
-                }}
-              />
+                    "& .MuiLinearProgress-bar": {
+                      borderRadius: 3,
+                    },
+                    width: "100%",
+                  }}
+                />
+              </div>
             </div>
           </div>
         )}

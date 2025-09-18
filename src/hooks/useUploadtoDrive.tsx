@@ -173,8 +173,8 @@ async function makeFilePublic(fileId: string) {
   let accessToken = await getFreshAccessToken();
 
   try {
-    await fetch(
-      `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`,
+    const res = await fetch(
+      `https://www.googleapis.com/drive/v3/files/${fileId}/permissions?supportsAllDrives=true`,
       {
         method: "POST",
         headers: {
@@ -187,16 +187,28 @@ async function makeFilePublic(fileId: string) {
         }),
       }
     );
-    console.log(`Made ${fileId} Public: `);
+
+    if (!res.ok) {
+      console.error(
+        "Failed to make file public:",
+        res.status,
+        await res.text()
+      );
+      throw new Error("Permission creation failed");
+    }
+
+    console.log(`Made ${fileId} Public ✅`);
+
+    return `https://drive.google.com/uc?export=view&id=${fileId}`;
   } catch (err: any) {
     if (err.message === "TOKEN_EXPIRED") {
       accessToken = await getFreshAccessToken();
+      return makeFilePublic(fileId); // retry once
     } else {
-      console.log(`Failed to make ${fileId} Public: `, err);
+      console.error(`Failed to make ${fileId} Public ❌`, err);
+      throw err;
     }
   }
-
-  return `https://drive.google.com/file/d/${fileId}/view`;
 }
 
 async function getFreshAccessToken() {

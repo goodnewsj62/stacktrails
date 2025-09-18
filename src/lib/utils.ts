@@ -26,19 +26,21 @@ export function googleOneTapForm(cred: string) {
 }
 
 export function getImageProxyUrl(url?: string, defaultImg = undefined) {
+  console.log("herrrrrrrrrrrrrrrrrre");
   if (!url) {
     return defaultImg || "/";
   }
 
   if (
     url.startsWith(
-      process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8020"
+      process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8082"
     )
   )
     return url;
 
+  console.log("fetching image...");
   return `${
-    process.env.NEXT_PUBLIC_BACKEND_URL
+    process.env.NEXT_PUBLIC_API_URL
   }/media/proxy?url=${encodeURIComponent(url)}`;
 }
 
@@ -69,4 +71,53 @@ export function timeAgo(isoDate: string): string {
 export function getLanguageName(code: string, displayLocale = "en"): string {
   const dn = new Intl.DisplayNames([displayLocale], { type: "language" });
   return dn.of(code) ?? code;
+}
+
+function toDropboxDirect(url: string) {
+  try {
+    const u = new URL(url);
+    if (!u.hostname.includes("dropbox.com")) return url;
+
+    // If there's a dl param, set it to 1
+    if (u.searchParams.has("dl")) {
+      u.searchParams.set("dl", "1");
+      return u.toString();
+    }
+
+    // Otherwise set raw=1 (works for /s/ and /scl/fi/ variants)
+    u.searchParams.set("raw", "1");
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
+// helpers/drive.ts
+export function toGoogleDriveDirect(url: string) {
+  try {
+    // capture /d/<id>/ style
+    const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (m && m[1]) return `https://drive.google.com/uc?export=view&id=${m[1]}`;
+
+    // capture ?id= style
+    const u = new URL(url);
+    const id = u.searchParams.get("id");
+    if (id) return `https://drive.google.com/uc?export=view&id=${id}`;
+
+    return url;
+  } catch {
+    return url;
+  }
+}
+
+export function getThumbnailViewUrl(rawUrl: string) {
+  const url = new URL(rawUrl);
+
+  if (url.hostname.includes("dropbox.com")) {
+    return toDropboxDirect(rawUrl);
+  } else if (url.hostname.includes("drive.google.com")) {
+    return toGoogleDriveDirect(rawUrl);
+  }
+
+  return rawUrl;
 }
