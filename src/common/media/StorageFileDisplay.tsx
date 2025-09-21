@@ -107,7 +107,7 @@ const StorageFileDisplay: React.FC<StorageFileDisplayProps> = ({
             <button
               type={"button"}
               className="bg-red-400 rounded-full p-1"
-              onClick={close}
+              onClick={onClose}
             >
               <IoClose />
             </button>
@@ -138,6 +138,7 @@ const ICON_MAP = {
 };
 
 function ListFiles() {
+  const t = useTranslations();
   const [folderHistory, setFolderHistory] = useState<string[]>([]);
   const {
     validStorages,
@@ -148,7 +149,6 @@ function ListFiles() {
     setViewStyle,
     mimeType: _mimeType,
   } = useContext(StorageContext);
-
   const currentFolder = folderHistory[folderHistory.length - 1] ?? "";
 
   const mimeType = _mimeType === "folder" ? "document" : _mimeType;
@@ -213,6 +213,12 @@ function ListFiles() {
           )}
         </div>
       </div>
+
+      {_mimeType !== "folder" && (
+        <div className="text-xs text-center py-1  text-orange-500">
+          {t("UPLOAD.PUBLIC_WARNING")}
+        </div>
+      )}
       <LoadingComponent
         loading={status === "pending"}
         data={data}

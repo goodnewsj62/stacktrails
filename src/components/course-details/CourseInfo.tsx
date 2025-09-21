@@ -27,22 +27,23 @@ type CourseInfoProps = {
 // ],
 
 const level = {
-  beginner: "Beginner Friendly",
-  intermediate: "Intermediate",
-  advanced: "Advanced ",
-  expert: "Expert",
+  beginner: "DIFFICULTY_LEVEL.BEGINNER",
+  intermediate: "DIFFICULTY_LEVEL.INTERMEDIATE",
+  advanced: "DIFFICULTY_LEVEL.ADVANCED",
+  expert: "DIFFICULTY_LEVEL.EXPERT",
+  all: "DIFFICULTY_LEVEL.ALL",
 };
 
 const CourseInfo: React.FC<CourseInfoProps> = ({ data, t }) => {
   const features = [
     {
-      value: level[data.difficulty_level as keyof typeof level],
+      value: t(level[data.difficulty_level as keyof typeof level]),
       icon: <HiMiniSquare3Stack3D />,
     },
     {
       value:
         data.enrollment_type === "open"
-          ? t("COURSE_DETAIL.BEGINNER_FRIENDLY")
+          ? t("COURSE_DETAIL.OPEN")
           : data.enrollment_type,
       icon: <BsBackpack2Fill />,
     },

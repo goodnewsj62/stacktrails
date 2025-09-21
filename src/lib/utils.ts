@@ -4,7 +4,7 @@ import { formatDistanceToNow } from "date-fns";
 const baseURL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8020/api/v1";
 
-export function googleOneTapForm(cred: string) {
+export function googleOneTapForm(cred: string, next: string) {
   const form = document.createElement("form");
   form.method = "POST";
   form.action = `${baseURL}${BackendRoutes.GOOGLE_ONE_TAP}`;
@@ -16,8 +16,8 @@ export function googleOneTapForm(cred: string) {
 
   const redirectInput = document.createElement("input");
   redirectInput.type = "hidden";
-  redirectInput.name = "should_redirect";
-  redirectInput.value = "true";
+  redirectInput.name = "redirect";
+  redirectInput.value = next;
 
   form.appendChild(credentialInput);
   form.appendChild(redirectInput);
@@ -26,7 +26,6 @@ export function googleOneTapForm(cred: string) {
 }
 
 export function getImageProxyUrl(url?: string, defaultImg = undefined) {
-  console.log("herrrrrrrrrrrrrrrrrre");
   if (!url) {
     return defaultImg || "/";
   }
@@ -38,7 +37,6 @@ export function getImageProxyUrl(url?: string, defaultImg = undefined) {
   )
     return url;
 
-  console.log("fetching image...");
   return `${
     process.env.NEXT_PUBLIC_API_URL
   }/media/proxy?url=${encodeURIComponent(url)}`;

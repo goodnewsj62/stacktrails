@@ -24,10 +24,6 @@ const nextConfig: NextConfig = {
         protocol: IsDEV ? "http" : "https",
         hostname: new URL(backendURL).hostname, // ✅ only your backend
       },
-      {
-        protocol: "https",
-        hostname: "drive.google.com", // ✅ only your backend
-      },
     ],
   },
 

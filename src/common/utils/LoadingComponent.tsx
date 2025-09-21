@@ -1,8 +1,10 @@
 "use client";
 
+import Loading from "@/app/[locale]/(public)/loading";
 import { ReactNode } from "react";
 import CenterOnLgScreen from "./CenterOnLgScreen";
 import Empty from "./Empty";
+import ErrorDisplay from "./Error";
 
 type LoadingComponentProps<T> = {
   loading: boolean;
@@ -25,12 +27,24 @@ const LoadingComponent = <T,>({
   errorComponent,
   children,
 }: LoadingComponentProps<T>) => {
-  if (loading) {
-    return loadingComponent ?? <CenterOnLgScreen>Loading...</CenterOnLgScreen>;
+  if (error) {
+    return (
+      errorComponent ?? (
+        <CenterOnLgScreen>
+          <ErrorDisplay />
+        </CenterOnLgScreen>
+      )
+    );
   }
 
-  if (error) {
-    return errorComponent ?? <CenterOnLgScreen>Error</CenterOnLgScreen>;
+  if (loading) {
+    return (
+      loadingComponent ?? (
+        <CenterOnLgScreen>
+          <Loading />
+        </CenterOnLgScreen>
+      )
+    );
   }
 
   if (empty) {

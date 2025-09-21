@@ -22,11 +22,12 @@ const useUploadToDrive = () => {
     concurrency?: number;
   }) => {
     const res = await batchResumableUpload(ctx, files, concurrency);
-    const urls = await Promise.all(res.map((d) => makeFilePublic(d.fileId)));
+    const urls = await Promise.all(
+      res.map((d) => makeGoogleFilePublic(d.fileId))
+    );
 
     // TODO:  construct url
 
-    console.log("+++++++++++++++++++++++++++++++++++++++", res);
     return urls;
   };
 };
@@ -169,7 +170,7 @@ async function batchResumableUpload(
   return results;
 }
 
-async function makeFilePublic(fileId: string) {
+export async function makeGoogleFilePublic(fileId: string) {
   let accessToken = await getFreshAccessToken();
 
   try {
@@ -203,7 +204,7 @@ async function makeFilePublic(fileId: string) {
   } catch (err: any) {
     if (err.message === "TOKEN_EXPIRED") {
       accessToken = await getFreshAccessToken();
-      return makeFilePublic(fileId); // retry once
+      return makeGoogleFilePublic(fileId); // retry once
     } else {
       console.error(`Failed to make ${fileId} Public ❌`, err);
       throw err;

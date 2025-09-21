@@ -30,9 +30,25 @@ export class AppRoutes {
   static getCreatedCourseRoute(slug: string) {
     return `/create/course/${slug}`;
   }
+  static CREATE_SECTION(slug: string) {
+    return `/create/course/${slug}/sections/create`;
+  }
 
   static getPreviewCreatedCourseRoute(slug: string) {
     return `/create/course/${slug}/preview`;
+  }
+  static CREATED_COURSE_SECTION(slug: string) {
+    return `/create/course/${slug}/sections`;
+  }
+  static CREATED_COURSE_EDIT(slug: string) {
+    return `/create/course/${slug}/edit`;
+  }
+
+  static EDIT_SECTION(section_id: string) {
+    return `/create/section/${section_id}/edit`;
+  }
+  static SECTION_MODULES(section_id: string) {
+    return `/create/section/${section_id}`;
   }
   static getEnrolledCourseRoute(slug: string) {
     return `/course/enrolled/${slug}`;
@@ -60,6 +76,8 @@ export class BackendRoutes {
   static COURSE_DETAIL = (slug: string) => `/courses/${slug}`;
   static COURSE_CONTENT_MINIMAL = (slug: string) =>
     `/courses/${slug}/content/minimal`;
+  static COURSE_CONTENT_FULL = (slug: string) =>
+    `/courses/${slug}/content/full`;
   static COURSE_COMMENTS = (course_id: string) =>
     `/courses/${course_id}/comments`;
   static COMMENT_REPLIES = (comment_id: string) =>
@@ -67,12 +85,16 @@ export class BackendRoutes {
   static LIKE_COMMENT = (comment_id: string) =>
     `/courses/${comment_id}/like-unlike`;
   static COURSE_REVIEW = (course_id: string) => `/courses/${course_id}/ratings`;
+  static CREATE_SECTION = `/courses/section`;
+  static CREATE_MODULE = `/courses/module`;
 
   static CREATE_RATING = "/courses/ratings";
   static ENROLL = "/courses/enroll";
   static CREATE_COMMENT = "/courses/comments";
   static GET_COURSE_ENROLLMENT = (course_id: string) =>
     `/courses/${course_id}/enroll`;
+  static GET_SECTION = (section_id: string) => `/courses/section/${section_id}`;
+  static GET_MODULE = (module_id: string) => `/courses/module/${module_id}`;
 
   static LIST_ACTIVE_PROVIDERS = "/list-active-providers";
   static LIST_ACTIVE_STORAGE_PROVIDERS = "/list-active-storage-providers";

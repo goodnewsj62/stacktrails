@@ -119,6 +119,7 @@
         "WHAT_YOU_WILL_LEARN": "What you'll  learn",
         "COURSE_FEATURES": "Course Features",
         "BEGINNER_FRIENDLY": "Beginner Friendly",
+        "OPEN": "Open",
         "FREE_ENROLLMENT": "Free enrollment",
         "APPROXIMATELY": "Approximately {num} hours of content",
         "CERTIFICATE": "Certificate on completion",
@@ -167,6 +168,67 @@
         "SELECT": "Select file from {storage}",
         "WARNING_TEXT": "Always select a publicly accessible file",
         "SAFELY_CLICK_AWAY": " You can safely click or navigate away — your upload will continue in the background.",
-        "CANCEL_UPLOAD": "Cancel upload"
+        "CANCEL_UPLOAD": "Cancel upload",
+        "PUBLIC_WARNING": "Unshared (private) files you select will be made public automatically",
+        "YOUTUBE_UPLOAD": "Upload to youtube"
+    },
+    "CREATE_COURSE": {
+        "TITLE": "Course title",
+        "SHORT_DESCRIPTION": "Short Description",
+        "DESCRIPTION": "Full course description",
+        "OBJECTIVES": "Learning objectives",
+        "PREREQUISITES": "Prerequisites",
+        "LEVEL": "Difficulty Level",
+        "STATUS": "Status",
+        "ENROLLMENT_TYPE": "Enrollment type",
+        "VISIBILITY": "Course Visibility",
+        "ESTIMATE_DURATION": "Estimated duration '(hours)'",
+        "LANGUAGE": "language",
+        "CREATED": "Course created successfully!"
+    },
+    "CREATED_COURSE": {
+        "INSTRUCTION": "A course must contain at least one section and one module before it can be published",
+        "MANAGE": "View/Manage Course Sections",
+        "PUBLISH": "Publish",
+        "ARCHIVE": "Archive",
+        "EDIT": "Edit Course",
+        "PREVIEW": "Preview Course",
+        "ERROR": "A Error occurred. We could not {publish} course",
+        "SUCCESS": "Course has been {published} successfully"
+    },
+    "SECTIONS": {
+        "CREATE": "Add section",
+        "EMPTY": "Let's create course first section",
+        "COURSE_DETAILS": "Course details",
+        "SECTIONS": "Sections",
+        "TITLE": "Section title",
+        "DESCRIPTION": "Description",
+        "OBJECTIVES": "Learning objectives",
+        "ORDER": "Order",
+        "ESTIMATE_DURATION": "Estimated duration '(minute)'",
+        "OPTIONAL": "Skippable",
+        "PROGRESSION_TYPE": "Progression type",
+        "SEQUENTIAL": "sequential",
+        "FLEXIBLE": "flexible",
+        "COMPLETION_CRITERIA": "Completion criteria",
+        "EDIT": "Edit"
+    },
+    "MODULE": {
+        "CREATE": "Create Module",
+        "EMPTY": "Let's create a module",
+        "MODULES": "Modules",
+        "TITLE": "Module title",
+        "DESCRIPTION": "Description",
+        "PREREQUISITES": "Prerequisites",
+        "REQUIRED": "Required",
+        "MODULE_TYPE": "module type",
+        "GOOGLE_WEBSITE": "https://google.com",
+        "MODULE_TYPES": {
+            "VIDEO": "video",
+            "DOCUMENT": "document",
+            "QUIZ": "quiz",
+            "DISCUSSION": "discussion",
+            "EXTERNAL_LINK": "external_link"
+        }
     }
 }

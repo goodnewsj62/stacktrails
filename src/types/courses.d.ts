@@ -34,36 +34,7 @@ type Author = {
   profile: Profile;
 };
 
-type Profile = {
-  display_name: string;
-  bio: string;
-  avatar: string;
-};
-
-type CourseContentMin = {
-  title: string;
-  image: string;
-  description: string;
-  short_description: string;
-  learning_objectives: string[];
-  prerequisites: string[];
-  difficulty_level: string;
-  estimated_duration_hours: number;
-  language: string;
-  status: string;
-  enrollment_type: string;
-  visibility: string;
-  certification_enabled: boolean;
-  id: string;
-  slug: string;
-  account_id: string;
-  author: Author;
-  average_rating: number;
-  total_rating: number;
-  stars: number;
-  enrollment_count: number;
-  comment_count: number;
-  updated_at: string;
+type CourseContentMin = Course & {
   sections: Section[];
 };
 interface Section {
@@ -102,4 +73,116 @@ type EnrollmentResp = {
   id: string;
   account_id: string;
   course_id: string;
+};
+
+type CourseCreate = {
+  title: string;
+  image: string;
+  description: string;
+  short_description: string;
+  learning_objectives?: string[];
+  prerequisites?: string[];
+  difficulty_level: string;
+  estimated_duration_hours: number;
+  language?: string;
+  status: string;
+  enrollment_type: string;
+  visibility: string;
+  certification_enabled: boolean;
+  tags?: any[];
+};
+
+type FullCourse = Course & {
+  sections: FullSection[];
+};
+type FullSection = Section & {
+  modules: FullModule[];
+  course: Course;
+};
+type FullModule = Module & {
+  video_content: VideoContent;
+  document_content: DocumentContent;
+  quiz_content: QuizContent;
+  attachments: Attachment[];
+};
+type Attachment = {
+  attachment_type: string;
+  file_url: string;
+  external_file_id: string;
+  embed_url: string;
+  title: string;
+  description: string;
+  document_type: string;
+  file_type: string;
+  id: string;
+  module_id: string;
+};
+type QuizContent = {
+  quiz_settings: Contentdata;
+  passing_score: number;
+  show_results: string;
+  randomize_questions: boolean;
+  created_at: string;
+  updated_at: string;
+  id: string;
+  module_id: string;
+};
+type DocumentContent = {
+  platform: string;
+  external_file_id: string;
+  file_url: string;
+  embed_url: string;
+  file_name: string;
+  file_type: string;
+  file_size_bytes: number;
+  viewer_settings: Contentdata;
+  id: string;
+  module_id: string;
+};
+type VideoContent = {
+  platform: string;
+  external_video_id: string;
+  video_url: string;
+  thumbnail_url: string;
+  duration_seconds: number;
+  title: string;
+  description: string;
+  embed_settings: Contentdata;
+  id: string;
+  module_id: string;
+};
+
+type Profile = {
+  display_name: string;
+  bio: string;
+  avatar: string;
+  created_at: string;
+  updated_at: string;
+  id: string;
+  account_id: string;
+};
+
+type CreateSection = {
+  title: string;
+  description?: string;
+  learning_objectives?: string[];
+  order_index: number;
+  estimated_duration_minutes?: number;
+  is_optional?: boolean;
+  progression_type: string;
+  completion_criteria?: string[];
+  course_id: string;
+};
+
+type CreateMoule = {
+  title: string;
+  description?: string;
+  content_data?: Contentdata;
+  order_index: number;
+  estimated_duration_minutes?: number;
+  is_required?: boolean;
+  prerequisites?: string[];
+  settings?: Contentdata;
+  section_id: string;
+  module_type: string;
 };
