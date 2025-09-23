@@ -7,14 +7,30 @@ import AppMdEditor from "@/common/markdown/AppMdEditor";
 import UploadFile from "@/common/media/UploadFile";
 import AppLinkBreadCrumbs from "@/common/utils/AppBreadCrumbs";
 import LoadingComponent from "@/common/utils/LoadingComponent";
-import { AppRoutes } from "@/routes";
+import { AppRoutes, BackendRoutes } from "@/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Checkbox, TextField } from "@mui/material";
 import { useTranslations } from "next-intl";
-import { use, useCallback } from "react";
+import { createContext, use, useCallback, useContext, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+
+import { AvailableSources } from "@/common/media/media.constants";
+import VidPlayer from "@/common/video/VidPlayer";
+import appAxios from "@/lib/axiosClient";
+import { extractExternalId } from "@/lib/utils";
+import { useMutation } from "@tanstack/react-query";
+import { IoTrashBin } from "react-icons/io5";
 import z from "zod";
 import useCourseSectionQuery from "../useFetchSection";
+
+type contentType =
+  | ({ type: "video" } & Omit<CreateVideoContent, "module_id">)
+  | ({ type: "document" } & Omit<CreateDocumentContent, "module_id">);
+
+const ContentProvider = createContext<{
+  setContentData: (value: contentType) => void;
+  contentData?: contentType;
+}>({} as any);
 
 const moduleType = [
   "video",
@@ -48,6 +64,8 @@ export default function Page({
     },
     resolver: zodResolver(schema),
   });
+
+  const [contentData, setContentData] = useState<contentType>();
 
   const t = useTranslations();
   const { section_id } = use(params);
@@ -103,144 +121,244 @@ export default function Page({
           />
 
           <div></div>
-          <FormProvider {...form}>
-            <form className="space-y-8">
-              <div className="w-full flex flex-col gap-4 lg:flex-row">
-                <AppTextField
-                  control={control}
-                  name="title"
-                  fullWidth
-                  placeholder={t("MODULE.TITLE")}
-                />
-                <AppTextField
-                  control={control}
-                  name="description"
-                  fullWidth
-                  placeholder={t("MODULE.DESCRIPTION")}
-                />
-              </div>
-
-              <AppSelectField
-                control={control}
-                name="order_index"
-                id="order_index"
-                label={
-                  <div className="text-[#111213]">{t("SECTIONS.ORDER")}</div>
-                }
-                options={Array.from(getAvailableIndex(cleanedData.modules)).map(
-                  ([value, _]) => ({
-                    text: value.toString(),
-                    value: value,
-                  })
-                )}
-                message={errors.order_index?.message}
-              />
-
-              <div>
-                <h2 className="text-xl font-bold py-3">
-                  {t("MODULE.PREREQUISITES")}
-                </h2>
-                <StringArrayInput name="prerequisites" />
-              </div>
-
-              <AppTextField
-                fullWidth
-                control={control}
-                name="estimated_duration_minutes"
-                placeholder={t("SECTIONS.ESTIMATE_DURATION")}
-                message={errors.estimated_duration_minutes?.message}
-                onChange={(e) => {
-                  const value =
-                    e.target.value === "" ? 0 : Number(e.target.value);
-
-                  if (!Number.isNaN(value))
-                    setValue("estimated_duration_minutes", value, {
-                      shouldValidate: true,
-                    });
-                }}
-              />
-
-              <div className="flex items-center gap-4">
-                <h5>{t("MODULE.REQUIRED")}</h5>
-                <div>
-                  <Checkbox {...register("is_required")} />
+          <ContentProvider value={{ setContentData, contentData }}>
+            <FormProvider {...form}>
+              <form className="space-y-8">
+                <div className="w-full flex flex-col gap-4 lg:flex-row">
+                  <AppTextField
+                    control={control}
+                    name="title"
+                    fullWidth
+                    placeholder={t("MODULE.TITLE")}
+                  />
+                  <AppTextField
+                    control={control}
+                    name="description"
+                    fullWidth
+                    placeholder={t("MODULE.DESCRIPTION")}
+                  />
                 </div>
-              </div>
 
-              <div>
                 <AppSelectField
                   control={control}
-                  name="module_type"
-                  id="module_type"
+                  name="order_index"
+                  id="order_index"
                   label={
-                    <div className="text-[#111213]">
-                      {t("MODULE.MODULE_TYPE")}
-                    </div>
+                    <div className="text-[#111213]">{t("SECTIONS.ORDER")}</div>
                   }
-                  options={[
-                    t("MODULE.MODULE_TYPES.VIDEO"),
-                    t("MODULE.MODULE_TYPES.DOCUMENT"),
-                    t("MODULE.MODULE_TYPES.DISCUSSION"),
-                    t("MODULE.MODULE_TYPES.EXTERNAL_LINK"),
-                  ].map((value) => ({
+                  options={Array.from(
+                    getAvailableIndex(cleanedData.modules)
+                  ).map(([value, _]) => ({
                     text: value.toString(),
                     value: value,
                   }))}
-                  message={errors.prerequisites?.message}
+                  message={errors.order_index?.message}
                 />
-              </div>
 
-              <div>
-                <div
-                  className={`hidden ${
-                    watch("module_type") === "video" && "!block"
-                  }`}
-                >
-                  <VideoUpload />
+                <div>
+                  <h2 className="text-xl font-bold py-3">
+                    {t("MODULE.PREREQUISITES")}
+                  </h2>
+                  <StringArrayInput name="prerequisites" />
                 </div>
-                <div
-                  className={`hidden ${
-                    watch("module_type") === "document" && "!block"
-                  }`}
-                >
-                  <DocumentUpload />
-                </div>
-                <div
-                  className={`hidden ${
-                    watch("module_type") === "discussion" && "!block"
-                  }`}
-                >
-                  <DiscussSection />
-                </div>
-                <div
-                  className={`hidden ${
-                    watch("module_type") === "external_link" && "!block"
-                  }`}
-                >
-                  <ExternalLink />
-                </div>
-              </div>
 
-              <div>
-                <Button className="w-full lg:!w-auto">Submit</Button>
-              </div>
-            </form>
-          </FormProvider>
+                <AppTextField
+                  fullWidth
+                  control={control}
+                  name="estimated_duration_minutes"
+                  placeholder={t("SECTIONS.ESTIMATE_DURATION")}
+                  message={errors.estimated_duration_minutes?.message}
+                  onChange={(e) => {
+                    const value =
+                      e.target.value === "" ? 0 : Number(e.target.value);
+
+                    if (!Number.isNaN(value))
+                      setValue("estimated_duration_minutes", value, {
+                        shouldValidate: true,
+                      });
+                  }}
+                />
+
+                <div className="flex items-center gap-4">
+                  <h5>{t("MODULE.REQUIRED")}</h5>
+                  <div>
+                    <Checkbox {...register("is_required")} />
+                  </div>
+                </div>
+
+                <div>
+                  <AppSelectField
+                    control={control}
+                    name="module_type"
+                    id="module_type"
+                    label={
+                      <div className="text-[#111213]">
+                        {t("MODULE.MODULE_TYPE")}
+                      </div>
+                    }
+                    options={[
+                      t("MODULE.MODULE_TYPES.VIDEO"),
+                      t("MODULE.MODULE_TYPES.DOCUMENT"),
+                      t("MODULE.MODULE_TYPES.DISCUSSION"),
+                      t("MODULE.MODULE_TYPES.EXTERNAL_LINK"),
+                    ].map((value) => ({
+                      text: value.toString(),
+                      value: value,
+                    }))}
+                    message={errors.prerequisites?.message}
+                    onChange={(v) => {
+                      setValue("module_type", v.target.value as any, {
+                        shouldValidate: true,
+                      });
+                      setContentData(undefined);
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <div
+                    className={`hidden ${
+                      watch("module_type") === "video" && "!block"
+                    }`}
+                  >
+                    <VideoUpload />
+                  </div>
+                  <div
+                    className={`hidden ${
+                      watch("module_type") === "document" && "!block"
+                    }`}
+                  >
+                    <DocumentUpload />
+                  </div>
+                  <div
+                    className={`hidden ${
+                      watch("module_type") === "discussion" && "!block"
+                    }`}
+                  >
+                    <DiscussSection />
+                  </div>
+                  <div
+                    className={`hidden ${
+                      watch("module_type") === "external_link" && "!block"
+                    }`}
+                  >
+                    <ExternalLink />
+                  </div>
+                </div>
+
+                <div>
+                  <Button className="w-full lg:!w-auto">Submit</Button>
+                </div>
+              </form>
+            </FormProvider>
+          </ContentProvider>
         </div>
       )}
     </LoadingComponent>
   );
 }
 
+// add video -> validate & process -> add value to store -> show iframe/player
+
 type pageProps = {};
 const VideoUpload: React.FC<pageProps> = ({}) => {
+  const t = useTranslations();
+  const [error, setError] = useState("");
+  const { setContentData, contentData } = useContext(ContentProvider);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (
+      data: Omit<DocumentItem, "provider"> & {
+        provider: "google_drive" | "dailymotion" | "dropbox" | "youtube";
+      }
+    ): Promise<DocumentValidationResponse> => {
+      const { data: resp } = await appAxios.post(
+        BackendRoutes.VALIDATE_DOCUMENT,
+        {
+          ...data,
+          provider: ["youtube", "dailymotion"].includes(data.provider)
+            ? "direct_link"
+            : data.provider,
+        }
+      );
+
+      return resp;
+    },
+    onSuccess(data, variables) {
+      console.log(
+        data,
+        variables,
+        extractExternalId(
+          variables.provider,
+          data.direct_url || data.embed_url || variables.url
+        )
+      );
+      setContentData({
+        type: "video",
+        embed_url: data.embed_url,
+        external_video_id:
+          extractExternalId(
+            variables.provider,
+            data.direct_url || data.embed_url || variables.url
+          ) || crypto.randomUUID(),
+        video_url: data.direct_url || variables.url,
+        platform: variables.provider.split("_").join("") as any,
+      });
+    },
+    onError(error, variables, context) {
+      setError(t("PROCESSING_FAILED"));
+    },
+  });
+
+  const uploadHandler = (url: string, provider: AvailableSources) => {
+    mutate({
+      url,
+      media_type: "video",
+      provider:
+        provider === "google_drive"
+          ? provider
+          : (provider.split("_").join("") as any),
+    });
+  };
+
+  console.log("");
   return (
     <div className="">
-      <UploadFile
-        accept={["youtube", "daily_motion", "google_drive", "drop_box", "link"]}
-        callback={() => {}}
-        mimeType="video"
-      />
+      {isPending && (
+        <div className="text-orange-500 font-bold  text-sm">
+          {t("PROCESSING")}
+        </div>
+      )}
+      {error && <div className="text-red-500 font-bold  text-sm">{error}</div>}
+      {contentData && (
+        <div>
+          <div className="flex items-center justify-end py-4">
+            <Button
+              color="error"
+              size="large"
+              className="!capitalize flex items-center gap-1"
+              onClick={() => setContentData(undefined as any)}
+            >
+              <span>Remove</span>
+              <span>
+                <IoTrashBin />
+              </span>
+            </Button>
+          </div>
+          <div className="w-full relative h-[500px] rounded-lg">
+            <VidPlayer
+              src={contentData.embed_url || (contentData as any).video_url}
+            />
+          </div>
+        </div>
+      )}
+      {!contentData && (
+        <UploadFile
+          accept={["youtube", "daily_motion", "google_drive", "drop_box"]}
+          callback={uploadHandler}
+          mimeType="video"
+        />
+      )}
     </div>
   );
 };
@@ -282,35 +400,6 @@ const ExternalLink: React.FC<externalLinkProps> = ({}) => {
     </div>
   );
 };
-
-// {
-//     "platform": "youtube",
-//     "external_video_id": "string",
-//     "video_url": "string",
-//     "embed_url": "string",
-//     "thumbnail_url": "string",
-//     "duration_seconds": 0,
-//     "title": "string",
-//     "description": "string",
-//     "embed_settings": {
-//       "additionalProp1": {}
-//     },
-//     "module_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-//   }
-
-// {
-//     "platform": "google_drive",
-//     "external_file_id": "string",
-//     "file_url": "string",
-//     "embed_url": "string",
-//     "file_name": "string",
-//     "file_type": "string",
-//     "file_size_bytes": 0,
-//     "viewer_settings": {
-//       "additionalProp1": {}
-//     },
-//     "module_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-//   }
 
 // {
 //     "data": [

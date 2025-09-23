@@ -42,3 +42,32 @@
 body {
   font-family: var(--font-lexend);
 }
+/* VIDEO JS */
+
+/* Make progress bar bigger */
+.vjs-control-bar {
+  display: block !important;
+  height: fit-content !important;
+}
+.vjs-control-bar .vjs-progress-control {
+  height: 12px !important;
+  margin-bottom: 6px;
+  display: block !important;
+  width: 100% !important;
+}
+.vjs-progress-holder {
+  height: 100% !important;
+}
+
+.vjs-play-progress,
+.vjs-load-progress {
+  height: 100% !important;
+}
+
+/* Row for other controls */
+.udemy-controls-row {
+  display: flex;
+  gap: 4rem;
+  padding-left: 0.8rem;
+  /* align-items: center; */
+}

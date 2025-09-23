@@ -119,3 +119,60 @@ export function getThumbnailViewUrl(rawUrl: string) {
 
   return rawUrl;
 }
+
+type Provider = "youtube" | "dailymotion" | "dropbox" | "google_drive";
+
+export function extractExternalId(
+  provider: Provider,
+  url: string
+): string | null {
+  switch (provider) {
+    case "youtube": {
+      // Matches:
+      // - https://www.youtube.com/watch?v=VIDEO_ID
+      // - https://youtu.be/VIDEO_ID
+      // - https://www.youtube.com/embed/VIDEO_ID
+      const match = url.match(
+        /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+      );
+      return match ? match[1] : null;
+    }
+
+    case "dailymotion": {
+      // Matches:
+      // - https://www.dailymotion.com/video/VIDEO_ID
+      // - https://www.dailymotion.com/embed/video/VIDEO_ID
+      const match = url.match(
+        /dailymotion\.com\/(?:embed\/)?video\/([a-zA-Z0-9]+)/
+      );
+      return match ? match[1] : null;
+    }
+
+    case "dropbox": {
+      // Matches: https://www.dropbox.com/s/FILE_ID/filename?dl=0
+      let match = url.match(/dropbox\.com\/s\/([a-zA-Z0-9]+)/);
+      if (match) return match[1];
+
+      // Matches: https://dl.dropboxusercontent.com/scl/fi/FILE_ID/filename
+      match = url.match(/dropboxusercontent\.com\/scl\/fi\/([a-zA-Z0-9]+)/);
+      if (match) return match[1];
+
+      return null;
+    }
+
+    case "google_drive": {
+      // Try `/file/d/FILE_ID/`
+      let match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if (match) return match[1];
+
+      // Try `uc?id=FILE_ID` or `uc?export=download&id=FILE_ID`
+      match = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (match) return match[1];
+
+      return null;
+    }
+
+    default:
+      return null;
+  }
+}

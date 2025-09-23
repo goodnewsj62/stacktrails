@@ -170,7 +170,8 @@
         "SAFELY_CLICK_AWAY": " You can safely click or navigate away — your upload will continue in the background.",
         "CANCEL_UPLOAD": "Cancel upload",
         "PUBLIC_WARNING": "Unshared (private) files you select will be made public automatically",
-        "YOUTUBE_UPLOAD": "Upload to youtube"
+        "YOUTUBE_UPLOAD": "Upload to youtube",
+        "LINK": "Enter link"
     },
     "CREATE_COURSE": {
         "TITLE": "Course title",
@@ -230,5 +231,9 @@
             "DISCUSSION": "discussion",
             "EXTERNAL_LINK": "external_link"
         }
-    }
+    },
+    "DONE": "Done",
+    "LINK_SUBMITTED": "link submitted",
+    "PROCESSING_FAILED": "could not process data",
+    "PROCESSING": "Processing..."
 }

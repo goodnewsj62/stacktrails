@@ -1,3 +1,6 @@
+type documentType = "google_drive" | "onedrive" | "dropbox" | "direct_link";
+type mediaType = "image" | "pdf" | "document" | "video" | "other";
+
 type Course = {
   title: string;
   image?: string;
@@ -185,4 +188,70 @@ type CreateMoule = {
   settings?: Contentdata;
   section_id: string;
   module_type: string;
+};
+
+type CreateVideoContent = {
+  platform: "youtube" | "dailymotion" | "googledrive" | "dropbox";
+  external_video_id: string;
+  video_url: string;
+  embed_url?: string;
+  thumbnail_url?: string;
+  duration_seconds?: number;
+  title?: string;
+  description?: string;
+  embed_settings?: Embedsettings;
+  module_id: string;
+};
+type CreateDocumentContent = {
+  platform: "google_drive" | "onedrive" | "dropbox" | "direct_link";
+  external_file_id: string;
+  file_url: string;
+  embed_url?: string;
+  file_name: string;
+  file_type: string;
+  file_size_bytes?: number;
+  viewer_settings?: Viewersettings;
+  module_id: string;
+};
+
+interface Embedsettings {
+  additionalProp1: AdditionalProp1;
+}
+interface Viewersettings {
+  additionalProp1: AdditionalProp1;
+}
+
+type CreateAttachmentContent = {
+  attachment_type: "document" | "external_link";
+  file_url: string;
+  external_file_id: string;
+  embed_url: string;
+  title: string;
+  description: string;
+  document_type: string;
+  file_type: string;
+  module_id: string;
+};
+
+type DocumentItem = {
+  url: string;
+  provider: documentType;
+  media_type: mediaType;
+  title?: string;
+  description?: string;
+  file_name?: string;
+};
+
+type DocumentValidationResponse = {
+  is_valid: boolean;
+  provider: documentType;
+  media_type: mediaType;
+  direct_url?: string;
+  preview_url?: string;
+  embed_url?: string;
+  file_size?: number;
+  content_type?: string;
+  file_name?: string;
+  page_count?: number;
+  error_message?: string;
 };

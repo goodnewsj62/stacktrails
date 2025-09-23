@@ -106,4 +106,5 @@ export class BackendRoutes {
   static LIST_SUB_FOLDERS_AND_FILES = "/subitems";
   static GOOGLE_SHORT_LIVED = "/auth/google/shortlived";
   static DROP_BOX_SHORT_LIVED = "/auth/drobox/shortlived";
+  static VALIDATE_DOCUMENT = "/documents/validate";
 }

@@ -28,10 +28,17 @@ const nextConfig: NextConfig = {
   },
 
   webpack: (config) => {
-    config.module.rules.push({
-      test: /\.lottie$/,
-      type: "asset/resource", // tells Next.js to emit the file and return a URL
-    });
+    config.module.rules.push(
+      {
+        test: /\.lottie$/,
+        type: "asset/resource", // tells Next.js to emit the file and return a URL
+      },
+      // Handle Video.js CSS
+      config.module.rules.push({
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      })
+    );
 
     return config;
   },
