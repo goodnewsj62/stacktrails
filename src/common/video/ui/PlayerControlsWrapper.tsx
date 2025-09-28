@@ -6,12 +6,18 @@ import ProgressBar from "./ProgressBar";
 
 type PlayerControlsWrapperProps = {
   playerRef: RefObject<any>;
+  controlsVisible: boolean;
 };
 const PlayerControlsWrapper: React.FC<PlayerControlsWrapperProps> = ({
   playerRef,
+  controlsVisible,
 }) => {
   return (
-    <div className="absolute bottom-0 left-0 right-0 z-[100] flex flex-col">
+    <div
+      className={`absolute bottom-0 left-0 right-0 z-[100] flex flex-col  transition-opacity duration-300 ${
+        controlsVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+      }`}
+    >
       <div className="flex items-center justify-center w-full">
         <ProgressBar playerRef={playerRef} />
       </div>

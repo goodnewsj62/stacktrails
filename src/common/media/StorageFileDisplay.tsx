@@ -9,6 +9,7 @@ import { BackendRoutes } from "@/routes";
 import { useAppStore } from "@/store";
 import { CircularProgress, Modal, Tooltip } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
@@ -152,7 +153,7 @@ function ListFiles() {
   const currentFolder = folderHistory[folderHistory.length - 1] ?? "";
 
   const mimeType = _mimeType === "folder" ? "document" : _mimeType;
-  const { data, status } = useQuery({
+  const { data, status, error } = useQuery({
     queryKey: [cacheKeys.LIST_FOLDER_SUB_ITEMS, provider, currentFolder],
     queryFn: async () =>
       await listSubFolderAndFiles({
@@ -164,6 +165,18 @@ function ListFiles() {
       }),
     enabled: !!validStorages.find((v) => v === provider),
   });
+
+  useEffect(() => {
+    if (status === "error") {
+      const err = error as AxiosError;
+      if (
+        err.response &&
+        (err.response.data as any)?.detail?.error === "invalid_grant"
+      ) {
+        authRedirect(provider as DocumentPlatform);
+      }
+    }
+  }, [status]);
 
   const onClick = (file: FileResp) => {
     if (_mimeType === "folder" && file.type === "folder") {
@@ -433,14 +446,7 @@ function storageCheckOrRedirect(
         return;
       }
 
-      const url = new URL(BACKEND_API_URL + BackendRoutes.GOOGLE_INCREMENTAL);
-      url.searchParams.append("redirect", location.href);
-      url.searchParams.append(
-        "required_scopes",
-        "openid email profile https://www.googleapis.com/auth/drive"
-      );
-
-      location.href = url.toString();
+      authRedirect(DocumentPlatform.GOOGLE_DRIVE);
 
       return;
     }
@@ -458,9 +464,7 @@ function storageCheckOrRedirect(
         return;
       }
 
-      const url = new URL(BACKEND_API_URL + BackendRoutes.DROPBOX_AUTH);
-      url.searchParams.append("redirect", location.href);
-      location.href = url.toString();
+      authRedirect(DocumentPlatform.DROPBOX);
       return;
     }
 
@@ -481,4 +485,30 @@ function LoadingDisplay() {
       <div>{t("PLEASE_WAIT")}</div>
     </div>
   );
+}
+
+function authRedirect(platform: DocumentPlatform) {
+  let url: URL = null as any;
+
+  switch (platform) {
+    case DocumentPlatform.GOOGLE_DRIVE:
+      {
+        url = new URL(BACKEND_API_URL + BackendRoutes.GOOGLE_INCREMENTAL);
+        url.searchParams.append(
+          "required_scopes",
+          "openid email profile https://www.googleapis.com/auth/drive"
+        );
+      }
+      break;
+    case DocumentPlatform.DROPBOX:
+      {
+        url = new URL(BACKEND_API_URL + BackendRoutes.DROPBOX_AUTH);
+      }
+      break;
+  }
+
+  if (!url) return;
+
+  url.searchParams.append("redirect", location.href);
+  location.href = url.toString();
 }

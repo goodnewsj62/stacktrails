@@ -21,6 +21,7 @@ export function googleOneTapForm(cred: string, next: string) {
 
   form.appendChild(credentialInput);
   form.appendChild(redirectInput);
+
   document.body.appendChild(form);
   form.submit();
 }

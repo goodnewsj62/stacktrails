@@ -6,6 +6,7 @@ import {
   Dispatch,
   SetStateAction,
   useCallback,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -31,6 +32,7 @@ const initialState = {
   seeking: false,
   loadedSeconds: 0,
   playedSeconds: 0,
+  hasPlayed: false,
   setState: () => {},
 };
 
@@ -41,11 +43,149 @@ type PlayerState = Omit<typeof initialState, "src" | "setState"> & {
 
 export const ReactPlayerProvider = createContext<PlayerState>(initialState);
 
+function detectSource(url: string) {
+  if (/youtube\.com|youtu\.be/.test(url)) {
+    return { src: url, type: "video/youtube", techOrder: ["youtube"] };
+  }
+
+  if (/dailymotion\.com/.test(url)) {
+    return { src: url, type: "dailymotion", techOrder: [] };
+  }
+
+  if (/drive\.google\.com/.test(url)) {
+    const match = url.match(/[-\w]{25,}/);
+    const fileId = match ? match[0] : null;
+
+    if (fileId) {
+      return {
+        src: `https://drive.google.com/file/d/${fileId}/preview`,
+        type: "google_drive",
+        techOrder: ["html5"],
+      };
+    }
+  }
+
+  if (/dropbox\.com|dropboxusercontent\.com/.test(url)) {
+    return {
+      src: url.replace("?dl=0", "?raw=1"),
+      type: "video/mp4",
+      techOrder: ["html5"],
+    };
+  }
+
+  return { src: url, type: "video/mp4", techOrder: ["html5"] };
+}
+
 const Player: React.FC<VidPlayerProps> = ({ src }) => {
   const playerRef = useRef<HTMLVideoElement | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   //   const urlInputRef = useRef<HTMLInputElement | null>(null);
 
   const [state, setState] = useState<PlayerState>(initialState);
+
+  const [controlsVisible, setControlsVisible] = useState(true);
+  const hideTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const showControls = () => {
+    setControlsVisible(true);
+
+    // reset timer
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    hideTimer.current = setTimeout(() => {
+      setControlsVisible(false);
+    }, 2000);
+  };
+
+  useEffect(() => {
+    // show controls initially
+    showControls();
+
+    return () => {
+      if (hideTimer.current) clearTimeout(hideTimer.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    const initializePlayer = async () => {
+      if (!playerRef.current) return;
+
+      // Clean up existing iframe
+      if (iframeRef.current) {
+        iframeRef.current.remove();
+        iframeRef.current = null;
+      }
+
+      const { src: url, type, techOrder } = detectSource(src);
+
+      if (type === "dailymotion") {
+        if (containerRef.current) {
+          // Clean up existing iframe (if any)
+          if (iframeRef.current) {
+            (iframeRef.current as any)?.remove?.();
+            iframeRef.current = null;
+          }
+
+          playerRef.current.style.display = "none";
+
+          const iframe = document.createElement("iframe");
+          iframe.width = "100%";
+          iframe.height = "100%";
+          iframe.src = url.replace(
+            "dailymotion.com/video",
+            "dailymotion.com/embed/video"
+          );
+          iframe.allow = "autoplay; fullscreen";
+          iframe.style.border = "none";
+          containerRef.current.appendChild(iframe);
+          iframeRef.current = iframe;
+        }
+        return;
+      }
+
+      if (type === "google_drive") {
+        if (containerRef.current) {
+          // Clean up existing iframe (if any)
+          if (iframeRef.current) {
+            (iframeRef.current as any)?.remove?.();
+            iframeRef.current = null;
+          }
+
+          playerRef.current.style.display = "none";
+
+          const iframe = document.createElement("iframe");
+          iframe.width = "100%";
+          iframe.height = "100%";
+          iframe.src = src;
+          iframe.allow = "autoplay; fullscreen";
+          iframe.style.border = "none";
+
+          containerRef.current.appendChild(iframe);
+          iframeRef.current = iframe;
+        }
+        return;
+      }
+    };
+
+    initializePlayer();
+
+    return () => {
+      // Clean up player
+      if (playerRef.current) {
+        playerRef.current = null;
+      }
+
+      // Clean up iframe
+      if (iframeRef.current) {
+        try {
+          iframeRef.current.remove();
+        } catch (error) {
+          console.warn("Error removing iframe:", error);
+        }
+        iframeRef.current = null;
+      }
+    };
+  }, [src]);
 
   const load = (src?: string) => {
     setState((prevState) => ({
@@ -57,7 +197,14 @@ const Player: React.FC<VidPlayerProps> = ({ src }) => {
     }));
   };
 
+  const setHasPlayed = () => {
+    if (!state.hasPlayed) {
+      setState((state) => ({ ...state, hasPlayed: true }));
+    }
+  };
+
   const handlePlayPause = () => {
+    setHasPlayed();
     setState((prevState) => ({ ...prevState, playing: !prevState.playing }));
   };
 
@@ -72,7 +219,7 @@ const Player: React.FC<VidPlayerProps> = ({ src }) => {
   };
 
   const handlePlay = () => {
-    console.log("onPlay");
+    setHasPlayed();
     setState((prevState) => ({ ...prevState, playing: true }));
   };
 
@@ -152,9 +299,21 @@ const Player: React.FC<VidPlayerProps> = ({ src }) => {
 
   return (
     <ReactPlayerProvider value={{ ...state, setState }}>
-      <div className="w-full h-full relative">
-        <PlayerControlsWrapper playerRef={playerRef} />
-        <PlayButton onClick={handlePlayPause} />
+      <div
+        className="w-full h-full relative"
+        ref={containerRef}
+        onMouseMove={showControls}
+        onMouseEnter={showControls}
+      >
+        {playerRef?.current?.style?.display !== "none" && (
+          <PlayerControlsWrapper
+            playerRef={playerRef}
+            controlsVisible={controlsVisible}
+          />
+        )}
+        {playerRef?.current?.style?.display !== "none" && (
+          <PlayButton onClick={handlePlayPause} />
+        )}
 
         <ReactPlayer
           src={src}

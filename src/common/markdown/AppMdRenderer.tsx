@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
+import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 
 const MarkdownRenderer = ({
@@ -10,9 +11,11 @@ const MarkdownRenderer = ({
   className?: string;
 }) => {
   return (
-    <div className={`relative w-fit ${className}`}>
+    <div
+      className={`relative prose prose-neutral dark:prose-invert  max-w-none w-fit ${className}`}
+    >
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
+        remarkPlugins={[remarkGfm, remarkBreaks]}
         rehypePlugins={[rehypeSanitize]} // sanitizes output
       >
         {content}
