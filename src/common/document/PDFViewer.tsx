@@ -31,6 +31,7 @@ const initialState = {
   pageCount: 0,
   pdfDoc: undefined,
   scale: null,
+  currentPage: 1,
 };
 
 type ViewerContextType = {
@@ -38,6 +39,10 @@ type ViewerContextType = {
   pdfDoc: pdfjsLib.PDFDocumentProxy | undefined;
   scale: null | number;
   pageCount: number;
+  currentPage: number;
+  navigateToPage: (p: number) => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
 };
 
 const ViewerProvider = createContext<ViewerContextType>(initialState as any);
@@ -53,7 +58,7 @@ export default function PdfViewer({ url }: PdfViewerProps) {
     initialState as any
   );
 
-  const { pdfDoc, scale } = viewerState;
+  const { pdfDoc, scale, currentPage, pageCount } = viewerState;
 
   useEffect(() => {
     const loadPdf = async () => {
@@ -84,16 +89,18 @@ export default function PdfViewer({ url }: PdfViewerProps) {
         }
 
         const vp = page.getViewport({ scale: effectiveScale! });
+        const outputScale = window.devicePixelRatio || 1; // depends on device DPI [goodnews]
 
         // Wrapper for canvas + overlay
         const wrapper = document.createElement("div");
-        wrapper.className = "relative mb-4";
+        wrapper.className = "relative";
+        wrapper.id = `pdf_viewer__page-${num}`; // give each page a unique ID
 
         // Canvas for PDF page
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d")!;
-        canvas.width = vp.width;
-        canvas.height = vp.height;
+        canvas.width = Math.floor(vp.width * outputScale);
+        canvas.height = Math.floor(vp.height * outputScale);
         canvas.style.width = `${vp.width}px`;
         canvas.style.height = `${vp.height}px`;
         canvas.className = "block";
@@ -103,14 +110,13 @@ export default function PdfViewer({ url }: PdfViewerProps) {
         overlay.className = "absolute top-0 left-0 pointer-events-none"; // we can toggle pointer-events later
         overlay.style.width = `${vp.width}px`;
         overlay.style.height = `${vp.height}px`;
-        overlay.style.border = `4px solid green`;
+        // overlay.style.border = `4px solid green`;
         overlay.style.zIndex = "10";
 
         wrapper.appendChild(canvas);
         wrapper.appendChild(overlay);
         container.appendChild(wrapper);
 
-        const outputScale = window.devicePixelRatio || 1;
         const transform =
           outputScale !== 1
             ? [outputScale, 0, 0, outputScale, 0, 0]
@@ -128,14 +134,35 @@ export default function PdfViewer({ url }: PdfViewerProps) {
     renderAllPages();
   }, [pdfDoc, scale]);
 
+  const navigateToPage = (page: number) => {
+    if (page <= pageCount && page >= 1) {
+      setViewerState((s) => ({ ...s, currentPage: page }));
+    }
+
+    const target = document.getElementById(`pdf_viewer__page-${page}`);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const zoomIn = () => {
+    setViewerState((s) => ({ ...s, scale: s.scale ? s.scale * 1.2 : 1.2 }));
+  };
+
+  const zoomOut = () => {
+    setViewerState((s) => ({ ...s, scale: s.scale ? s.scale / 1.2 : 1 }));
+  };
+
   return (
-    <ViewerProvider value={{ ...viewerState }}>
+    <ViewerProvider
+      value={{ ...viewerState, currentPage, navigateToPage, zoomIn, zoomOut }}
+    >
       <div className="w-full relative pt-10 h-full flex flex-col items-center bg-[#242323]">
         <PDFControls />
         <div
           id="pdf-container"
           ref={containerRef}
-          className="relative w-full max-w-[800px] overflow-y-auto h-full border-2 m-auto flex flex-col items-center"
+          className="relative w-full max-w-[800px] overflow-auto h-full border-2 m-auto flex flex-col items-start"
         ></div>
       </div>
     </ViewerProvider>
@@ -143,7 +170,8 @@ export default function PdfViewer({ url }: PdfViewerProps) {
 }
 
 function PDFControls() {
-  const { pageCount } = useContext(ViewerProvider);
+  const { pageCount, currentPage, navigateToPage, scale, zoomIn, zoomOut } =
+    useContext(ViewerProvider);
 
   return (
     <div className="bg-[#504f4f] text-white flex items-center justify-between px-4 h-10 absolute left-0 top-0 w-full md:px-6 lg:px-8">
@@ -151,19 +179,30 @@ function PDFControls() {
       <div className="flex items-center gap-4">
         {/* Page Navigation */}
         <div className="flex items-center gap-2">
-          <button type="button" className="cursor-pointer hover:text-gray-300">
+          <button
+            type="button"
+            className="cursor-pointer hover:text-gray-300"
+            onClick={() => navigateToPage(currentPage - 1)}
+          >
             <FaAngleLeft />
           </button>
           <div className="flex items-center gap-1">
             <input
               className="w-8 px-1 bg-white text-black text-center rounded"
-              value={"1"}
+              value={currentPage}
               type="text"
+              onChange={(val) => {
+                if (!Number.isNaN(+val)) navigateToPage(+val);
+              }}
             />
             <span>/</span>
             <span>{pageCount}</span>
           </div>
-          <button type="button" className="cursor-pointer hover:text-gray-300">
+          <button
+            type="button"
+            className="cursor-pointer hover:text-gray-300"
+            onClick={() => navigateToPage(currentPage + 1)}
+          >
             <FaAngleRight />
           </button>
         </div>
@@ -184,11 +223,19 @@ function PDFControls() {
 
       {/* Right Controls (Zoom) */}
       <div className="flex items-center gap-2">
-        <button type="button" className="cursor-pointer hover:text-gray-300">
+        <button
+          type="button"
+          className="cursor-pointer hover:text-gray-300"
+          onClick={zoomOut}
+        >
           <FaSearchMinus />
         </button>
-        <span className="text-sm">100%</span>
-        <button type="button" className="cursor-pointer hover:text-gray-300">
+        <span className="text-sm">{Math.floor((scale || 1) * 100)}%</span>
+        <button
+          type="button"
+          className="cursor-pointer hover:text-gray-300"
+          onClick={zoomIn}
+        >
           <FaSearchPlus />
         </button>
       </div>
