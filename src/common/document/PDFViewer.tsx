@@ -1,244 +1,138 @@
 "use client";
+
 import { getImageProxyUrl } from "@/lib/utils";
 import * as pdfjsLib from "pdfjs-dist";
-
 import "pdfjs-dist/web/pdf_viewer.css";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
-import {
-  FaAngleLeft,
-  FaAngleRight,
-  FaCopy,
-  FaSearchMinus,
-  FaSearchPlus,
-} from "react-icons/fa";
-import { FaHighlighter, FaRegCommentDots } from "react-icons/fa6";
+import React, { createContext, useEffect, useRef, useState } from "react";
+import PdfPage from "./PDFPage";
+import PDFControls from "./components/PDFControl";
 
+// --- PDF.js WORKER SETUP ---
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
 
-type Highlight = {
-  page: number;
-  text: string;
-  lines: number[];
-  comment?: string;
-  id: string;
-};
-
-interface PdfViewerProps {
-  url: string;
-}
-
+// --- STATE AND CONTEXT DEFINITION ---
 const initialState = {
+  pdfDoc: undefined as pdfjsLib.PDFDocumentProxy | undefined,
   pageCount: 0,
-  pdfDoc: undefined,
-  scale: null,
-  currentPage: 1,
+  scale: null as number | null,
+  tool: "select" as Tool,
+  highlights: [] as Highlight[],
+  currentPage: 1, // Start at page 1
 };
 
-type ViewerContextType = {
-  setState: (v: typeof initialState) => void;
-  pdfDoc: pdfjsLib.PDFDocumentProxy | undefined;
-  scale: null | number;
-  pageCount: number;
-  currentPage: number;
-  navigateToPage: (p: number) => void;
-  zoomIn: () => void;
-  zoomOut: () => void;
+type ViewerContextType = typeof initialState & {
+  setState: React.Dispatch<React.SetStateAction<typeof initialState>>;
+  addHighlight: (highlight: Omit<Highlight, "id">) => void;
+  deleteHighlight: (id: string) => void;
 };
 
-const ViewerProvider = createContext<ViewerContextType>(initialState as any);
+export const ViewerContext = createContext<ViewerContextType>(null as any);
 
-export default function PdfViewer({ url }: PdfViewerProps) {
+// --- MAIN VIEWER COMPONENT ---
+export default function PdfViewer({ url }: { url: string }) {
+  const [viewerState, setViewerState] = useState(initialState);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // const [pageCount, setPageCount] = useState(0);
-  // const [pdfDoc, setPdfDoc] = useState<PDFDocumentProxy | undefined>();
-  // const [scale, setScale] = useState<number | null>(null); // computed once
+  // NEW: Store the observer instance in a ref
+  const observer = useRef<IntersectionObserver | null>(null);
 
-  const [viewerState, setViewerState] = useState<ViewerContextType>(
-    initialState as any
-  );
-
-  const { pdfDoc, scale, currentPage, pageCount } = viewerState;
-
+  // Load the PDF document
   useEffect(() => {
     const loadPdf = async () => {
-      const doc = await pdfjsLib.getDocument(getImageProxyUrl(url)).promise;
-      setViewerState((s) => ({ ...s, pdfDoc: doc }));
-      setViewerState((s) => ({ ...s, pageCount: doc.numPages }));
+      try {
+        const doc = await pdfjsLib.getDocument(getImageProxyUrl(url)).promise;
+        setViewerState((s) => ({
+          ...s,
+          pdfDoc: doc,
+          pageCount: doc.numPages,
+        }));
+      } catch (error) {
+        console.error("Failed to load PDF:", error);
+      }
     };
     loadPdf();
   }, [url]);
 
   useEffect(() => {
-    if (!pdfDoc) return;
+    if (!containerRef.current) return;
 
-    const renderAllPages = async () => {
-      const container = containerRef.current!;
-      container.innerHTML = ""; // clear before re-rendering
+    observer.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Get the page number from the data attribute
 
-      for (let num = 1; num <= pdfDoc.numPages; num++) {
-        const page = await pdfDoc.getPage(num);
-        const unscaledVp = page.getViewport({ scale: 1 });
+            const pageNum = entry.target.getAttribute("data-page-index");
+            if (pageNum) {
+              setViewerState((s) => ({
+                ...s,
+                currentPage: parseInt(pageNum, 10),
+              }));
+            }
+          }
+        });
+      },
+      {
+        root: containerRef.current, // The scrollable container
+        threshold: 0.3, // 50% of the page must be visible
+        // rootMargin: `-40px 0px 0px 0px`,
+      }
+    );
 
-        // compute scale once from container width (same for all pages)
-        let effectiveScale = scale;
-        if (scale === null) {
-          const containerWidth = container.clientWidth;
-          effectiveScale = containerWidth / unscaledVp.width;
-          setViewerState((s) => ({ ...s, scale: effectiveScale }));
-        }
-
-        const vp = page.getViewport({ scale: effectiveScale! });
-        const outputScale = window.devicePixelRatio || 1; // depends on device DPI [goodnews]
-
-        // Wrapper for canvas + overlay
-        const wrapper = document.createElement("div");
-        wrapper.className = "relative";
-        wrapper.id = `pdf_viewer__page-${num}`; // give each page a unique ID
-
-        // Canvas for PDF page
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d")!;
-        canvas.width = Math.floor(vp.width * outputScale);
-        canvas.height = Math.floor(vp.height * outputScale);
-        canvas.style.width = `${vp.width}px`;
-        canvas.style.height = `${vp.height}px`;
-        canvas.className = "block";
-
-        // Overlay div (absolute positioned)
-        const overlay = document.createElement("div");
-        overlay.className = "absolute top-0 left-0 pointer-events-none"; // we can toggle pointer-events later
-        overlay.style.width = `${vp.width}px`;
-        overlay.style.height = `${vp.height}px`;
-        // overlay.style.border = `4px solid green`;
-        overlay.style.zIndex = "10";
-
-        wrapper.appendChild(canvas);
-        wrapper.appendChild(overlay);
-        container.appendChild(wrapper);
-
-        const transform =
-          outputScale !== 1
-            ? [outputScale, 0, 0, outputScale, 0, 0]
-            : undefined;
-
-        await page.render({
-          canvasContext: ctx,
-          viewport: vp,
-          transform,
-          canvas,
-        }).promise;
+    // Cleanup function to disconnect the observer
+    return () => {
+      if (observer.current) {
+        observer.current.disconnect();
       }
     };
+  }, []); // Run this effect only once
 
-    renderAllPages();
-  }, [pdfDoc, scale]);
-
-  const navigateToPage = (page: number) => {
-    if (page <= pageCount && page >= 1) {
-      setViewerState((s) => ({ ...s, currentPage: page }));
-    }
-
-    const target = document.getElementById(`pdf_viewer__page-${page}`);
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+  // Function to add a new highlight
+  const addHighlight = (highlight: Omit<Highlight, "id">) => {
+    setViewerState((s) => ({
+      ...s,
+      highlights: [
+        ...s.highlights,
+        { ...highlight, id: `${Date.now()}-${Math.random()}` },
+      ],
+    }));
   };
 
-  const zoomIn = () => {
-    setViewerState((s) => ({ ...s, scale: s.scale ? s.scale * 1.2 : 1.2 }));
-  };
-
-  const zoomOut = () => {
-    setViewerState((s) => ({ ...s, scale: s.scale ? s.scale / 1.2 : 1 }));
+  // Function to delete a highlight
+  const deleteHighlight = (id: string) => {
+    setViewerState((s) => ({
+      ...s,
+      highlights: s.highlights.filter((h) => h.id !== id),
+    }));
   };
 
   return (
-    <ViewerProvider
-      value={{ ...viewerState, currentPage, navigateToPage, zoomIn, zoomOut }}
+    <ViewerContext.Provider
+      value={{
+        ...viewerState,
+        setState: setViewerState,
+        addHighlight,
+        deleteHighlight,
+      }}
     >
-      <div className="w-full relative pt-10 h-full flex flex-col items-center bg-[#242323]">
+      <div className="w-full pt-10 relative h-full flex flex-col items-center bg-[#242323]">
         <PDFControls />
         <div
           id="pdf-container"
           ref={containerRef}
-          className="relative w-full max-w-[800px] overflow-auto h-full border-2 m-auto flex flex-col items-start"
-        ></div>
-      </div>
-    </ViewerProvider>
-  );
-}
-
-function PDFControls() {
-  const { pageCount, currentPage, navigateToPage, scale, zoomIn, zoomOut } =
-    useContext(ViewerProvider);
-
-  return (
-    <div className="bg-[#504f4f] text-white flex items-center justify-between px-4 h-10 absolute left-0 top-0 w-full md:px-6 lg:px-8">
-      {/* Left Controls (Tools + Page Navigation) */}
-      <div className="flex items-center gap-4">
-        {/* Page Navigation */}
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            className="cursor-pointer hover:text-gray-300"
-            onClick={() => navigateToPage(currentPage - 1)}
-          >
-            <FaAngleLeft />
-          </button>
-          <div className="flex items-center gap-1">
-            <input
-              className="w-8 px-1 bg-white text-black text-center rounded"
-              value={currentPage}
-              type="text"
-              onChange={(val) => {
-                if (!Number.isNaN(+val)) navigateToPage(+val);
-              }}
-            />
-            <span>/</span>
-            <span>{pageCount}</span>
-          </div>
-          <button
-            type="button"
-            className="cursor-pointer hover:text-gray-300"
-            onClick={() => navigateToPage(currentPage + 1)}
-          >
-            <FaAngleRight />
-          </button>
-        </div>
-
-        {/* Tools */}
-        <div className="flex items-center gap-4">
-          <button type="button" className="cursor-pointer hover:text-gray-300">
-            <FaHighlighter />
-          </button>
-          <button type="button" className="cursor-pointer hover:text-gray-300">
-            <FaRegCommentDots />
-          </button>
-          <button type="button" className="cursor-pointer hover:text-gray-300">
-            <FaCopy />
-          </button>
+          className="relative w-full max-w-[800px] overflow-y-auto h-full m-auto"
+        >
+          {viewerState.pdfDoc &&
+            Array.from({ length: viewerState.pageCount }, (_, i) => (
+              <PdfPage
+                key={i + 1}
+                pageNum={i + 1}
+                containerRef={containerRef as any}
+                observer={observer.current}
+              />
+            ))}
         </div>
       </div>
-
-      {/* Right Controls (Zoom) */}
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          className="cursor-pointer hover:text-gray-300"
-          onClick={zoomOut}
-        >
-          <FaSearchMinus />
-        </button>
-        <span className="text-sm">{Math.floor((scale || 1) * 100)}%</span>
-        <button
-          type="button"
-          className="cursor-pointer hover:text-gray-300"
-          onClick={zoomIn}
-        >
-          <FaSearchPlus />
-        </button>
-      </div>
-    </div>
+    </ViewerContext.Provider>
   );
 }
