@@ -9,16 +9,14 @@ export default function AnnotationEditorLayer({
 }: {
   pageNum: number;
 }) {
-  const { highlights, scale, deleteHighlight } = useContext(ViewerContext);
+  const { highlights, scale, deleteHighlight, tool } =
+    useContext(ViewerContext);
   const pageHighlights = highlights.filter((hl) => hl.page === pageNum);
 
   if (!pageHighlights.length || scale === null) return null;
 
   return (
-    <div
-      className="annotationEditorLayer absolute inset-0 pointer-events-none"
-      style={{ zIndex: 2 }} // Highest z-index for interaction
-    >
+    <div className="annotationEditorLayer absolute inset-0 pointer-events-none">
       {pageHighlights.map((hl) => {
         // Calculate the bounding box for all quads in the highlight
         if (!hl.quads.length) return null;
@@ -45,10 +43,15 @@ export default function AnnotationEditorLayer({
         };
 
         // This is the BOXED DIV
+        // TODO: this should be pointer events none until when user chooses highlight or double clicks in proximity of the highlight
         return (
           <div
             key={hl.id}
-            className="absolute border-2 border-dashed border-transparent hover:border-blue-500 pointer-events-auto group"
+            className={`absolute border-2 border-dashed border-transparent hover:border-blue-500 pointer-events-auto group ${
+              tool === "highlight"
+                ? "pointer-events-auto"
+                : "pointer-events-none"
+            }`}
             style={box}
           >
             <button

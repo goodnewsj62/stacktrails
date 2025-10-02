@@ -6,6 +6,7 @@ import "pdfjs-dist/web/pdf_viewer.css";
 import React, { createContext, useEffect, useRef, useState } from "react";
 import PdfPage from "./PDFPage";
 import PDFControls from "./components/PDFControl";
+import usePageIntersection from "./hooks/usePageIntersection";
 
 // --- PDF.js WORKER SETUP ---
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
@@ -18,6 +19,8 @@ const initialState = {
   tool: "select" as Tool,
   highlights: [] as Highlight[],
   currentPage: 1, // Start at page 1
+  annotations: [] as PdfCustomAnnotation[],
+  showAnnotations: true,
 };
 
 type ViewerContextType = typeof initialState & {
@@ -53,39 +56,7 @@ export default function PdfViewer({ url }: { url: string }) {
     loadPdf();
   }, [url]);
 
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    observer.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // Get the page number from the data attribute
-
-            const pageNum = entry.target.getAttribute("data-page-index");
-            if (pageNum) {
-              setViewerState((s) => ({
-                ...s,
-                currentPage: parseInt(pageNum, 10),
-              }));
-            }
-          }
-        });
-      },
-      {
-        root: containerRef.current, // The scrollable container
-        threshold: 0.3, // 50% of the page must be visible
-        // rootMargin: `-40px 0px 0px 0px`,
-      }
-    );
-
-    // Cleanup function to disconnect the observer
-    return () => {
-      if (observer.current) {
-        observer.current.disconnect();
-      }
-    };
-  }, []); // Run this effect only once
+  usePageIntersection({ containerRef, observer, setViewerState });
 
   // Function to add a new highlight
   const addHighlight = (highlight: Omit<Highlight, "id">) => {

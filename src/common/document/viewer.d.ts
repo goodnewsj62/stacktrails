@@ -13,3 +13,28 @@ interface Highlight {
   quads: Quad[];
   comment?: string;
 }
+
+type PdfPoint = {
+  x: number;
+  y: number;
+};
+
+type PdfCustomAnnotation = {
+  id: string;
+  text: string;
+  page: number;
+  point: PdfPoint;
+  type: Omit<selectOptionsT | "copy">;
+};
+
+type ContextInfo = {
+  pdfCoord: PdfPoint;
+  screenCoord: { x: number; y: number };
+  text?: string;
+};
+
+type selectOptionsT = "note" | "ai" | "copy";
+type AnnotationPinProps = {
+  annotation: PdfCustomAnnotation;
+  viewport: pdfJs.PageViewport;
+};

@@ -1,6 +1,7 @@
 import * as pdfjsLib from "pdfjs-dist";
 import "pdfjs-dist/web/pdf_viewer.css";
 import { RefObject, useContext, useEffect, useRef, useState } from "react";
+import AnnotationDisplayLayer from "./components/AnnotationDisplayLayer";
 import AnnotationEditorLayer from "./components/AnnotationEditorLayer";
 import HighlightLayer from "./components/Highlight";
 import CanvasLayer from "./components/PdfMainCanva";
@@ -81,7 +82,7 @@ export default function PdfPage({
     <div
       className="page-custom relative mb-1 shadow-lg bg-white "
       style={{
-        width: "100%",
+        width: `${viewport.width}px`,
         height: `${viewport.height}px`,
       }}
       data-page-index={pageNum}
@@ -91,16 +92,14 @@ export default function PdfPage({
       <div className="canvasWrapper w-full h-full overflow-hidden">
         <CanvasLayer page={page} viewport={viewport} />
         {/* SVG highlights are siblings to the canvas */}
+
         <HighlightLayer pageNum={pageNum} />
       </div>
 
       {/* 2. TEXT LAYER */}
       <TextLayer page={page} viewport={viewport} />
 
-      {/* 3. ANNOTATION LAYER (Placeholder as per your research) */}
-      <div className="annotationLayer absolute top-0 left-0 pointer-events-none">
-        {/* Links or other PDF-native annotations would go here */}
-      </div>
+      <AnnotationDisplayLayer pageNum={pageNum} viewport={viewport} />
 
       {/* 4. ANNOTATION EDIT LAYER */}
       <AnnotationEditorLayer pageNum={pageNum} />

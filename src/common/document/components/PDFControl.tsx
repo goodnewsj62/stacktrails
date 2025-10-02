@@ -1,3 +1,4 @@
+import { appToast } from "@/lib/appToast";
 import "pdfjs-dist/web/pdf_viewer.css";
 import { useContext, useEffect, useState } from "react";
 import {
@@ -11,7 +12,7 @@ import { FaHighlighter, FaRegCommentDots } from "react-icons/fa6";
 import { ViewerContext } from "../PDFViewer";
 
 export default function PDFControls() {
-  const { pageCount, tool, setState, scale, currentPage } =
+  const { pageCount, tool, setState, scale, currentPage, showAnnotations } =
     useContext(ViewerContext);
 
   const [inputValue, setInputValue] = useState(String(currentPage));
@@ -95,7 +96,9 @@ export default function PDFControls() {
         <div className="flex items-center gap-4">
           <button
             type="button"
-            onClick={() => setTool("highlight")}
+            onClick={() =>
+              setTool(tool === "highlight" ? "select" : "highlight")
+            }
             className={`cursor-pointer hover:text-gray-300 ${
               tool === "highlight" ? "text-yellow-400" : ""
             }`}
@@ -104,19 +107,30 @@ export default function PDFControls() {
           </button>
           <button
             type="button"
-            onClick={() => setTool("comment")}
+            onClick={() =>
+              setState((s) => ({ ...s, showAnnotations: !showAnnotations }))
+            }
             className={`cursor-pointer hover:text-gray-300 ${
-              tool === "comment" ? "text-blue-400" : ""
+              showAnnotations ? "text-blue-400" : ""
             }`}
+            title={
+              showAnnotations ? "turn off annotations" : "show annotations"
+            }
           >
             <FaRegCommentDots />
           </button>
           <button
             type="button"
-            onClick={() => setTool("copy")}
-            className={`cursor-pointer hover:text-gray-300 ${
-              tool === "copy" ? "text-green-400" : ""
-            }`}
+            onClick={() => {
+              const selection = window.getSelection();
+              if (selection && !selection.isCollapsed) {
+                return navigator.clipboard
+                  .writeText(selection.toString())
+                  .then(() => appToast.Success("text copied!"));
+              }
+              appToast.Info("no text selected");
+            }}
+            className={`cursor-pointer hover:text-gray-300 `}
           >
             <FaCopy />
           </button>
