@@ -17,6 +17,8 @@ import { Button } from "@mui/material";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { use, useState } from "react";
+import Attachments from "./Attachments";
+import ModuleDetail from "./ModuleDetail";
 import useCourseSectionQuery from "./useFetchSection";
 
 export default function Page({
@@ -100,7 +102,7 @@ export default function Page({
                 <section className="flex items-center justify-end px-4">
                   <Link href={AppRoutes.getCreateModuleRoute(section_id)}>
                     <Button className="!capitalize !font-bold" size="large">
-                      {t("SECTIONS.CREATE")}
+                      {t("MODULE.CREATE")}
                     </Button>
                   </Link>
                 </section>
@@ -114,12 +116,12 @@ export default function Page({
               </div>
             )}
           </div>
-          {/* {popUp && (
-            <SectionDetail
+          {popUp && (
+            <ModuleDetail
               data={popUp}
               onClose={() => setPopUpState(undefined)}
             />
-          )} */}
+          )}
         </div>
       )}
     </LoadingComponent>
@@ -173,6 +175,7 @@ function SortableSectionContainer({
   module: FullModule;
   setPopUpState: (val: FullModule) => any;
 }) {
+  const [showAttachments, setShowAttachments] = useState(false);
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: module.id });
 
@@ -204,15 +207,23 @@ function SortableSectionContainer({
           size="small"
           variant="outlined"
           onClick={() => setPopUpState(module)}
+          className="!capitalize"
         >
           View
         </Button>
-        <Link href={AppRoutes.getCreateModuleRoute(module.id)}>
-          <Button size="small" variant="contained">
-            See Modules
-          </Button>
-        </Link>
+
+        <Button
+          size="small"
+          variant="contained"
+          className="!capitalize"
+          onClick={() => setShowAttachments(true)}
+        >
+          Attachments
+        </Button>
       </div>
+      {showAttachments && (
+        <Attachments data={module} onClose={() => setShowAttachments(false)} />
+      )}
     </div>
   );
 }

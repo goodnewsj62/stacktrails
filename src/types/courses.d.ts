@@ -67,7 +67,7 @@ interface Module {
   module_type: "video" | "external_link" | "document" | "quiz" | "discussion";
 }
 type Contentdata = {
-  additionalProp1: AdditionalProp1;
+  [any]: any;
 };
 type AdditionalProp1 = {};
 
@@ -153,6 +153,7 @@ type VideoContent = {
   embed_settings: Contentdata;
   id: string;
   module_id: string;
+  embed_url: string;
 };
 
 type Profile = {
@@ -224,13 +225,13 @@ interface Viewersettings {
 type CreateAttachmentContent = {
   attachment_type: "document" | "external_link";
   file_url: string;
-  external_file_id: string;
-  embed_url: string;
+  external_file_id?: string;
+  embed_url?: string;
   title: string;
-  description: string;
-  document_type: string;
-  file_type: string;
-  module_id: string;
+  description?: string;
+  document_type?: documentType;
+  file_type?: string;
+  module_id?: string;
 };
 
 type DocumentItem = {

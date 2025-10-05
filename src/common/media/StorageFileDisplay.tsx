@@ -17,6 +17,7 @@ import { BsArrowLeft } from "react-icons/bs";
 import { FaPlus } from "react-icons/fa";
 import { GrStorage } from "react-icons/gr";
 import { IoClose, IoGrid, IoList } from "react-icons/io5";
+import Empty from "../utils/Empty";
 import LoadingComponent from "../utils/LoadingComponent";
 
 type mime_ = "image" | "document" | "video" | "folder";
@@ -238,6 +239,7 @@ function ListFiles() {
         empty={data && data.length < 1}
         error={status === "error"}
         loadingComponent={<LoadingDisplay />}
+        emptyComponent={<Empty height={200} width={200} />}
       >
         {(cleanedData) => (
           <div

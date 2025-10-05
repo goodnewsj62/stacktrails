@@ -47,6 +47,9 @@ export class AppRoutes {
   static EDIT_SECTION(section_id: string) {
     return `/create/section/${section_id}/edit`;
   }
+  static EDIT_MODULE(section_id: string, module_id: string) {
+    return `/create/section/${section_id}/module/${module_id}`;
+  }
   static SECTION_MODULES(section_id: string) {
     return `/create/section/${section_id}`;
   }
@@ -95,6 +98,8 @@ export class BackendRoutes {
     `/courses/${course_id}/enroll`;
   static GET_SECTION = (section_id: string) => `/courses/section/${section_id}`;
   static GET_MODULE = (module_id: string) => `/courses/module/${module_id}`;
+  static GET_FULL_MODULE = (module_id: string) =>
+    `/courses/module/full/${module_id}`;
 
   static LIST_ACTIVE_PROVIDERS = "/list-active-providers";
   static LIST_ACTIVE_STORAGE_PROVIDERS = "/list-active-storage-providers";
@@ -107,4 +112,11 @@ export class BackendRoutes {
   static GOOGLE_SHORT_LIVED = "/auth/google/shortlived";
   static DROP_BOX_SHORT_LIVED = "/auth/drobox/shortlived";
   static VALIDATE_DOCUMENT = "/documents/validate";
+  static CREATE_VIDEO = "/courses/video";
+  static CREATE_DOCUMENT = "/courses/document";
+  static CREATE_ATTACHMENT = "/courses/add-attachments";
+  static REMOVE_ATTACHMENT = (id: string) => `/courses/remove-attachment/${id}`;
+  static UPDATE_VIDEO = (id: string) => "/courses/video" + `/${id}`;
+  static UPDATE_DOCUMENT = (id: string) => "/courses/document" + `/${id}`;
+  static UPDATE_MODULE = (id: string) => `/courses/module/${id}`;
 }

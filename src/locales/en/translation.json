@@ -216,6 +216,7 @@
     },
     "MODULE": {
         "CREATE": "Create Module",
+        "UPDATE": "Update Module",
         "EMPTY": "Let's create a module",
         "MODULES": "Modules",
         "TITLE": "Module title",
@@ -230,10 +231,37 @@
             "QUIZ": "quiz",
             "DISCUSSION": "discussion",
             "EXTERNAL_LINK": "external_link"
-        }
+        },
+        "EDIT": "Edit",
+        "ORDER": "order",
+        "ATTACHMENTS": "Attachments",
+        "CREATE_ATTACHMENT": "Create Attachment",
+        "NO_ATTACHMENT": "No attachments yet",
+        "CREATING_ATTACHMENT": "Creating attachment for module",
+        "SAVE_ATTACHMENT": "Save Attachment",
+        "ATTACHMENT_SAVED": "Attachment saved",
+        "ERROR_SAVING_ATTACHMENT": "Oops! could not save attachment",
+        "DELETE_DOCUMENT": "Are you sure you want to delete this document",
+        "ATTACHMENT_REMOVED": "Attachment deleted",
+        "ERROR_REMOVING_ATTACHMENT": "Oops! could not delete attachment",
+        "SUBMITTING_CONTENT": "submitting content...",
+        "MODULE_MESSAGE": "Module has been created successfully",
+        "ATTACH_VIDEO": "Failed to attach video",
+        "ATTACH_DOCUMENT": "Failed to attach document",
+        "FAILED_CREATE_MODULE": "Failed to create module"
     },
     "DONE": "Done",
     "LINK_SUBMITTED": "link submitted",
     "PROCESSING_FAILED": "could not process data",
-    "PROCESSING": "Processing..."
+    "PROCESSING": "Processing...",
+    "PREVIEW": "Preview",
+    "EMPTY": "Empty",
+    "CANCEL_TEXT": "No,  Cancel",
+    "PROCEED_TEXT": "Yes, Proceed",
+    "CONFIRM_DELETE": "Confirm Delete",
+    "PROCEED_DELETE": "Yes, Delete",
+    "REMOVE": "Remove",
+    "VALID_URL": "not a valid url example[https://google.com]",
+    "SUBMIT": "Submit",
+    "UPDATE": "Update"
 }

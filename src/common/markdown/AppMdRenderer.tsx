@@ -12,7 +12,7 @@ const MarkdownRenderer = ({
 }) => {
   return (
     <div
-      className={`relative prose prose-neutral dark:prose-invert  max-w-none w-fit ${className}`}
+      className={`relative prose prose-neutral   max-w-none w-fit ${className}`}
     >
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkBreaks]}
