@@ -11,7 +11,7 @@ type StringArrayInputProps = {
 };
 
 const StringArrayInput: React.FC<StringArrayInputProps> = ({ name, label }) => {
-  const { control, getValues } = useFormContext();
+  const { control, getValues, trigger } = useFormContext();
   const { fields, append, remove, update } = useFieldArray({
     control,
     name,
@@ -41,7 +41,7 @@ const StringArrayInput: React.FC<StringArrayInputProps> = ({ name, label }) => {
     }
   }, [fields.length, name, getValues, editIndex]);
 
-  const handleUpdate = (index: number) => {
+  const handleUpdate = async (index: number) => {
     if (editValue.trim() !== "") {
       update(index, editValue.trim());
     } else {
@@ -50,6 +50,7 @@ const StringArrayInput: React.FC<StringArrayInputProps> = ({ name, label }) => {
     }
     setEditIndex(null);
     setEditValue("");
+    await trigger(name);
   };
 
   const handleEdit = (index: number) => {

@@ -116,17 +116,24 @@ export default function ModuleForm({
     formState: { errors },
   } = form;
 
-  const getAvailableIndex = useCallback((modules: FullModule[]) => {
-    if (modules.length < 1) return [[1, true]];
+  const getAvailableIndex = useCallback(
+    (modules: FullModule[], currentOrder?: number) => {
+      if (modules.length < 1) return [[1, true]];
 
-    const available = new Map(
-      Array.from({ length: modules.length + 1 }, (_, i) => [i + 1, true])
-    );
+      const available = new Map(
+        Array.from({ length: modules.length + 1 }, (_, i) => [i + 1, true])
+      );
 
-    modules.forEach((module) => available.delete(module.order_index));
+      modules.forEach((module) => {
+        if (module.order_index !== currentOrder) {
+          available.delete(module.order_index);
+        }
+      });
 
-    return available.entries();
-  }, []);
+      return available.entries();
+    },
+    []
+  );
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: Partial<CreateMoule>): Promise<FullModule> => {
@@ -308,12 +315,12 @@ export default function ModuleForm({
                 label={
                   <div className="text-[#111213]">{t("SECTIONS.ORDER")}</div>
                 }
-                options={Array.from(getAvailableIndex(sections.modules)).map(
-                  ([value, _]) => ({
-                    text: value.toString(),
-                    value: value,
-                  })
-                )}
+                options={Array.from(
+                  getAvailableIndex(sections.modules, module?.order_index)
+                ).map(([value, _]) => ({
+                  text: value.toString(),
+                  value: value,
+                }))}
                 message={errors.order_index?.message}
               />
 

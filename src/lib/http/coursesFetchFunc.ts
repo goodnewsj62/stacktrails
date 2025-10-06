@@ -79,7 +79,7 @@ export async function updateCourseFunction(
   slug: string,
   data: Partial<CourseCreate>
 ): Promise<Course> {
-  const resp = await appAxios.post<any>(
+  const resp = await appAxios.patch<any>(
     BackendRoutes.COURSE_DETAIL(slug),
     data
   );
@@ -90,6 +90,17 @@ export async function createSectionFunction(
   data: CreateSection
 ): Promise<Section> {
   const resp = await appAxios.post<any>(BackendRoutes.CREATE_SECTION, data);
+  return resp.data;
+}
+
+export async function updateSectionFunction(
+  id: string,
+  data: Partial<CreateSection>
+): Promise<Section> {
+  const resp = await appAxios.patch<any>(
+    BackendRoutes.UPDATE_SECTION(id),
+    data
+  );
   return resp.data;
 }
 

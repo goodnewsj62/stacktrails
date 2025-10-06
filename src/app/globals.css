@@ -40,6 +40,15 @@
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.14);
   }
 }
+
+@layer base {
+  html {
+    @apply overflow-y-scroll;
+    /* or */
+    scrollbar-gutter: stable;
+  }
+}
+
 body {
   font-family: var(--font-lexend);
 }

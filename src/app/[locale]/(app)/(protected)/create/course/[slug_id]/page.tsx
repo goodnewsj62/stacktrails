@@ -48,7 +48,7 @@ export default function Page({
       await updateCourseFunction(slug, { status }),
     onSuccess(_, variable) {
       appToast.Success(
-        t("CREATED_COURSE.ERROR", {
+        t("CREATED_COURSE.SUCCESS", {
           published: variable === "archive" ? variable + "ed" : variable,
         })
       );
@@ -198,6 +198,7 @@ export default function Page({
                     sizes="(max-width: 768px) 100vw, 50vw"
                     style={{ objectFit: "cover" }}
                     className="block rounded-xl"
+                    unoptimized
                     //   onError={() => setImgSrc("/placeholder.png")}
                   />
                 </div>

@@ -88,7 +88,8 @@ export class BackendRoutes {
   static LIKE_COMMENT = (comment_id: string) =>
     `/courses/${comment_id}/like-unlike`;
   static COURSE_REVIEW = (course_id: string) => `/courses/${course_id}/ratings`;
-  static CREATE_SECTION = `/courses/section`;
+  static CREATE_SECTION = "/courses/section";
+  static UPDATE_SECTION = (id: string) => `/courses/section/${id}`;
   static CREATE_MODULE = `/courses/module`;
 
   static CREATE_RATING = "/courses/ratings";

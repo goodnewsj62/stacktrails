@@ -6,14 +6,14 @@ import { useAppStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-export default function useFullCourseQuery(slug: string) {
+export default function useFullCourseQuery(slug?: string) {
   const { user } = useAppStore((state) => state);
   const router = useRouter();
 
   const query = useQuery({
     queryKey: [cacheKeys.COURSE_DETAIL, slug, user?.id],
-    queryFn: getFullCourseContent({ slug: slug }),
-    enabled: !!user?.id,
+    queryFn: getFullCourseContent({ slug: slug as any }),
+    enabled: !!user?.id && !!slug,
   });
 
   const { data, status } = query;

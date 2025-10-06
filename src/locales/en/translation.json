@@ -108,7 +108,9 @@
         "LOADING_REVIEWS": "Loading reviews",
         "LOAD_MORE_REVIEWS": "Load more reviews",
         "LOADING_COMMENTS": "Loading Comments",
-        "LOAD_MORE_COMMENT": "Load more comments"
+        "LOAD_MORE_COMMENT": "Load more comments",
+        "SIGN_IN": "Sign in to review",
+        "CREATION_FAILED": "Make sure you are enrolled,  an error occurred"
     },
     "COURSE_DETAIL": {
         "CREATED_BY": "created by",
@@ -185,7 +187,7 @@
         "VISIBILITY": "Course Visibility",
         "ESTIMATE_DURATION": "Estimated duration '(hours)'",
         "LANGUAGE": "language",
-        "CREATED": "Course created successfully!"
+        "CREATED": "Course {created} successfully!"
     },
     "CREATED_COURSE": {
         "INSTRUCTION": "A course must contain at least one section and one module before it can be published",
@@ -212,7 +214,8 @@
         "SEQUENTIAL": "sequential",
         "FLEXIBLE": "flexible",
         "COMPLETION_CRITERIA": "Completion criteria",
-        "EDIT": "Edit"
+        "EDIT": "Edit",
+        "CREATED": "Section {created} successfully"
     },
     "MODULE": {
         "CREATE": "Create Module",
@@ -263,5 +266,7 @@
     "REMOVE": "Remove",
     "VALID_URL": "not a valid url example[https://google.com]",
     "SUBMIT": "Submit",
-    "UPDATE": "Update"
+    "UPDATE": "Update",
+    "CREATED": "Created",
+    "UPDATED": "Updated"
 }

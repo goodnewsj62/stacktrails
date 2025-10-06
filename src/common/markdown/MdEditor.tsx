@@ -9,13 +9,15 @@ const mdParser = new MarkdownIt(/* Markdown-it options */);
 export default function EditorLite({
   changeHandler,
   text,
+  style,
 }: {
   text: string;
   changeHandler: (text: string) => void;
+  style?: React.CSSProperties;
 }) {
   return (
     <MdEditor
-      style={{ height: "500px" }}
+      style={{ height: "500px", ...style }}
       value={text}
       renderHTML={(text_) => mdParser.render(text_)}
       onChange={({ text: text_ }) => {
