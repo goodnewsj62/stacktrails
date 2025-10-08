@@ -190,14 +190,18 @@
         "CREATED": "Course {created} successfully!"
     },
     "CREATED_COURSE": {
-        "INSTRUCTION": "A course must contain at least one section and one module before it can be published",
+        "INSTRUCTION": "A course must contain at least one section and every section must have a module before it can be published",
         "MANAGE": "View/Manage Course Sections",
         "PUBLISH": "Publish",
         "ARCHIVE": "Archive",
         "EDIT": "Edit Course",
         "PREVIEW": "Preview Course",
         "ERROR": "A Error occurred. We could not {publish} course",
-        "SUCCESS": "Course has been {published} successfully"
+        "SUCCESS": "Course has been {published} successfully",
+        "PUBLISHED": "Published courses",
+        "ENROLLED_STUDENT": "Student enrolled",
+        "TOTAL_REVIEWS": "Total reviews",
+        "TOTAL_COMMENTS": "Total comments"
     },
     "SECTIONS": {
         "CREATE": "Add section",
@@ -253,6 +257,11 @@
         "ATTACH_DOCUMENT": "Failed to attach document",
         "FAILED_CREATE_MODULE": "Failed to create module"
     },
+    "DASHBOARD": {
+        "IN_PROGRESS": "In Progress",
+        "COMPLETED": "Completed",
+        "CREATED": "Created Courses"
+    },
     "DONE": "Done",
     "LINK_SUBMITTED": "link submitted",
     "PROCESSING_FAILED": "could not process data",
@@ -268,5 +277,13 @@
     "SUBMIT": "Submit",
     "UPDATE": "Update",
     "CREATED": "Created",
-    "UPDATED": "Updated"
+    "UPDATED": "Updated",
+    "WELCOME_MESSAGE": "Welcome back,",
+    "STUDY_REPORT": "here is your study report",
+    "ENROLLED_TEXT": "View all enrolled courses",
+    "PROGRESS": "progress",
+    "CREATED_TEXT": "View all created courses",
+    "PUBLISHED": "Published",
+    "REVIEWS": "Reviews",
+    "COMMENTS": "Comments"
 }

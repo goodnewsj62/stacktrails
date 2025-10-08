@@ -35,7 +35,7 @@ export class AppRoutes {
   }
 
   static getPreviewCreatedCourseRoute(slug: string) {
-    return `/create/course/${slug}/preview`;
+    return `/preview/${slug}`;
   }
   static CREATED_COURSE_SECTION(slug: string) {
     return `/create/course/${slug}/sections`;
@@ -120,4 +120,8 @@ export class BackendRoutes {
   static UPDATE_VIDEO = (id: string) => "/courses/video" + `/${id}`;
   static UPDATE_DOCUMENT = (id: string) => "/courses/document" + `/${id}`;
   static UPDATE_MODULE = (id: string) => `/courses/module/${id}`;
+  static STUDENT_DASHBOARD = "/student/dashboard";
+  static ENROLLED_COURSES = "/student/enrolled";
+  static CREATED_COURSE = "/creators/created";
+  static CREATORS_STATS = "/creators/courses/stats";
 }

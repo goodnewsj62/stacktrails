@@ -63,7 +63,7 @@ export default function Page({
   });
 
   const updateHandler = (should: "published" | "archive") => {
-    const canPublish = (data as FullCourse)?.sections?.some(
+    const canPublish = (data as FullCourse)?.sections?.every(
       (section) => !!section.modules?.length
     );
     if (!canPublish) {

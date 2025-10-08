@@ -256,3 +256,50 @@ type DocumentValidationResponse = {
   page_count?: number;
   error_message?: string;
 };
+
+type StudentStat = {
+  completed_courses: number;
+  created_courses: number;
+  in_progress: number;
+};
+
+type CreatorStat = {
+  total_enrolled: number;
+  total_reviews: number;
+  total_comments: number;
+  total_published: number;
+};
+
+type CourseProgress = {
+  status: string;
+  start_time: string;
+  completion_time: string;
+  time_spent_seconds: number;
+  progress_data: Progressdata;
+  next_module: string;
+  next_section: string;
+  current_streak: number;
+  longest_streak: number;
+  last_active_date: string;
+  id: string;
+  account_id: string;
+  course_id: string;
+};
+
+type Progressdata = {
+  [string]: any;
+};
+
+type CourseEnrollment = {
+  status: string;
+  id: string;
+  account_id: string;
+  course_id: string;
+  completion_date: string;
+  progress_percentage: number;
+};
+
+type EnrolledCourse = {
+  course: Course;
+  enrollment: CourseEnrollment;
+};

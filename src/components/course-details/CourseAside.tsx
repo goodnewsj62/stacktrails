@@ -33,9 +33,11 @@ import { MdGroups } from "react-icons/md";
 import StarRating from "../courses/Stars";
 import IconAndText from "./IconAndText";
 
-type CourseAsideProps = {};
+type CourseAsideProps = {
+  isPreview?: boolean;
+};
 
-const CourseAside: React.FC<CourseAsideProps> = () => {
+const CourseAside: React.FC<CourseAsideProps> = ({ isPreview }) => {
   const t = useTranslations("COURSE_DETAIL");
   const tl = useTranslations("DIFFICULTY_LEVEL");
   const { slug_id } = useParams<{ slug_id: string }>();
@@ -91,7 +93,11 @@ const CourseAside: React.FC<CourseAsideProps> = () => {
 
       <div className="p-4 flex flex-col gap-4 font-light">
         <p className="text-sm">{data.short_description}</p>
-        <EnrollCTAButton course_id={data.id} slug={slug_id} />
+        {isPreview ? (
+          <Button> CTA Button </Button>
+        ) : (
+          <EnrollCTAButton course_id={data.id} slug={slug_id} />
+        )}
 
         <div className="flex items-center gap-1">
           <StarRating rating={data.average_rating} size="medium" />
