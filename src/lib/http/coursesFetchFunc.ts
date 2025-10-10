@@ -1,4 +1,5 @@
 import { BackendRoutes } from "@/routes";
+import { AxiosResponse } from "axios";
 import appAxios from "../axiosClient";
 
 export function getCoursesQueryFn({
@@ -35,9 +36,18 @@ export function getMinimalCourseContent({ slug }: { slug: string }) {
   };
 }
 export function getFullCourseContent({ slug }: { slug: string }) {
-  return async (): Promise<CourseContentMin> => {
+  return async (): Promise<AxiosResponse<CourseContentMin>> => {
     const res = await appAxios.get<CourseContentMin>(
       BackendRoutes.COURSE_CONTENT_FULL(slug)
+    );
+
+    return res;
+  };
+}
+export function getCourseProgress({ course_id }: { course_id: string }) {
+  return async (): Promise<CourseProgress> => {
+    const res = await appAxios.get<CourseProgress>(
+      BackendRoutes.COURSE_PROGRESS(course_id)
     );
 
     return res.data;
@@ -45,8 +55,8 @@ export function getFullCourseContent({ slug }: { slug: string }) {
 }
 
 export function hasEnrolled({ courseId }: { courseId: string }) {
-  return async (): Promise<EnrollmentResp> => {
-    const res = await appAxios.get<EnrollmentResp>(
+  return async (): Promise<CourseEnrollment> => {
+    const res = await appAxios.get<CourseEnrollment>(
       BackendRoutes.GET_COURSE_ENROLLMENT(courseId)
     );
 

@@ -63,7 +63,7 @@ export default function Page({
   });
 
   const updateHandler = (should: "published" | "archive") => {
-    const canPublish = (data as FullCourse)?.sections?.every(
+    const canPublish = (data?.data as FullCourse)?.sections?.every(
       (section) => !!section.modules?.length
     );
     if (!canPublish) {
@@ -101,7 +101,7 @@ export default function Page({
     <LoadingComponent
       loading={isLoading}
       error={status === "error"}
-      data={data as FullCourse}
+      data={data?.data as FullCourse}
     >
       {(cleanedData) => (
         <div className="px-4 xl:px-0">
@@ -192,7 +192,9 @@ export default function Page({
 
                 <div className="relative order-1 w-full h-[220px] lg:w-[300px] lg:order-none">
                   <Image
-                    src={getImageProxyUrl(data?.image) || "/placeholder.png"}
+                    src={
+                      getImageProxyUrl(cleanedData?.image) || "/placeholder.png"
+                    }
                     alt={"course thumbnail"}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"

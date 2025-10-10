@@ -14,7 +14,7 @@ const PlayerControlsWrapper: React.FC<PlayerControlsWrapperProps> = ({
 }) => {
   return (
     <div
-      className={`absolute bottom-0 left-0 right-0 z-[100] flex flex-col  transition-opacity duration-300 ${
+      className={`absolute bg-black/60 bottom-0 left-0 right-0 z-[100] flex flex-col gap-2 py-2  transition-opacity duration-300 ${
         controlsVisible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >

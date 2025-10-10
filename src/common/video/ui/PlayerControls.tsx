@@ -98,7 +98,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ playerRef }) => {
 
   // --- UI ---
   return (
-    <div className="flex items-center justify-between bg-black/60 text-white px-3 py-2 text-sm z-[200]">
+    <div className="flex items-center justify-between text-white px-3 py-2 text-sm z-[200]">
       {/* Left controls */}
       <div className="flex items-center gap-3">
         {/* Play / Pause */}

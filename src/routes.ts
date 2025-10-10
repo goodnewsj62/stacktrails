@@ -124,4 +124,6 @@ export class BackendRoutes {
   static ENROLLED_COURSES = "/student/enrolled";
   static CREATED_COURSE = "/creators/created";
   static CREATORS_STATS = "/creators/courses/stats";
+  static COURSE_PROGRESS = (course_id: string) =>
+    `/courses/${course_id}/progress`;
 }

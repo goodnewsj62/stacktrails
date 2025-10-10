@@ -22,13 +22,14 @@ export default function Page({
     isLoading: loadingCourse,
   } = useFullCourseQuery(data?.course?.slug);
 
-  console.log(data);
-
   return (
     <LoadingComponent
       loading={isLoading || loadingCourse}
       error={status === "error" || courseStatus === "error"}
-      data={{ section: data as FullSection, course: courseData as FullCourse }}
+      data={{
+        section: data as FullSection,
+        course: courseData?.data as FullCourse,
+      }}
     >
       {({ course, section }) => (
         <SectionForm course={course} section={section} />

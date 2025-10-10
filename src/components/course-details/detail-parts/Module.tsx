@@ -40,7 +40,7 @@ const Module: React.FC<ModuleProps> = ({ data, showDescription }) => {
       <div className="flex items-center gap-8">
         <h3>
           {contentTypeIcons[data.module_type]}
-          Module title
+          {data.title}
         </h3>
         {showDescription && (
           <button

@@ -33,7 +33,7 @@ export default function Page({ params }: props) {
     <LoadingComponent
       loading={isLoading}
       error={status === "error"}
-      data={data as FullCourse}
+      data={data?.data as FullCourse}
     >
       {(validData) => (
         <main className="">

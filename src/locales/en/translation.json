@@ -285,5 +285,15 @@
     "CREATED_TEXT": "View all created courses",
     "PUBLISHED": "Published",
     "REVIEWS": "Reviews",
-    "COMMENTS": "Comments"
+    "COMMENTS": "Comments",
+    "NOT_FOUND": "Not found",
+    "PERMISSION_REQUIRED": "Permission Required",
+    "PERMISSION_MESSAGE": "you are not authorized to access this resource",
+    "NOT_FOUND_TEXT": "Course not found",
+    "ATTACHMENT": "Attachment",
+    "COMING_SOON": "Coming soon",
+    "UNDER_CONSTRUCTION": "This feature is under construction and will be available soon!",
+    "STUDY_WITH_ME": "Study with me on Stacktrails",
+    "COURSE_ITEMS": "Course Items",
+    "CHATS": "Chats"
 }

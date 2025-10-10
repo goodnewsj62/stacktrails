@@ -19,7 +19,7 @@ export default function Page({
   return (
     <LoadingComponent
       loading={isLoading}
-      data={data as FullCourse}
+      data={data?.data as FullCourse}
       error={status === "error"}
     >
       {(cleanedData) => <CourseForm course={cleanedData} />}
