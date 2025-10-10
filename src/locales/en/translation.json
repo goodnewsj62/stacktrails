@@ -262,6 +262,8 @@
         "COMPLETED": "Completed",
         "CREATED": "Created Courses"
     },
+    "SUMMARY": "Summary",
+    "COURSE_SUMMARY": "Course summary",
     "DONE": "Done",
     "LINK_SUBMITTED": "link submitted",
     "PROCESSING_FAILED": "could not process data",

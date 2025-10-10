@@ -6,6 +6,7 @@ import ClientFooter from "@/components/layout/ClientFooter";
 import ContentArea from "@/components/study-area/ContentArea";
 import CourseStructureNav from "@/components/study-area/layout/CourseStructureNav";
 import StudyHeader from "@/components/study-area/layout/StudyHeader";
+import StudyTabs from "@/components/study-area/StudyTabs";
 import { useWindowWidth } from "@/hooks/useWindowWidth";
 import appAxios from "@/lib/axiosClient";
 import { cacheKeys } from "@/lib/cacheKeys";
@@ -14,7 +15,7 @@ import { useAppStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { use, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { FaExpandAlt } from "react-icons/fa";
 import useFullCourseQuery from "../../../../create/course/useFetchFullCourse";
 import useFetchCourseEnrolment from "../useFetchCourseEnrolment";
@@ -29,7 +30,10 @@ export default function Page({
   // const firstModuleIdRef = useRef<string>(null);
   const [moduleId, setModuleId] = useState<string>(module_id);
   const [navCollapsed, setNavCollapsed] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [navHeight, setNavHeight] = useState("calc(100vh - 58px)");
   const windowsWidth = useWindowWidth({});
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -66,6 +70,55 @@ export default function Page({
       router.replace(url, { scroll: false });
     }
   };
+
+  // Handle scroll events for nav height adjustment and snap effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const headerHeight = 58;
+
+      // Clear existing timeout
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+
+      // Update scroll state
+      setIsScrolled(scrollY > 0);
+
+      // Adjust nav height based on scroll position
+      if (scrollY > headerHeight) {
+        setNavHeight("100vh");
+      } else {
+        setNavHeight("calc(100vh - 58px)");
+      }
+
+      // Implement snap effect
+      if (scrollY > 0 && scrollY < headerHeight) {
+        scrollTimeoutRef.current = setTimeout(() => {
+          window.scrollTo({
+            top: headerHeight,
+            behavior: "smooth",
+          });
+        }, 150);
+      } else if (scrollY > headerHeight && scrollY < headerHeight + 20) {
+        scrollTimeoutRef.current = setTimeout(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+        }, 150);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const courseError =
     data?.status === 403 ? (
@@ -104,6 +157,16 @@ export default function Page({
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: #a0aec0;
+        }
+
+        /* Smooth scroll behavior for snap effect */
+        html {
+          scroll-behavior: smooth;
+        }
+
+        /* Prevent scroll chaining during snap effect */
+        body {
+          overscroll-behavior-y: contain;
         }
       `}</style>
       <LoadingComponent
@@ -144,6 +207,15 @@ export default function Page({
                   module={module}
                   isLoading={moduleStatus === "pending"}
                 />
+                <StudyTabs
+                  sections={course.sections}
+                  currentModule={module}
+                  setCurrentModuleId={handleModuleSelect}
+                  progress={progress}
+                  course={course}
+                  showContent={windowsWidth < 1024 || navCollapsed}
+                  showChats={windowsWidth < 1024 || navCollapsed}
+                />
               </section>
 
               <button
@@ -156,10 +228,12 @@ export default function Page({
                 <FaExpandAlt size={20} />
               </button>
               <section
-                className={`hidden bg-white z-[300] top-[58px] right-0 h-[calc(100vh-58px)] overflow-y-auto  lg:!block lg:w-[300px] xl:w-[400px] lg:fixed custom-scrollbar ${
+                className={`hidden bg-white z-[300] right-0 overflow-y-auto lg:!block lg:w-[300px] xl:w-[400px] lg:fixed custom-scrollbar transition-all duration-300 ${
                   navCollapsed && "!-right-[400px]"
                 }`}
                 style={{
+                  top: isScrolled ? "0px" : "58px",
+                  height: navHeight,
                   scrollbarWidth: "thin",
                   scrollbarColor: "#cbd5e0 #f7fafc",
                 }}

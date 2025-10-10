@@ -3,10 +3,10 @@
 import ComingSoon from "@/common/utils/ComingSoon";
 
 type CourseChatProps = {
-  course_id: string;
+  courseId: string;
 };
 
-const CourseChat: React.FC<CourseChatProps> = ({ course_id }) => {
+const CourseChat: React.FC<CourseChatProps> = ({ courseId }) => {
   return <ComingSoon />;
 };
 

@@ -5,8 +5,7 @@ import { Tab, Tabs } from "@mui/material";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { IoClose, IoExpand } from "react-icons/io5";
-import NavModule from "./NavModule";
-import NavSection from "./NavSection";
+import CourseNav from "./CourseNav";
 
 type CourseStructureNavProps = {
   sections: FullSection[];
@@ -65,34 +64,15 @@ const CourseStructureNav: React.FC<CourseStructureNavProps> = ({
         </button>
       </div>
       <div hidden={value === 0}>
-        <CourseChat course_id={""} />
+        <CourseChat courseId={""} />
       </div>
       <div hidden={value === 1}>
-        {sections.map((section) => (
-          <NavSection
-            key={section.id}
-            title={section.title}
-            defaultExpanded={section.id === currentModule.section_id}
-          >
-            <div className="grid ">
-              {section.modules.map((data) => (
-                <NavModule
-                  key={data.id}
-                  data={data as FullModule}
-                  selected={currentModule.id === data.id}
-                  onClick={() => {
-                    if (currentModule.id !== data.id) {
-                      setCurrentModuleId(data.id);
-                    }
-                  }}
-                  completed={(
-                    progress?.progress_data as any
-                  )?.finished_modules?.find((v: any) => v === data.id)}
-                />
-              ))}
-            </div>
-          </NavSection>
-        ))}
+        <CourseNav
+          currentModule={currentModule}
+          sections={sections}
+          setCurrentModuleId={setCurrentModuleId}
+          progress={progress}
+        />
       </div>
     </div>
   );
