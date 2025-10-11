@@ -64,7 +64,7 @@ const StudyHeader: React.FC<StudyHeaderProps> = ({
   };
   return (
     <header
-      className={`bg-[#04111F] gap-4 text-[#fffdfd] h-[58px] flex items-center px-4 md:px-8`}
+      className={`bg-[#04111F] gap-4 text-[#fffdfd] flex flex-wrap items-center px-4 md:px-8 lg:h-[58px]`}
     >
       <Link href={"/"} className="flex items-baseline">
         <Image
@@ -74,15 +74,18 @@ const StudyHeader: React.FC<StudyHeaderProps> = ({
           height={40}
           className="translate-y-1"
         />
-        <h2 className="font-bold -translate-x-2">tacktrails</h2>
+        <h2 className="font-bold -translate-x-2 hidden md:block">tacktrails</h2>
       </Link>
       <Divider
         orientation="vertical"
         sx={{ height: "70%", background: "white" }}
+        className="hidden lg:!block"
       />
-      <div className="">{course.title}</div>
-      <div className="ml-auto flex items-center gap-4">
-        <ProfileListOfStudyGroup />
+      <div className="line-clamp-2">{course.title}</div>
+      <div className="flex items-center gap-4 w-full justify-between lg:!w-auto lg:ml-auto  lg:!justify-start">
+        <div className="hidden md:block">
+          <ProfileListOfStudyGroup />
+        </div>
 
         <CircularProgressWithLabel value={enrollment.progress_percentage} />
 

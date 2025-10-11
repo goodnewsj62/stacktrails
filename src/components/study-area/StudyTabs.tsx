@@ -1,8 +1,9 @@
 "use client";
 
-import { Tab, Tabs } from "@mui/material";
+import { Box, IconButton, Tab, Tabs } from "@mui/material";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import CourseChat from "../chats/CourseChat";
 import CourseNav from "./layout/CourseNav";
 import Comments from "./study-tabs/Comments";
@@ -36,6 +37,9 @@ const StudyTabs: React.FC<StudyTabsProps> = ({
 }) => {
   const t = useTranslations();
   const [value, setValue] = useState("SUMMARY");
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (showChats || showContent)
@@ -65,21 +69,148 @@ const StudyTabs: React.FC<StudyTabsProps> = ({
     setValue(newValue);
   };
 
-  return (
-    <div className="px-8 py-4">
-      <Tabs value={value} onChange={handleChange}>
-        {NAV.map(({ key, title }, index) => (
-          <Tab
-            label={title}
-            key={key}
-            value={key}
-            sx={{ textTransform: "capitalize" }}
-            {...a11yProps(index)}
-          />
-        ))}
-      </Tabs>
+  const checkScrollButtons = () => {
+    const container = tabsContainerRef.current;
+    if (container) {
+      const { scrollLeft, scrollWidth, clientWidth } = container;
+      const canScrollLeftValue = scrollLeft > 5; // Small threshold for precision
+      const canScrollRightValue = scrollLeft < scrollWidth - clientWidth - 5; // Small threshold for precision
 
-      <div className="px-4">
+      console.log("Scroll check:", {
+        scrollLeft,
+        scrollWidth,
+        clientWidth,
+        canScrollLeftValue,
+        canScrollRightValue,
+      });
+
+      setCanScrollLeft(canScrollLeftValue);
+      setCanScrollRight(canScrollRightValue);
+    }
+  };
+
+  const scrollTabs = (direction: "left" | "right") => {
+    const container = tabsContainerRef.current;
+    if (container) {
+      const scrollAmount = 200; // Adjust scroll distance as needed
+      const newScrollLeft =
+        direction === "left"
+          ? container.scrollLeft - scrollAmount
+          : container.scrollLeft + scrollAmount;
+
+      container.scrollTo({
+        left: newScrollLeft,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  useEffect(() => {
+    // Check scroll buttons after a short delay to ensure DOM is ready
+    const timeoutId = setTimeout(() => {
+      checkScrollButtons();
+    }, 100);
+
+    const container = tabsContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", checkScrollButtons);
+      window.addEventListener("resize", checkScrollButtons);
+
+      // Use ResizeObserver to detect when content changes
+      const resizeObserver = new ResizeObserver(() => {
+        setTimeout(checkScrollButtons, 50);
+      });
+      resizeObserver.observe(container);
+
+      return () => {
+        clearTimeout(timeoutId);
+        container.removeEventListener("scroll", checkScrollButtons);
+        window.removeEventListener("resize", checkScrollButtons);
+        resizeObserver.disconnect();
+      };
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [NAV, showContent, showChats]); // Re-check when NAV or visibility changes
+
+  return (
+    <div className="p-4 lg:px-8">
+      <Box className="!relative">
+        {/* Debug info */}
+        {/* <div className="text-xs text-gray-500 mb-2">
+          Left: {canScrollLeft ? "YES" : "NO"} | Right:{" "}
+          {canScrollRight ? "YES" : "NO"} |
+          <button
+            onClick={checkScrollButtons}
+            className="ml-2 px-2 py-1 bg-blue-200 rounded"
+          >
+            Check Scroll
+          </button>
+        </div> */}
+
+        {/* Left scroll button - only visible on mobile when can scroll left */}
+        {canScrollLeft && (
+          <div className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white shadow-md">
+            <IconButton
+              onClick={() => scrollTabs("left")}
+              sx={{
+                width: 32,
+                height: 32,
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                },
+              }}
+            >
+              <IoChevronBack size={16} />
+            </IconButton>
+          </div>
+        )}
+
+        {/* Right scroll button - only visible on mobile when can scroll right */}
+        {canScrollRight && (
+          <div className="absolute -right-2 top-1/2 transform -translate-y-1/2 z-10 bg-white shadow-md">
+            <IconButton
+              onClick={() => scrollTabs("right")}
+              sx={{
+                width: 32,
+                height: 32,
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                },
+              }}
+            >
+              <IoChevronForward size={16} />
+            </IconButton>
+          </div>
+        )}
+
+        <div ref={tabsContainerRef} className="overflow-x-auto scrollbar-hide">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            sx={{
+              minWidth: "max-content",
+              "& .MuiTab-root": {
+                minWidth: "120px", // Ensure tabs are wide enough to cause overflow
+                whiteSpace: "nowrap",
+              },
+            }}
+          >
+            {NAV.map(({ key, title }, index) => (
+              <Tab
+                label={title}
+                key={key}
+                value={key}
+                sx={{ textTransform: "capitalize" }}
+                {...a11yProps(index)}
+              />
+            ))}
+          </Tabs>
+        </div>
+      </Box>
+      <div className="lg:px-4">
         <div hidden={value !== "REVIEWS"} className="py-8">
           <Review courseId={course.id} />
         </div>

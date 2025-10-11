@@ -96,11 +96,35 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ playerRef }) => {
     return `${minutes}:${seconds}`;
   };
 
+  const playbackSpeed = (
+    <select
+      value={playbackRate}
+      onChange={(e) => handleSetPlaybackRate(Number(e.target.value))}
+      className="bg-black/40 border border-gray-500 rounded px-1 text-xs"
+    >
+      {[0.5, 1, 1.25, 1.5, 2].map((rate) => (
+        <option key={rate} value={rate}>
+          {rate}x
+        </option>
+      ))}
+    </select>
+  );
+
+  const fullScreen = (
+    <button type="button" onClick={handleClickFullscreen}>
+      {screenfull.isFullscreen ? (
+        <MdFullscreenExit size={18} />
+      ) : (
+        <MdFullscreen size={18} />
+      )}
+    </button>
+  );
+
   // --- UI ---
   return (
-    <div className="flex items-center justify-between text-white px-3 py-2 text-sm z-[200]">
+    <div className="flex flex-col gap-4 text-white px-3 py-2 text-sm z-[200] md:!flex-row md:items-center md:justify-between">
       {/* Left controls */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-6 w-full md:!gap-3 md:!w-auto">
         {/* Play / Pause */}
         <button type="button" onClick={handlePlayPause}>
           {playing ? <FaPause size={18} /> : <FaPlay size={18} />}
@@ -110,6 +134,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ playerRef }) => {
         <button
           type="button"
           onClick={handleToggleLoop}
+          className="hidden sm:!block"
           className={loop ? "text-primary" : "text-white"}
         >
           <MdLoop size={18} />
@@ -117,7 +142,11 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ playerRef }) => {
 
         {/* backwards by 5 seconds */}
 
-        <button type="button" onClick={() => handleSeekChange("subtract")}>
+        <button
+          type="button"
+          className="hidden sm:!block"
+          onClick={() => handleSeekChange("subtract")}
+        >
           <FaUndo size={16} />
         </button>
 
@@ -127,13 +156,20 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ playerRef }) => {
         </span>
 
         {/* Move 5 seconds */}
-        <button type="button" onClick={() => handleSeekChange()}>
+        <button
+          type="button"
+          className="hidden sm:!block"
+          onClick={() => handleSeekChange()}
+        >
           <FaRedo size={16} />
         </button>
+
+        <div className="md:hidden">{playbackSpeed}</div>
+        <div className="md:hidden">{fullScreen}</div>
       </div>
 
       {/* Right controls */}
-      <div className="flex items-center gap-3">
+      <div className="hidden items-center gap-6 md:!flex md:!gap-3">
         {/* Volume */}
         <button type="button" onClick={handleToggleMuted}>
           {muted || volume === 0 ? (
@@ -153,17 +189,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ playerRef }) => {
         />
 
         {/* Playback rate */}
-        <select
-          value={playbackRate}
-          onChange={(e) => handleSetPlaybackRate(Number(e.target.value))}
-          className="bg-black/40 border border-gray-500 rounded px-1 text-xs"
-        >
-          {[0.5, 1, 1.25, 1.5, 2].map((rate) => (
-            <option key={rate} value={rate}>
-              {rate}x
-            </option>
-          ))}
-        </select>
+        {playbackSpeed}
 
         {/* Picture-in-Picture */}
         <button
@@ -175,13 +201,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ playerRef }) => {
         </button>
 
         {/* Fullscreen */}
-        <button type="button" onClick={handleClickFullscreen}>
-          {screenfull.isFullscreen ? (
-            <MdFullscreenExit size={18} />
-          ) : (
-            <MdFullscreen size={18} />
-          )}
-        </button>
+        {fullScreen}
       </div>
     </div>
   );
