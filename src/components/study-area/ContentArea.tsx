@@ -6,7 +6,7 @@ import ConfirmPopup from "@/common/popups/ComfirmPop";
 import VidPlayer from "@/common/video/VidPlayer";
 import { Button, CircularProgress } from "@mui/material";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight, FaLink } from "react-icons/fa";
 
 type ContentAreaProps = {
@@ -27,6 +27,22 @@ const ContentArea: React.FC<ContentAreaProps> = ({
   const [showWarning, setShowWarning] = useState(
     module.module_type === "external_link"
   );
+  const [showButtons, setShowButtons] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setShowButtons(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setShowButtons(false);
+    }, 650); // 0.65 seconds delay
+  };
 
   if (isLoading) {
     return (
@@ -36,94 +52,114 @@ const ContentArea: React.FC<ContentAreaProps> = ({
     );
   }
   return (
-    <div className="h-full w-full relative">
+    <div
+      className="h-full w-full relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       {/* Navigation Buttons */}
-      <button
-        type="button"
-        className={`absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary-dark transition-colors duration-200`}
-        onClick={() => {
-          // Add your left navigation logic here
-          /* 
-            left click should go to previous module or section if any exists
-              - check if module is first if it is check if there  is a previous section tke the last module 
-              -  if module is not first take the previous one
+      <div className="absolute left-0 top-0 h-full w-full z-10 flex items-center justify-start pointer-events-none">
+        <button
+          type="button"
+          className={`w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary-dark transition-all duration-300 pointer-events-auto ${
+            showButtons
+              ? "opacity-100 translate-x-2 md:translate-x-4"
+              : "opacity-100 md:opacity-0 translate-x-2 md:translate-x-0"
+          }`}
+          onClick={() => {
+            // Add your left navigation logic here
+            /* 
+              left click should go to previous module or section if any exists
+                - check if module is first if it is check if there  is a previous section tke the last module 
+                -  if module is not first take the previous one
 
 
-          */
+            */
 
-          const currentSectionIndex = course.sections.findIndex(
-            (s) => s.id === module.section_id
-          );
-
-          const currentModuleIndex = course.sections[
-            currentSectionIndex
-          ].modules.findIndex((m) => m.id === module.id);
-
-          // Assume that sections are ordered by order index
-          if (currentSectionIndex === 0 && currentModuleIndex === 0) {
-            return;
-          }
-
-          // previous section last module
-          if (currentModuleIndex === 0) {
-            const prevSection = course.sections[currentSectionIndex - 1];
-            setCurrentModuleId(
-              prevSection.modules[prevSection.modules.length - 1].id
+            const currentSectionIndex = course.sections.findIndex(
+              (s) => s.id === module.section_id
             );
 
-            return;
-          }
+            const currentModuleIndex = course.sections[
+              currentSectionIndex
+            ].modules.findIndex((m) => m.id === module.id);
 
-          const currentSection = course.sections[currentSectionIndex];
-          setCurrentModuleId(currentSection.modules[currentModuleIndex - 1].id);
-        }}
-      >
-        <FaChevronLeft />
-      </button>
+            // Assume that sections are ordered by order index
+            if (currentSectionIndex === 0 && currentModuleIndex === 0) {
+              return;
+            }
 
-      <button
-        type="button"
-        className={`absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary-dark transition-colors duration-200`}
-        onClick={() => {
-          // Add your right navigation logic here
-          /*
-          - check if module is the last if it is check if there is another section if there is move to it's first module
-          -  if this is not the last section module move to the next
-          
-        */
+            // previous section last module
+            if (currentModuleIndex === 0) {
+              const prevSection = course.sections[currentSectionIndex - 1];
+              setCurrentModuleId(
+                prevSection.modules[prevSection.modules.length - 1].id
+              );
 
-          const currentSectionIndex = course.sections.findIndex(
-            (s) => s.id === module.section_id
-          );
+              return;
+            }
 
-          const currentModuleIndex = course.sections[
-            currentSectionIndex
-          ].modules.findIndex((m) => m.id === module.id);
+            const currentSection = course.sections[currentSectionIndex];
+            setCurrentModuleId(
+              currentSection.modules[currentModuleIndex - 1].id
+            );
+          }}
+        >
+          <FaChevronLeft className="text-xs md:text-sm lg:text-base" />
+        </button>
+      </div>
 
-          const currentSection = course.sections[currentSectionIndex];
+      <div className="absolute right-0 top-0 h-full w-full z-10 flex items-center justify-end pointer-events-none">
+        <button
+          type="button"
+          className={`w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary-dark transition-all duration-300 pointer-events-auto ${
+            showButtons
+              ? "opacity-100 -translate-x-2 md:-translate-x-4"
+              : "opacity-100 md:opacity-0 -translate-x-2 md:translate-x-0"
+          }`}
+          onClick={() => {
+            // Add your right navigation logic here
+            /*
+            - check if module is the last if it is check if there is another section if there is move to it's first module
+            -  if this is not the last section module move to the next
+            
+          */
 
-          // Assume that sections are ordered by order index
+            const currentSectionIndex = course.sections.findIndex(
+              (s) => s.id === module.section_id
+            );
 
-          incrementProgress({ module_id: module.id });
-          if (
-            currentSectionIndex === course.sections.length - 1 &&
-            currentModuleIndex === currentSection.modules.length - 1
-          ) {
-            return;
-          }
+            const currentModuleIndex = course.sections[
+              currentSectionIndex
+            ].modules.findIndex((m) => m.id === module.id);
 
-          // previous section last module
-          if (currentModuleIndex === currentSection.modules.length - 1) {
-            const nextSection = course.sections[currentSectionIndex + 1];
-            setCurrentModuleId(nextSection.modules[0].id);
-            return;
-          }
+            const currentSection = course.sections[currentSectionIndex];
 
-          setCurrentModuleId(currentSection.modules[currentModuleIndex + 1].id);
-        }}
-      >
-        <FaChevronRight />
-      </button>
+            // Assume that sections are ordered by order index
+
+            incrementProgress({ module_id: module.id });
+            if (
+              currentSectionIndex === course.sections.length - 1 &&
+              currentModuleIndex === currentSection.modules.length - 1
+            ) {
+              return;
+            }
+
+            // previous section last module
+            if (currentModuleIndex === currentSection.modules.length - 1) {
+              const nextSection = course.sections[currentSectionIndex + 1];
+              setCurrentModuleId(nextSection.modules[0].id);
+              return;
+            }
+
+            setCurrentModuleId(
+              currentSection.modules[currentModuleIndex + 1].id
+            );
+          }}
+        >
+          <FaChevronRight className="text-xs md:text-sm lg:text-base" />
+        </button>
+      </div>
 
       {module.module_type === "video" && (
         <div className="w-full lg:h-[630px]">
