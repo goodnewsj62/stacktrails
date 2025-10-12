@@ -8,12 +8,14 @@ type CourseNavProps = {
   progress?: CourseProgress;
   currentModule: FullModule;
   setCurrentModuleId: (id: string) => void;
+  toggleCompleted: toggleCompletedType;
 };
 const CourseNav: React.FC<CourseNavProps> = ({
   sections,
   currentModule,
   setCurrentModuleId,
   progress,
+  toggleCompleted,
 }) => {
   return (
     <>
@@ -37,6 +39,7 @@ const CourseNav: React.FC<CourseNavProps> = ({
                 completed={(
                   progress?.progress_data as any
                 )?.finished_modules?.find((v: any) => v === data.id)}
+                toggleCompleted={toggleCompleted}
               />
             ))}
           </div>

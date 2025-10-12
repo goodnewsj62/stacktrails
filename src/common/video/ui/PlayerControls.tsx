@@ -134,8 +134,7 @@ const PlayerControls: React.FC<PlayerControlsProps> = ({ playerRef }) => {
         <button
           type="button"
           onClick={handleToggleLoop}
-          className="hidden sm:!block"
-          className={loop ? "text-primary" : "text-white"}
+          className={`hidden sm:!block ${loop ? "text-primary" : "text-white"}`}
         >
           <MdLoop size={18} />
         </button>

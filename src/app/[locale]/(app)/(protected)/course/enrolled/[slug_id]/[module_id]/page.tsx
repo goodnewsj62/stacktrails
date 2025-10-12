@@ -8,11 +8,12 @@ import CourseStructureNav from "@/components/study-area/layout/CourseStructureNa
 import StudyHeader from "@/components/study-area/layout/StudyHeader";
 import StudyTabs from "@/components/study-area/StudyTabs";
 import { useWindowWidth } from "@/hooks/useWindowWidth";
+import { appToast } from "@/lib/appToast";
 import appAxios from "@/lib/axiosClient";
 import { cacheKeys } from "@/lib/cacheKeys";
 import { BackendRoutes } from "@/routes";
 import { useAppStore } from "@/store";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { use, useEffect, useRef, useState } from "react";
@@ -39,13 +40,24 @@ export default function Page({
   const searchParams = useSearchParams();
   const { user } = useAppStore((state) => state);
   const t = useTranslations();
-  const { data, status } = useFullCourseQuery(slug_id, "student");
+  const {
+    data,
+    status,
+    queryKey: courseQueryKey,
+  } = useFullCourseQuery(slug_id, "student");
 
-  const { data: progressData, status: progressStatus } = useFetchCourseProgress(
-    data?.data?.id
-  );
-  const { data: enrollmentData, status: enrollmentStatus } =
-    useFetchCourseEnrolment(data?.data?.id);
+  const {
+    data: progressData,
+    status: progressStatus,
+    queryKey: progressQueryKey,
+  } = useFetchCourseProgress(data?.data?.id);
+  const {
+    data: enrollmentData,
+    status: enrollmentStatus,
+    queryKey: enrollmentQueryKey,
+  } = useFetchCourseEnrolment(data?.data?.id);
+
+  const queryClient = useQueryClient();
 
   const { status: moduleStatus, data: moduleData } = useQuery({
     queryKey: [cacheKeys.MODULE_DETAIL_PAGE, moduleId, user?.id],
@@ -55,6 +67,37 @@ export default function Page({
       );
 
       return res.data;
+    },
+  });
+
+  const { mutate: toggleCompleted } = useMutation({
+    mutationFn: async (data: { module_id: string; status: boolean }) => {
+      return await appAxios.post(BackendRoutes.TOGGLE_MODULE_COMPLETED, data);
+    },
+    onSuccess() {
+      [courseQueryKey, progressQueryKey, enrollmentQueryKey].forEach((k) => {
+        queryClient.invalidateQueries({ queryKey: k });
+      });
+    },
+    onError(_, variables) {
+      appToast.Error(
+        t("ERROR_TOGGLING_COMPLETED", {
+          completed: variables.status ? t("COMPLETED") : t("UNCOMPLETED"),
+        })
+      );
+    },
+  });
+  const { mutate: incrementProgress } = useMutation({
+    mutationFn: async (data: { module_id: string }) => {
+      return await appAxios.post(BackendRoutes.INCREMENT_PROGRESS, data);
+    },
+    onSuccess() {
+      [courseQueryKey, progressQueryKey, enrollmentQueryKey].forEach((k) =>
+        queryClient.invalidateQueries({ queryKey: k })
+      );
+    },
+    onError() {
+      appToast.Error(t("INCREMENT_ERROR"));
     },
   });
 
@@ -141,6 +184,8 @@ export default function Page({
         : "0px",
   };
 
+  console.log("===", progressData?.progress_data);
+
   return (
     <div>
       <style jsx>{`
@@ -206,6 +251,9 @@ export default function Page({
                 <ContentArea
                   module={module}
                   isLoading={moduleStatus === "pending"}
+                  course={course}
+                  incrementProgress={incrementProgress}
+                  setCurrentModuleId={handleModuleSelect}
                 />
                 <StudyTabs
                   sections={course.sections}
@@ -215,6 +263,7 @@ export default function Page({
                   course={course}
                   showContent={windowsWidth < 1024 || navCollapsed}
                   showChats={windowsWidth < 1024 || navCollapsed}
+                  toggleCompleted={toggleCompleted}
                 />
               </section>
 
@@ -244,6 +293,7 @@ export default function Page({
                   setCurrentModuleId={handleModuleSelect}
                   onClose={() => setNavCollapsed(!navCollapsed)}
                   progress={progress}
+                  toggleCompleted={toggleCompleted}
                 />
               </section>
             </main>

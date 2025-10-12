@@ -12,8 +12,10 @@ export default function useFetchCourseEnrolment(course_id?: string) {
   const { user } = useAppStore((state) => state);
   const router = useRouter();
 
+  const queryKey = [cacheKeys.GET_ENROLLMENT, course_id, user?.id];
+
   const query = useQuery({
-    queryKey: [cacheKeys.GET_ENROLLMENT, course_id, user?.id],
+    queryKey,
     queryFn: hasEnrolled({ courseId: course_id as any }),
     enabled: !!user?.id && !!course_id,
   });
@@ -28,6 +30,6 @@ export default function useFetchCourseEnrolment(course_id?: string) {
   return {
     ...query,
     isLoading,
-    queryKey: [cacheKeys.COURSE_DETAIL, course_id, user?.id],
+    queryKey,
   };
 }

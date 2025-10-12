@@ -15,6 +15,7 @@ type NavModuleProps = {
   selected?: boolean;
   onClick: () => void;
   completed?: boolean;
+  toggleCompleted: toggleCompletedType;
 };
 const contentTypeIcons = {
   video: (
@@ -34,6 +35,7 @@ const NavModule: React.FC<NavModuleProps> = ({
   selected,
   completed,
   onClick,
+  toggleCompleted,
 }) => {
   const t = useTranslations();
 
@@ -53,8 +55,9 @@ const NavModule: React.FC<NavModuleProps> = ({
         <div className="">
           <Checkbox
             checked={!!completed}
-            onChange={(e) => {
+            onChange={(e, checked) => {
               e.stopPropagation();
+              toggleCompleted({ module_id: data.id, status: checked });
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -64,7 +67,7 @@ const NavModule: React.FC<NavModuleProps> = ({
       </div>
       {data.attachments.length > 0 && (
         <div className="">
-          <h6 className="text-sm mb-1">module attachments</h6>
+          <h6 className="text-sm mb-1">{t("MODULE_ATTACHMENTS")}</h6>
           <div
             className="flex rounded bg-white border border-gray-500 p-2"
             onClick={(e) => e.stopPropagation()}

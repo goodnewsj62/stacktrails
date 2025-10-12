@@ -303,5 +303,10 @@
         "WARNING": "You are about to be redirected to a study resource outside Stacktrails.  Please be careful, and  do not give away any personal information or any sensitive information. if you notice anything fishy please file a report to help others.",
         "OK": "Ok let's go"
     },
-    "LINK": "Link"
+    "LINK": "Link",
+    "MODULE_ATTACHMENTS": "module attachments",
+    "ERROR_TOGGLING_COMPLETED": "error marking module as {completed}",
+    "COMPLETED": "completed",
+    "UNCOMPLETED": "uncompleted",
+    "INCREMENT_ERROR": "Error incrementing progress"
 }

@@ -13,6 +13,7 @@ type CourseStructureNavProps = {
   currentModule: FullModule;
   setCurrentModuleId: (id: string) => void;
   onClose: () => void;
+  toggleCompleted: toggleCompletedType;
 };
 
 function a11yProps(index: number) {
@@ -28,6 +29,7 @@ const CourseStructureNav: React.FC<CourseStructureNavProps> = ({
   setCurrentModuleId,
   progress,
   onClose,
+  toggleCompleted,
 }) => {
   const t = useTranslations();
   const [value, setValue] = useState(0);
@@ -72,6 +74,7 @@ const CourseStructureNav: React.FC<CourseStructureNavProps> = ({
           sections={sections}
           setCurrentModuleId={setCurrentModuleId}
           progress={progress}
+          toggleCompleted={toggleCompleted}
         />
       </div>
     </div>

@@ -8,8 +8,9 @@ import { useQuery } from "@tanstack/react-query";
 export default function useFetchCourseProgress(course_id?: string) {
   const { user } = useAppStore((state) => state);
 
+  const queryKey = [cacheKeys.COURSE_PROGRESS, course_id, user?.id];
   const query = useQuery({
-    queryKey: [cacheKeys.COURSE_PROGRESS, course_id, user?.id],
+    queryKey,
     queryFn: getCourseProgress({ course_id: course_id as any }),
     enabled: !!user?.id && !!course_id,
   });
@@ -20,6 +21,6 @@ export default function useFetchCourseProgress(course_id?: string) {
   return {
     ...query,
     isLoading,
-    queryKey: [cacheKeys.COURSE_DETAIL, course_id, user?.id],
+    queryKey,
   };
 }

@@ -126,4 +126,6 @@ export class BackendRoutes {
   static CREATORS_STATS = "/creators/courses/stats";
   static COURSE_PROGRESS = (course_id: string) =>
     `/courses/${course_id}/progress`;
+  static TOGGLE_MODULE_COMPLETED = "/student/toggle-module-completed";
+  static INCREMENT_PROGRESS = "/student/increment-progress";
 }

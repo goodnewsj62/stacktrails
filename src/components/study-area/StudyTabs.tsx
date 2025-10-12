@@ -25,6 +25,7 @@ type StudyTabsProps = {
   course: FullCourse;
   showContent?: boolean;
   showChats?: boolean;
+  toggleCompleted: toggleCompletedType;
 };
 const StudyTabs: React.FC<StudyTabsProps> = ({
   sections,
@@ -34,6 +35,7 @@ const StudyTabs: React.FC<StudyTabsProps> = ({
   course,
   showContent,
   showChats,
+  toggleCompleted,
 }) => {
   const t = useTranslations();
   const [value, setValue] = useState("SUMMARY");
@@ -226,6 +228,7 @@ const StudyTabs: React.FC<StudyTabsProps> = ({
             sections={sections}
             setCurrentModuleId={setCurrentModuleId}
             progress={progress}
+            toggleCompleted={toggleCompleted}
           />
         </div>
         <div hidden={value !== "SUMMARY"} className="py-8">
