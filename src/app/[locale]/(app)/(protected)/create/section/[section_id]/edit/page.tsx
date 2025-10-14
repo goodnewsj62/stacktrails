@@ -28,7 +28,7 @@ export default function Page({
       error={status === "error" || courseStatus === "error"}
       data={{
         section: data as FullSection,
-        course: courseData?.data as FullCourse,
+        course: courseData as FullCourse,
       }}
     >
       {({ course, section }) => (

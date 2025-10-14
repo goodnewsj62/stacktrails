@@ -34,7 +34,7 @@ type Author = {
   created_at: string;
   updated_at: string;
   id: string;
-  profile: Profile;
+  profile: Profile_;
 };
 
 type CourseContentMin = Course & {
@@ -156,7 +156,7 @@ type VideoContent = {
   embed_url: string;
 };
 
-type Profile = {
+type Profile_ = {
   display_name: string;
   bio: string;
   avatar: string;

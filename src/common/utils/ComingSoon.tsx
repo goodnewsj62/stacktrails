@@ -1,3 +1,5 @@
+"use client";
+
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
@@ -7,11 +9,13 @@ type ComingSoonProps = {
   width?: number;
   height?: number;
   className?: string;
+  message?: string;
 };
 const ComingSoon: React.FC<ComingSoonProps> = ({
   width,
   height,
   className,
+  message,
 }) => {
   const t = useTranslations();
 
@@ -30,7 +34,7 @@ const ComingSoon: React.FC<ComingSoonProps> = ({
         {t("COMING_SOON")}
       </h3>
       <p className="text-sm text-gray-500 text-center max-w-md">
-        {t("UNDER_CONSTRUCTION")}
+        {message || t("UNDER_CONSTRUCTION")}
       </p>
     </div>
   );

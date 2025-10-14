@@ -1,5 +1,4 @@
 import { BackendRoutes } from "@/routes";
-import { AxiosResponse } from "axios";
 import appAxios from "../axiosClient";
 
 export function getCoursesQueryFn({
@@ -36,12 +35,12 @@ export function getMinimalCourseContent({ slug }: { slug: string }) {
   };
 }
 export function getFullCourseContent({ slug }: { slug: string }) {
-  return async (): Promise<AxiosResponse<CourseContentMin>> => {
+  return async (): Promise<CourseContentMin> => {
     const res = await appAxios.get<CourseContentMin>(
       BackendRoutes.COURSE_CONTENT_FULL(slug)
     );
 
-    return res;
+    return res.data;
   };
 }
 export function getCourseProgress({ course_id }: { course_id: string }) {

@@ -1,9 +1,9 @@
 "use client";
 
-import ErrorDisplay from "@/common/utils/Error";
 import LoadingComponent from "@/common/utils/LoadingComponent";
 import ClientFooter from "@/components/layout/ClientFooter";
 import { AppRoutes } from "@/routes";
+import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { use, useEffect } from "react";
@@ -17,11 +17,11 @@ export default function Page({
 }) {
   const { slug_id } = use(params);
   const router = useRouter();
-  const { data, status } = useFullCourseQuery(slug_id, "student");
+  const { data, status, error } = useFullCourseQuery(slug_id, "student");
   const t = useTranslations();
 
   const { data: progressData, status: progressStatus } = useFetchCourseProgress(
-    data?.data?.id
+    data?.id
   );
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function Page({
         router.push(
           AppRoutes.getEnrolledCourseModuleRoute(
             slug_id,
-            data.data.sections[0].modules[0].id
+            data.sections[0].modules[0].id
           )
         );
       }
@@ -49,21 +49,7 @@ export default function Page({
       <LoadingComponent
         loading
         error={status === "error"}
-        emptyComponent={
-          data?.status === 403 ? (
-            <ErrorDisplay
-              title={t("PERMISSION_REQUIRED")}
-              message={t("PERMISSION_MESSAGE")}
-            />
-          ) : data?.status === 404 ? (
-            <ErrorDisplay
-              title={t("NOT_FOUND")}
-              message={t("NOT_FOUND_TEXT")}
-            />
-          ) : (
-            <ErrorDisplay />
-          )
-        }
+        errorStatus={(error as AxiosError)?.response?.status}
       />
       <ClientFooter />
     </>

@@ -4,10 +4,15 @@ export class PublicRoutes {
   static LOGIN = `/auth/login`;
   static REGISTER = `/auth/register`;
   static HOME = `/`;
-  static POLICY = `/site/policy`;
-  static TERMS = `/site/terms`;
+  static POLICY = `/site/privacy-policy`;
+  static TERMS = `/site/terms-and-conditions`;
+  static FAQs = `/site/faqs`;
+  static SUPPORT = `/site/support`;
   static COURSES = `/courses`;
+  static CONTACT = `/contact`;
   static ABOUT = "/about";
+  static BLOG = "/blog";
+  static PAID_COURSES = "/paid-courses";
 
   static getCourseRoute(slug: string) {
     return `/course/${slug}`;
@@ -128,4 +133,6 @@ export class BackendRoutes {
     `/courses/${course_id}/progress`;
   static TOGGLE_MODULE_COMPLETED = "/student/toggle-module-completed";
   static INCREMENT_PROGRESS = "/student/increment-progress";
+  static USER_PROFILE = (u: string) => `/account/${u}`;
+  static ACCOUNT_COURSES = (u: string) => `/creators/pages/${u}`;
 }

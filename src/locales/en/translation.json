@@ -291,7 +291,7 @@
     "NOT_FOUND": "Not found",
     "PERMISSION_REQUIRED": "Permission Required",
     "PERMISSION_MESSAGE": "you are not authorized to access this resource",
-    "NOT_FOUND_TEXT": "Course not found",
+    "NOT_FOUND_TEXT": "Resource not found",
     "ATTACHMENT": "Attachment",
     "COMING_SOON": "Coming soon",
     "UNDER_CONSTRUCTION": "This feature is under construction and will be available soon!",
@@ -308,5 +308,7 @@
     "ERROR_TOGGLING_COMPLETED": "error marking module as {completed}",
     "COMPLETED": "completed",
     "UNCOMPLETED": "uncompleted",
-    "INCREMENT_ERROR": "Error incrementing progress"
+    "INCREMENT_ERROR": "Error incrementing progress",
+    "SEARCH_BY_TITLE": "Search by title",
+    "PAID_COURSES": "Paid courses will be available soon.  stay tuned!"
 }

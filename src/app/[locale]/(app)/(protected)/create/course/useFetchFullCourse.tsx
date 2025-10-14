@@ -20,7 +20,7 @@ export default function useFullCourseQuery(
   });
 
   const { status } = query;
-  const data = query.data?.data;
+  const data = query?.data;
 
   useEffect(() => {
     if (type === "creator" && data && user && data?.account_id !== user?.id)

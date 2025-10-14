@@ -3,15 +3,19 @@
 import CourseCard from "@/common/cards/CourseCard";
 import PageHeaderText from "@/common/cards/PageHeader";
 import StatCard from "@/common/cards/StatCard";
+import SearchInput from "@/common/forms/SearchInput";
+import TablePagination from "@/common/table/TablePagination";
 import CenterOnLgScreen from "@/common/utils/CenterOnLgScreen";
 import LoadingComponent from "@/common/utils/LoadingComponent";
 import appAxios from "@/lib/axiosClient";
 import { cacheKeys } from "@/lib/cacheKeys";
+import { deBounce } from "@/lib/debounce";
 import { getNumberUnit } from "@/lib/utils";
 import { BackendRoutes } from "@/routes";
 import { useAppStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { AiFillLike } from "react-icons/ai";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoMdChatbubbles } from "react-icons/io";
@@ -20,6 +24,8 @@ import { RiFolderSharedFill } from "react-icons/ri";
 export default function Page() {
   const t = useTranslations();
   const { user } = useAppStore((state) => state);
+  const [page, setPage] = useState(1);
+  const [title, setTitle] = useState("");
 
   const {
     data: statData,
@@ -34,9 +40,14 @@ export default function Page() {
   });
 
   const { data, status, isLoading } = useQuery({
-    queryKey: [cacheKeys.CREATED_COURSE, user?.id],
+    queryKey: [cacheKeys.CREATED_COURSE, user?.id, page, title],
     queryFn: async (): Promise<Paginated<FullCourse>> => {
-      const data = await appAxios.get(BackendRoutes.CREATED_COURSE);
+      const data = await appAxios.get(BackendRoutes.CREATED_COURSE, {
+        params: {
+          title,
+          page,
+        },
+      });
       return data.data;
     },
   });
@@ -46,7 +57,7 @@ export default function Page() {
       loading={isLoading || isLoadingStat}
       error={status === "error" || statStatus === "error"}
       data={{
-        data: (data?.items ?? []) as FullCourse[],
+        data: data as Paginated<FullCourse>,
         stat: statData as CreatorStat,
       }}
     >
@@ -80,10 +91,35 @@ export default function Page() {
             />
           </div>
 
-          <div className="w-full grid gap-6 [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]">
-            {data.map((v) => (
-              <CourseCard key={v.id} type="created" course={v} />
-            ))}
+          <div className="space-y-6">
+            <div className="flex items-center ">
+              <div className="w-80">
+                <SearchInput
+                  placeholder={t("SEARCH_BY_TITLE")}
+                  otherProps={{
+                    onChange: deBounce(
+                      (e: React.ChangeEvent<HTMLInputElement>) =>
+                        setTitle(e.target.value),
+                      800
+                    ),
+                    defaultValue: title,
+                  }}
+                />
+              </div>
+            </div>
+            <div className="w-full grid gap-6 [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]">
+              {data.items.map((v) => (
+                <CourseCard key={v.id} type="created" course={v} />
+              ))}
+            </div>
+
+            <div className=" lg:flex lg:justify-end xl:justify-start">
+              <TablePagination
+                onChange={(_, page: number) => setPage(page)}
+                currentPage={data.page ?? 1}
+                totalPages={data.total_pages ?? 1}
+              />
+            </div>
           </div>
         </CenterOnLgScreen>
       )}

@@ -1,7 +1,7 @@
 type Profile = {
-  display_name: string;
-  bio: string;
-  avatar: string;
+  display_name?: string;
+  bio?: string;
+  avatar?: string;
   id: string;
   account_id: string;
   username?: string;

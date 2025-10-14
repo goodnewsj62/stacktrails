@@ -63,7 +63,7 @@ export default function Page({
   });
 
   const updateHandler = (should: "published" | "archive") => {
-    const canPublish = (data?.data as FullCourse)?.sections?.every(
+    const canPublish = (data as FullCourse)?.sections?.every(
       (section) => !!section.modules?.length
     );
     if (!canPublish) {
@@ -101,7 +101,7 @@ export default function Page({
     <LoadingComponent
       loading={isLoading}
       error={status === "error"}
-      data={data?.data as FullCourse}
+      data={data as FullCourse}
     >
       {(cleanedData) => (
         <div className="px-4 xl:px-0">

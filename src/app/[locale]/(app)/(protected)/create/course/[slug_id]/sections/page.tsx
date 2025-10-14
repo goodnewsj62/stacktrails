@@ -48,7 +48,7 @@ export default function Page({
     <LoadingComponent
       loading={isLoading}
       error={status === "error"}
-      data={data?.data as FullCourse}
+      data={data as FullCourse}
     >
       {(cleanedData) => (
         <div>

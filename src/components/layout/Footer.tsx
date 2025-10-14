@@ -1,4 +1,6 @@
 import CenterOnLgScreen from "@/common/utils/CenterOnLgScreen";
+import { Link } from "@/i18n/navigation";
+import { PublicRoutes } from "@/routes";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
@@ -29,24 +31,24 @@ export default async function PublicFooter(_params: params) {
             <nav aria-label="Footer primary navigation">
               <ul className="flex flex-wrap gap-6 text-sm">
                 <li>
-                  <a href="/about" className="hover:underline">
+                  <Link href={PublicRoutes.ABOUT} className="hover:underline">
                     {t("ABOUT")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/blog" className="hover:underline">
+                  <Link href={PublicRoutes.BLOG} className="hover:underline">
                     {t("BLOG")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/contact" className="hover:underline">
+                  <Link href={PublicRoutes.CONTACT} className="hover:underline">
                     {t("CONTACT")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/support" className="hover:underline">
+                  <Link href={PublicRoutes.SUPPORT} className="hover:underline">
                     {t("SUPPORT")}
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>
@@ -100,28 +102,28 @@ export default async function PublicFooter(_params: params) {
             <nav aria-label="Footer legal">
               <ul className="flex gap-4 text-sm">
                 <li>
-                  <a
-                    href="/privacy"
+                  <Link
+                    href={PublicRoutes.POLICY}
                     className="text-gray-700 hover:text-[var(--color-primary)]"
                   >
                     {t("PRIVACY")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/terms"
+                  <Link
+                    href={PublicRoutes.TERMS}
                     className="text-gray-700 hover:text-[var(--color-primary)]"
                   >
                     {t("Terms")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/faqs"
+                  <Link
+                    href={PublicRoutes.FAQs}
                     className="text-gray-700 hover:text-[var(--color-primary)]"
                   >
                     {t("FAQs")}
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>

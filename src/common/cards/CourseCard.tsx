@@ -72,7 +72,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
         {enrollment && (
           <div className="w-full py-2 px-1 space-y-2">
             <p className="text-xs lowercase font-thin">
-              {t("PROGRESS")} ({enrollment.progress_percentage}%)
+              {t("PROGRESS")} ({Math.round(enrollment.progress_percentage)}%)
             </p>
             {!!enrollment.progress_percentage && (
               <LinearProgress

@@ -1,6 +1,5 @@
 "use client";
 
-import ErrorDisplay from "@/common/utils/Error";
 import LoadingComponent from "@/common/utils/LoadingComponent";
 import ClientFooter from "@/components/layout/ClientFooter";
 import ContentArea from "@/components/study-area/ContentArea";
@@ -14,6 +13,7 @@ import { cacheKeys } from "@/lib/cacheKeys";
 import { BackendRoutes } from "@/routes";
 import { useAppStore } from "@/store";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { use, useEffect, useRef, useState } from "react";
@@ -43,6 +43,7 @@ export default function Page({
   const {
     data,
     status,
+    error,
     queryKey: courseQueryKey,
   } = useFullCourseQuery(slug_id, "student");
 
@@ -50,12 +51,12 @@ export default function Page({
     data: progressData,
     status: progressStatus,
     queryKey: progressQueryKey,
-  } = useFetchCourseProgress(data?.data?.id);
+  } = useFetchCourseProgress(data?.id);
   const {
     data: enrollmentData,
     status: enrollmentStatus,
     queryKey: enrollmentQueryKey,
-  } = useFetchCourseEnrolment(data?.data?.id);
+  } = useFetchCourseEnrolment(data?.id);
 
   const queryClient = useQueryClient();
 
@@ -163,17 +164,7 @@ export default function Page({
     };
   }, []);
 
-  const courseError =
-    data?.status === 403 ? (
-      <ErrorDisplay
-        title={t("PERMISSION_REQUIRED")}
-        message={t("PERMISSION_MESSAGE")}
-      />
-    ) : data?.status === 404 ? (
-      <ErrorDisplay title={t("NOT_FOUND")} message={t("NOT_FOUND_TEXT")} />
-    ) : (
-      <ErrorDisplay />
-    );
+  const errorStatus = (error as AxiosError)?.response?.status;
 
   const marginStyle = {
     marginRight:
@@ -183,8 +174,6 @@ export default function Page({
           : "300px"
         : "0px",
   };
-
-  console.log("===", progressData?.progress_data);
 
   return (
     <div>
@@ -225,9 +214,9 @@ export default function Page({
           enrollmentStatus === "error" ||
           moduleStatus === "error"
         }
-        errorComponent={courseError}
+        errorStatus={errorStatus}
         data={{
-          course: data?.data as FullCourse,
+          course: data as FullCourse,
           enrollment: enrollmentData as CourseEnrollment,
           progress: progressData as CourseProgress,
           module: moduleData as FullModule,
