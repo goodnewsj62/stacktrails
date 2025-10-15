@@ -1,5 +1,11 @@
 import { BackendRoutes } from "@/routes";
+import { clsx, type ClassValue } from "clsx";
 import { formatDistanceToNow } from "date-fns";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 const baseURL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8020/api/v1";

@@ -44,12 +44,12 @@ export default function Page({
   const { status, data, isLoading } = useFullCourseQuery(slug);
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (status: "archive" | "published") =>
+    mutationFn: async (status: "archived" | "published") =>
       await updateCourseFunction(slug, { status }),
     onSuccess(_, variable) {
       appToast.Success(
         t("CREATED_COURSE.SUCCESS", {
-          published: variable === "archive" ? variable + "ed" : variable,
+          published: variable === "archived" ? variable + "ed" : variable,
         })
       );
     },
@@ -62,7 +62,7 @@ export default function Page({
     },
   });
 
-  const updateHandler = (should: "published" | "archive") => {
+  const updateHandler = (should: "published" | "archived") => {
     const canPublish = (data as FullCourse)?.sections?.every(
       (section) => !!section.modules?.length
     );
@@ -144,7 +144,7 @@ export default function Page({
                   variant="outlined"
                   className="flex items-center  gap-2 !capitalize !font-bold"
                   //   color="error"
-                  onClick={() => updateHandler("archive")}
+                  onClick={() => updateHandler("archived")}
                 >
                   <span>Archive</span>
                   <IoMdArchive />

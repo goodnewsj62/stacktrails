@@ -310,5 +310,28 @@
     "UNCOMPLETED": "uncompleted",
     "INCREMENT_ERROR": "Error incrementing progress",
     "SEARCH_BY_TITLE": "Search by title",
-    "PAID_COURSES": "Paid courses will be available soon.  stay tuned!"
+    "PAID_COURSES": "Paid courses will be available soon.  stay tuned!",
+    "ABOUT_US": {
+        "ABOUT_US": "About US"
+    },
+    "CONTACT_US": {
+        "HEADING": "Contact Us",
+        "SUB_HEADING": "leave a message and we will get right back to you",
+        "MESSAGE": "message",
+        "TITLE": "title",
+        "SUBMIT": "Submit"
+    },
+    "SITE_BLOG": "Stacktrails blog will be available soon.  stay tuned!",
+    "SUPPORT": {
+        "SUPPORT_STACKTRAILS": "Support Stacktrails",
+        "SUPPORT_TEXT": "we'd love to hear from you",
+        "SUPPORT_MAIN": "At Stacktrails, we’re on a mission to make learning easier, smarter, and more community-driven. Whether you’re a learner, educator, or organization, your feedback and ideas mean the world to us. If you’d like to:",
+        "LI_1": "Partner with Stacktrails",
+        "LI_2": "Explore investment or sponsorship opportunities",
+        "LI_3": "Share feedback or report an issue ",
+        "ALL_EARS": "We’re all ears!",
+        "EMAIL_US": "Email us",
+        "FUTURE_OF_LEARNING": "Let’s build the future of learning  together. 🌍",
+        "FINAL": "Stacktrails is still in its early stages, but we believe the best way to grow is through collaboration. If you share our vision for open, organized, and community-powered learning, we’d love to connect with you."
+    }
 }

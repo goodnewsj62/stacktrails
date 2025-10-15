@@ -135,4 +135,5 @@ export class BackendRoutes {
   static INCREMENT_PROGRESS = "/student/increment-progress";
   static USER_PROFILE = (u: string) => `/account/${u}`;
   static ACCOUNT_COURSES = (u: string) => `/creators/pages/${u}`;
+  static CONTACT_FORM = "/contact";
 }

@@ -122,7 +122,7 @@ const SectionForm: React.FC<SectionFormProps> = ({
   );
 
   return (
-    <div>
+    <div className="px-4">
       <AppLinkBreadCrumbs
         links={[
           {
@@ -151,7 +151,7 @@ const SectionForm: React.FC<SectionFormProps> = ({
           <h1 className="text-2xl font-bold lg:text-3xl">
             {t("SECTIONS.CREATE")}
           </h1>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col items-center gap-4 md:flex-row">
             <AppTextField
               control={control}
               name="title"
