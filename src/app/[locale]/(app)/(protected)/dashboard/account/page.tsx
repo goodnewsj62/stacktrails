@@ -1,7 +1,9 @@
 "use client";
 
+import UpdateProfile from "@/components/profileForm/UpdateProfile";
 import { useAppStore } from "@/store";
 import { Avatar, IconButton } from "@mui/material";
+import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 
 export default function Page() {
@@ -13,6 +15,13 @@ export default function Page() {
       username={user?.username}
       avatar={currentProfile?.avatar}
       bio={currentProfile?.bio}
+      language={currentProfile?.language}
+      xHandle={currentProfile?.x}
+      instagram={currentProfile?.instagram}
+      facebook={currentProfile?.facebook}
+      youtube={currentProfile?.youtube}
+      tiktok={currentProfile?.tiktok}
+      website={currentProfile?.website}
     />
   );
 }
@@ -48,9 +57,13 @@ function ProfilePage({
   tiktok,
   website,
 }: ProfilePageProps) {
+  const [updateProfile, setUpdateProfile] = useState(false);
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
       {/* Header Section */}
+      {updateProfile && (
+        <UpdateProfile onClose={() => setUpdateProfile(false)} />
+      )}
       <section className="rounded-xl border border-gray-200 p-6 flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Avatar
@@ -68,7 +81,11 @@ function ProfilePage({
             {country && <p className="text-sm text-gray-400">{country}</p>}
           </div>
         </div>
-        <IconButton size="small" aria-label="edit">
+        <IconButton
+          onClick={() => setUpdateProfile(true)}
+          size="small"
+          aria-label="edit"
+        >
           <FaEdit fontSize="small" />
         </IconButton>
       </section>
@@ -79,7 +96,11 @@ function ProfilePage({
           <h3 className="text-lg font-medium text-gray-900">
             Basic Information
           </h3>
-          <IconButton size="small" aria-label="edit">
+          <IconButton
+            onClick={() => setUpdateProfile(true)}
+            size="small"
+            aria-label="edit"
+          >
             <FaEdit fontSize="small" />
           </IconButton>
         </div>
@@ -106,7 +127,11 @@ function ProfilePage({
       <section className=" rounded-xl border border-gray-200 p-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-medium text-gray-900">Social Links</h3>
-          <IconButton size="small" aria-label="edit">
+          <IconButton
+            onClick={() => setUpdateProfile(true)}
+            size="small"
+            aria-label="edit"
+          >
             <FaEdit fontSize="small" />
           </IconButton>
         </div>

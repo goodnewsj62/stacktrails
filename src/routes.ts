@@ -136,4 +136,8 @@ export class BackendRoutes {
   static USER_PROFILE = (u: string) => `/account/${u}`;
   static ACCOUNT_COURSES = (u: string) => `/creators/pages/${u}`;
   static CONTACT_FORM = "/contact";
+  static USERNAME_EXISTS = "/account/username/exists";
+  static UPDATE_USERNAME = "/account/username";
+  static EXPLORE = "/courses/explore";
+  static TAGS = "/courses/tags";
 }

@@ -97,6 +97,7 @@ type CourseCreate = {
 
 type FullCourse = Course & {
   sections: FullSection[];
+  tags: Tag[];
 };
 type FullSection = Section & {
   modules: FullModule[];
@@ -302,4 +303,10 @@ type CourseEnrollment = {
 type EnrolledCourse = {
   course: Course;
   enrollment: CourseEnrollment;
+};
+
+type Tag = {
+  id: string;
+  name: string;
+  usage_count: number;
 };

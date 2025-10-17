@@ -5,6 +5,15 @@ type Profile = {
   id: string;
   account_id: string;
   username?: string;
+
+  // socials
+  x?: string;
+  youtube?: string;
+  facebook?: string;
+  tiktok?: string;
+  website?: string;
+  instagram?: string;
+  language?: string;
 };
 
 type User = {

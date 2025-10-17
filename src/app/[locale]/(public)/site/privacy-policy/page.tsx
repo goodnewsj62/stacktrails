@@ -80,7 +80,7 @@ export default async function Page() {
           </ul>
           <p className="mt-2">
             If you have any questions, please contact us at{" "}
-            <strong>goodnewsj62@gmail.com</strong>.
+            <strong>contact@stacktrails.com</strong>.
           </p>
         </PolicySection>
 
@@ -287,8 +287,8 @@ export default async function Page() {
           <p className="mt-2">
             You can exercise these rights by visiting your dashboard or emailing
             us at{" "}
-            <a href="mailto:goodnewsj62@gmail.com" className="text-blue-600">
-              goodnewsj62@gmail.com
+            <a href="mailto:contact@stacktrails.com" className="text-blue-600">
+              contact@stacktrails.com
             </a>
             .
           </p>
@@ -337,8 +337,8 @@ export default async function Page() {
             Lagos, Lagos 102262, Nigeria
             <br />
             📧{" "}
-            <a href="mailto:goodnewsj62@gmail.com" className="text-blue-600">
-              goodnewsj62@gmail.com
+            <a href="mailto:support@stacktrails.com" className="text-blue-600">
+              support@stacktrails.com
             </a>
           </p>
         </PolicySection>
@@ -355,8 +355,11 @@ export default async function Page() {
             <li>Visiting your dashboard</li>
             <li>
               Contacting us at{" "}
-              <a href="mailto:goodnewsj62@gmail.com" className="text-blue-600">
-                goodnewsj62@gmail.com
+              <a
+                href="mailto:contact@stacktrails.com"
+                className="text-blue-600"
+              >
+                contact@stacktrails.com
               </a>
             </li>
           </ul>

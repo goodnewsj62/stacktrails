@@ -14,6 +14,7 @@
         "CREATE": "Create"
     },
     "LANGUAGE_SELECT": {
+        "ALL": "All",
         "ENGLISH": "English",
         "GERMAN": "Deutsch",
         "SPANISH": "Español",
@@ -333,5 +334,15 @@
         "EMAIL_US": "Email us",
         "FUTURE_OF_LEARNING": "Let’s build the future of learning  together. 🌍",
         "FINAL": "Stacktrails is still in its early stages, but we believe the best way to grow is through collaboration. If you share our vision for open, organized, and community-powered learning, we’d love to connect with you."
-    }
+    },
+    "ABOUT_YOU": "say something about yourself",
+    "USERNAME": "username",
+    "USERNAME_TAKEN": "username taken",
+    "DISPLAY_NAME_TEXT": "This name will be visible in chats",
+    "DISPLAY_NAME": "Display name",
+    "LANGUAGE": "language",
+    "PROFILE_UPDATED": "Profile updated",
+    "USERNAME_UPDATED": "Username updated",
+    "WEBSITE": "website",
+    "SEARCH": "Search"
 }

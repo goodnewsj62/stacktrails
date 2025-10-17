@@ -5,6 +5,7 @@ import AppTextField from "@/common/forms/AppTextField";
 import AppTitleInput from "@/common/forms/AppTitleInput";
 import ErrorMessage from "@/common/forms/ErrorMessage";
 import StringArrayInput from "@/common/forms/StringArrayInput";
+import TagsInputField from "@/common/forms/TagsInputField";
 // create new course
 
 import EditorLite from "@/common/markdown/MdEditor";
@@ -72,7 +73,7 @@ const schema = z.object({
   enrollment_type: z.enum(enrollment_type), //[ "open","restricted","invitation_only"] (grayed,  open )
   visibility: z.enum(visibility), // ["public", "private"]
   certification_enabled: z.boolean(), // false  (grayed)
-  // tags: z.array(z.string()),
+  tags: z.array(z.object({ value: z.string().min(1) })).optional(),
 });
 
 type params = {
@@ -98,6 +99,7 @@ export default function CourseForm({ course }: params) {
       difficulty_level: (course?.difficulty_level as any) || "beginner",
       language: course?.language,
       visibility: (course?.visibility as any) || "public",
+      tags: course?.tags?.map((tag) => ({ value: tag.name })) || [],
     },
     resolver: zodResolver(schema),
   });
@@ -136,7 +138,11 @@ export default function CourseForm({ course }: params) {
   });
 
   const handleFormSubmit = handleSubmit((values) => {
-    mutate(values);
+    const payload = {
+      ...values,
+      tags: values.tags?.map((t) => t.value) || [],
+    };
+    mutate(payload);
   });
 
   return (
@@ -240,6 +246,22 @@ export default function CourseForm({ course }: params) {
           ).map((e, idx) => (
             <ErrorMessage key={idx} message={e?.message ?? ""} />
           ))}
+        </section>
+
+        <section>
+          <TagsInputField
+            name="tags"
+            label="Tags"
+            maxTags={8}
+            recommended={[
+              "UI",
+              "UX",
+              "Design",
+              "Accessibility",
+              "WebDesign",
+              "AppDesign",
+            ]}
+          />
         </section>
         <section className="grid gap-8  xl:grid-cols-2">
           <AppSelectField

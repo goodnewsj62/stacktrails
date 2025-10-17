@@ -8,6 +8,7 @@ import appAxios from "@/lib/axiosClient";
 import { cacheKeys } from "@/lib/cacheKeys";
 import { BackendRoutes } from "@/routes";
 import { useAppStore } from "@/store";
+import { Button } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { FaCheckCircle, FaFolderPlus, FaHourglassHalf } from "react-icons/fa";
@@ -48,6 +49,11 @@ export default function Page() {
         <CenterOnLgScreen className="!py-4">
           <div className=" space-y-8">
             <WelcomeCard />
+            <div className="w-full flex items-center md:justify-end">
+              <Button className="!capitalize">
+                {t("PUBLIC_MAIN.CREATE_COURSE")}
+              </Button>
+            </div>
             <div className="flex flex-col gap-6 lg:flex-row">
               <StatCard
                 title={t("DASHBOARD.IN_PROGRESS")}

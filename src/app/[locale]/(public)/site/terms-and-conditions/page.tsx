@@ -68,8 +68,8 @@ export default function TermsPage() {
 
       <h2>2. INTELLECTUAL PROPERTY RIGHTS</h2>
       <p>
-        All intellectual property rights in the StackTrails platform — including
-        the software, design, logos, text, and code — are owned or licensed by{" "}
+        All intellectual property rights in the StackTrails platform, including
+        the software, design, logos, text, and code, are owned or licensed by{" "}
         <strong>StackTrails</strong>.
       </p>
       <p>

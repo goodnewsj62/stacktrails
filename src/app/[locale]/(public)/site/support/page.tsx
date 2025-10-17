@@ -67,10 +67,10 @@ export default async function Page() {
           <p className="text-base text-black">
             {t("SUPPORT.EMAIL_US")}{" "}
             <a
-              href="mailto:goodnewsj62@gmail.com"
+              href="mailto:support@stacktrails.com"
               className="text-primary font-semibold hover:underline transition-colors"
             >
-              goodnewsj62@gmail.com
+              support@stacktrails.com
             </a>
           </p>
 
