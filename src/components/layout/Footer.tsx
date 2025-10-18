@@ -57,35 +57,35 @@ export default async function PublicFooter(_params: params) {
           {/* Layer 2: social icons */}
           <div className="flex justify-center gap-4">
             <a
-              href="#"
+              href="https://web.facebook.com/stacktrails"
               aria-label="Facebook"
               className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-[var(--color-primary)] hover:text-white transition-colors"
             >
               <FaFacebookF />
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/stack_trails"
               aria-label="Instagram"
               className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-[var(--color-primary)] hover:text-white transition-colors"
             >
               <FaInstagram />
             </a>
             <a
-              href="#"
+              href="https://www.youtube.com/@stacktrails"
               aria-label="YouTube"
               className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-[var(--color-primary)] hover:text-white transition-colors"
             >
               <FaYoutube />
             </a>
             <a
-              href="#"
+              href="https://www.tiktok.com/@stacktrails"
               aria-label="TikTok"
               className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-[var(--color-primary)] hover:text-white transition-colors"
             >
               <SiTiktok />
             </a>
             <a
-              href="#"
+              href="https://x.com/stacktrails"
               aria-label="X"
               className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-[var(--color-primary)] hover:text-white transition-colors"
             >

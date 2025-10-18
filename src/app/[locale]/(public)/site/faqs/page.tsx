@@ -33,13 +33,13 @@ const faqs = [
     q: "Who can use Stacktrails?",
     a: "Anyone! Whether you're a student, professional, or lifelong learner, Stacktrails helps you find or organize learning materials around any topic or goal.",
   },
-  {
-    q: "What makes Stacktrails different from Reddit or Notion?",
-    a: "Reddit is great for discussion, and Notion is great for note-taking — but Stacktrails combines the best of both: structured learning paths, community discussions and reviews, smart recommendations powered by AI (coming soon), and a focus on shared growth and collaboration.",
-  },
+  // {
+  //   q: "What makes Stacktrails different from Reddit or Notion?",
+  //   a: "Reddit is great for discussion, and Notion is great for note-taking — but Stacktrails combines the best of both: structured learning paths, community discussions and reviews, smart recommendations powered by AI (coming soon), and a focus on shared growth and collaboration.",
+  // },
   {
     q: "How can I create or join a learning community?",
-    a: 'You can create a channel around a topic or goal (e.g., "IELTS Prep" or "Web Development"), invite others, or discover existing communities with similar goals. You can then contribute resources, comment, and collaborate together.',
+    a: "You can create a group around a course, invite others, or discover existing communities with similar goals. You can then contribute resources, comment, and collaborate together.",
   },
   {
     q: "What if I find incorrect or inappropriate content?",
