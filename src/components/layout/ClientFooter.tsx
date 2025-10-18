@@ -1,6 +1,8 @@
 "use client";
 
 import CenterOnLgScreen from "@/common/utils/CenterOnLgScreen";
+import { Link } from "@/i18n/navigation";
+import { PublicRoutes } from "@/routes";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { CSSProperties } from "react";
@@ -17,7 +19,7 @@ export default function ClientFooter({ className, style }: params) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className={`bg-base ${className}`} style={style}>
+    <footer className="bg-base">
       <CenterOnLgScreen className="py-8 ">
         <div className="w-full max-w-7xl mx-auto flex flex-col gap-6 ">
           {/* Layer 1: logo + navs */}
@@ -35,24 +37,24 @@ export default function ClientFooter({ className, style }: params) {
             <nav aria-label="Footer primary navigation">
               <ul className="flex flex-wrap gap-6 text-sm">
                 <li>
-                  <a href="/about" className="hover:underline">
+                  <Link href={PublicRoutes.ABOUT} className="hover:underline">
                     {t("ABOUT")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/blog" className="hover:underline">
+                  <Link href={PublicRoutes.BLOG} className="hover:underline">
                     {t("BLOG")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/contact" className="hover:underline">
+                  <Link href={PublicRoutes.CONTACT} className="hover:underline">
                     {t("CONTACT")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/support" className="hover:underline">
+                  <Link href={PublicRoutes.SUPPORT} className="hover:underline">
                     {t("SUPPORT")}
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>
@@ -61,35 +63,35 @@ export default function ClientFooter({ className, style }: params) {
           {/* Layer 2: social icons */}
           <div className="flex justify-center gap-4">
             <a
-              href="#"
+              href="https://web.facebook.com/stacktrails"
               aria-label="Facebook"
               className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-[var(--color-primary)] hover:text-white transition-colors"
             >
               <FaFacebookF />
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/stack_trails"
               aria-label="Instagram"
               className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-[var(--color-primary)] hover:text-white transition-colors"
             >
               <FaInstagram />
             </a>
             <a
-              href="#"
+              href="https://www.youtube.com/@stacktrails"
               aria-label="YouTube"
               className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-[var(--color-primary)] hover:text-white transition-colors"
             >
               <FaYoutube />
             </a>
             <a
-              href="#"
+              href="https://www.tiktok.com/@stacktrails"
               aria-label="TikTok"
               className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-[var(--color-primary)] hover:text-white transition-colors"
             >
               <SiTiktok />
             </a>
             <a
-              href="#"
+              href="https://x.com/stacktrails"
               aria-label="X"
               className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-[var(--color-primary)] hover:text-white transition-colors"
             >
@@ -106,28 +108,28 @@ export default function ClientFooter({ className, style }: params) {
             <nav aria-label="Footer legal">
               <ul className="flex gap-4 text-sm">
                 <li>
-                  <a
-                    href="/privacy"
+                  <Link
+                    href={PublicRoutes.POLICY}
                     className="text-gray-700 hover:text-[var(--color-primary)]"
                   >
                     {t("PRIVACY")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/terms"
+                  <Link
+                    href={PublicRoutes.TERMS}
                     className="text-gray-700 hover:text-[var(--color-primary)]"
                   >
                     {t("Terms")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/faqs"
+                  <Link
+                    href={PublicRoutes.FAQs}
                     className="text-gray-700 hover:text-[var(--color-primary)]"
                   >
                     {t("FAQs")}
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>
