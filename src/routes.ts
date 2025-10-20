@@ -137,7 +137,7 @@ export class BackendRoutes {
     `/student/document/${doc_id}/annotations`;
   static USER_PROFILE = (u: string) => `/account/${u}`;
   static ACCOUNT_COURSES = (u: string) => `/creators/pages/${u}`;
-  static CONTACT_FORM = "/contact";
+  static CONTACT_FORM = "/management/contact";
   static USERNAME_EXISTS = "/account/username/exists";
   static UPDATE_USERNAME = "/account/username";
   static EXPLORE = "/courses/explore";

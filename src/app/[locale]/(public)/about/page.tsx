@@ -13,11 +13,11 @@ export default function Page() {
         </h1>
         <p className="text-center">
           StackTrails is an open platform where communities create, organize,
-          and share learning resources. It's where collaborative spirit meets
-          structured learning, built by learners, for learners. At Stacktrails,
-          we believe that learning is a collaborative journey, not a solitary
-          one. In a world overflowing with information, finding a clear and
-          organized path can be the biggest hurdle to success.
+          and aggregate share learning resources. It's where collaborative
+          spirit meets structured learning, built by learners, for learners. At
+          Stacktrails, we believe that learning is a collaborative journey, not
+          a solitary one. In a world overflowing with information, finding a
+          clear and organized path can be the biggest hurdle to success.
         </p>
 
         <div className="mt-4">
