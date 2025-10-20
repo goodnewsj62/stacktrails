@@ -1,4 +1,7 @@
+"use client";
+
 import { Button } from "@mui/material";
+import { useTranslations } from "next-intl";
 import * as pdfjsLib from "pdfjs-dist";
 import { useContext, useState } from "react";
 import { ViewerContext } from "../PDFViewer";
@@ -10,6 +13,10 @@ type NoteAnnotationInputProps = {
   page: number;
   viewPort: pdfjsLib.PageViewport;
   close: () => void;
+  update?: {
+    id: string;
+    text: string;
+  };
 };
 const NoteAnnotationInput: React.FC<NoteAnnotationInputProps> = ({
   x,
@@ -17,25 +24,32 @@ const NoteAnnotationInput: React.FC<NoteAnnotationInputProps> = ({
   page,
   pdfCoord,
   viewPort,
+  update,
   close,
 }) => {
-  const [value, setValue] = useState("");
-  const { setState } = useContext(ViewerContext);
+  const t = useTranslations();
+  const [value, setValue] = useState(update?.text ?? "");
+  const { addNote, updateNote } = useContext(ViewerContext);
 
   const submitHandler = () => {
-    setState((s) => ({
-      ...s,
-      annotations: [
-        ...s.annotations,
-        {
-          id: crypto.randomUUID(),
-          page,
-          text: value,
-          point: pdfCoord,
-          type: "note",
-        },
-      ],
-    }));
+    if (!value) return;
+
+    const data = {
+      page,
+      text: value,
+      point: pdfCoord,
+      type: "note",
+    };
+
+    if (update?.id) {
+      updateNote({
+        ...data,
+        id: update.id,
+      });
+      close();
+      return;
+    }
+    addNote(data);
     close();
   };
 
@@ -73,7 +87,7 @@ const NoteAnnotationInput: React.FC<NoteAnnotationInputProps> = ({
           type="button"
           onClick={close}
         >
-          Close
+          {t("CLOSE")}
         </Button>
         <Button
           fullWidth
@@ -82,7 +96,7 @@ const NoteAnnotationInput: React.FC<NoteAnnotationInputProps> = ({
           type="button"
           onClick={submitHandler}
         >
-          Submit
+          {t("SUBMIT")}
         </Button>
       </div>
     </div>

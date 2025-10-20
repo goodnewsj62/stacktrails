@@ -344,5 +344,8 @@
     "PROFILE_UPDATED": "Profile updated",
     "USERNAME_UPDATED": "Username updated",
     "WEBSITE": "website",
-    "SEARCH": "Search"
+    "SEARCH": "Search",
+    "EDIT": "edit",
+    "DELETE": "delete",
+    "CLOSE": "Close"
 }

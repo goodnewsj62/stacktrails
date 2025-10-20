@@ -1,11 +1,14 @@
 "use client";
 
 import { getImageProxyUrl } from "@/lib/utils";
+import { useAppStore } from "@/store";
 import * as pdfjsLib from "pdfjs-dist";
 import "pdfjs-dist/web/pdf_viewer.css";
 import React, { createContext, useEffect, useRef, useState } from "react";
 import PdfPage from "./PDFPage";
 import PDFControls from "./components/PDFControl";
+import useAnnotationSync from "./hooks/useAnnotationSync";
+import useFetchAnnotations from "./hooks/useFetchAnnotations";
 import usePageIntersection from "./hooks/usePageIntersection";
 
 // --- PDF.js WORKER SETUP ---
@@ -27,12 +30,21 @@ type ViewerContextType = typeof initialState & {
   setState: React.Dispatch<React.SetStateAction<typeof initialState>>;
   addHighlight: (highlight: Omit<Highlight, "id">) => void;
   deleteHighlight: (id: string) => void;
+  addNote: (data: Omit<PdfCustomAnnotation, "id"> & { id?: string }) => void;
+  deleteNote: (id: string) => void;
+  updateNote: (data: PdfCustomAnnotation) => void;
 };
 
 export const ViewerContext = createContext<ViewerContextType>(null as any);
 
+type params = {
+  url: string;
+  docId?: string;
+};
+
 // --- MAIN VIEWER COMPONENT ---
-export default function PdfViewer({ url }: { url: string }) {
+export default function PdfViewer({ url, docId }: params) {
+  const { user } = useAppStore((store) => store);
   const [viewerState, setViewerState] = useState(initialState);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -57,24 +69,120 @@ export default function PdfViewer({ url }: { url: string }) {
   }, [url]);
 
   usePageIntersection({ containerRef, observer, setViewerState });
+  useFetchAnnotations({ docId, setState: setViewerState as any });
+  const { createAnnotation, deleteAnnotation, updateAnnotation } =
+    useAnnotationSync({
+      docId,
+      onCreate: (data: AnnotationResp) => {
+        if (data.type === "highlight") {
+          setViewerState((s) => ({
+            ...s,
+            highlights: [
+              ...s.highlights,
+              {
+                id: data.id,
+                page: data.page_number || 1,
+                quads: Array.isArray((data?.meta_data as any)?.quads)
+                  ? (data?.meta_data as any)?.quads
+                  : [],
+              } as any,
+            ],
+          }));
+          return;
+        }
+
+        setViewerState((s) => ({
+          ...s,
+          annotations: [
+            ...s.annotations,
+            {
+              id: data.id,
+              page: data.page_number || 1,
+              point: (data.meta_data as any)?.point ?? { x: 0, y: 0 },
+              text: data.content,
+              type: "note",
+            } as any,
+          ],
+        }));
+      },
+      onDelete: (data: AnnotationResp) => {
+        if (data.type === "highlight") {
+          setViewerState((s) => ({
+            ...s,
+            highlights: s.highlights.filter((h) => h.id !== data.id),
+          }));
+          return;
+        }
+
+        setViewerState((s) => ({
+          ...s,
+          annotations: s.annotations.filter((h) => h.id !== data.id),
+        }));
+      },
+      onUpdate: (data: AnnotationResp) => {
+        if (data.type === "highlight") {
+          return;
+        }
+
+        setViewerState((s) => ({
+          ...s,
+          annotations: s.annotations.map((annotation) => {
+            if (annotation.id !== data.id) return annotation;
+            return {
+              ...annotation,
+              ...({
+                id: data.id,
+                page: data.page_number || 1,
+                point: (data.meta_data as any)?.point ?? { x: 0, y: 0 },
+                text: data.content,
+                type: "note",
+              } as any),
+            };
+          }),
+        }));
+      },
+      syncAnnotation: !!docId,
+    });
 
   // Function to add a new highlight
   const addHighlight = (highlight: Omit<Highlight, "id">) => {
-    setViewerState((s) => ({
-      ...s,
-      highlights: [
-        ...s.highlights,
-        { ...highlight, id: `${Date.now()}-${Math.random()}` },
-      ],
-    }));
+    createAnnotation({
+      page_number: highlight.page,
+      meta_data: {
+        quads: highlight.quads,
+      },
+      type: "highlight",
+    });
   };
 
   // Function to delete a highlight
   const deleteHighlight = (id: string) => {
-    setViewerState((s) => ({
-      ...s,
-      highlights: s.highlights.filter((h) => h.id !== id),
-    }));
+    deleteAnnotation(id);
+  };
+
+  const addNote = (data: Omit<PdfCustomAnnotation, "id"> & { id?: string }) => {
+    createAnnotation({
+      page_number: data.page,
+      content: data.text,
+      meta_data: {
+        point: data.point,
+      },
+      type: "note",
+    });
+  };
+  const deleteNote = (id: string) => {
+    deleteAnnotation(id);
+  };
+  const updateNote = (data: PdfCustomAnnotation) => {
+    updateAnnotation({
+      id: data.id,
+      page_number: data.page,
+      content: data.text,
+      meta_data: {
+        point: data.point,
+      },
+      type: "note",
+    });
   };
 
   return (
@@ -84,6 +192,9 @@ export default function PdfViewer({ url }: { url: string }) {
         setState: setViewerState,
         addHighlight,
         deleteHighlight,
+        addNote,
+        deleteNote,
+        updateNote,
       }}
     >
       <div className="w-full pt-10 relative h-full flex flex-col items-center bg-[#242323]">

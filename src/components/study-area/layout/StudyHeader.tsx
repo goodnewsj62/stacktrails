@@ -83,7 +83,7 @@ const StudyHeader: React.FC<StudyHeaderProps> = ({
       />
       <div className="line-clamp-2">{course.title}</div>
       <div className="flex items-center gap-4 w-full justify-between lg:!w-auto lg:ml-auto  lg:!justify-start">
-        <div className="hidden md:block">
+        <div className="hidden">
           <ProfileListOfStudyGroup />
         </div>
 
@@ -91,7 +91,7 @@ const StudyHeader: React.FC<StudyHeaderProps> = ({
 
         <div className="flex items-center">
           <FaFireFlameCurved color="#FFB300" size={20} />
-          <p className="font-bold">{progress.current_streak}</p>
+          <p className="font-bold">{progress?.current_streak ?? 0}</p>
         </div>
         <div
           role="button"

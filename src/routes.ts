@@ -133,6 +133,8 @@ export class BackendRoutes {
     `/courses/${course_id}/progress`;
   static TOGGLE_MODULE_COMPLETED = "/student/toggle-module-completed";
   static INCREMENT_PROGRESS = "/student/increment-progress";
+  static GET_MY_ANNOTATIONS = (doc_id: string) =>
+    `/student/document/${doc_id}/annotations`;
   static USER_PROFILE = (u: string) => `/account/${u}`;
   static ACCOUNT_COURSES = (u: string) => `/creators/pages/${u}`;
   static CONTACT_FORM = "/contact";
@@ -140,4 +142,5 @@ export class BackendRoutes {
   static UPDATE_USERNAME = "/account/username";
   static EXPLORE = "/courses/explore";
   static TAGS = "/courses/tags";
+  static WS_SHORT_LIVED = "/auth/ws-shortlived";
 }

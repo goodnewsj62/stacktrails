@@ -198,7 +198,7 @@ export async function makeGoogleFilePublic(fileId: string) {
       throw new Error("Permission creation failed");
     }
 
-    console.log(`Made ${fileId} Public ✅`);
+    // console.log(`Made ${fileId} Public ✅`);
 
     return `https://drive.google.com/uc?export=view&id=${fileId}`;
   } catch (err: any) {

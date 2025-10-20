@@ -22,4 +22,5 @@ export const cacheKeys = {
   ACCOUNT_COURSES: "ACCOUNT_COURSES",
   EXPLORE: "Explore",
   TAGS: "TAGS",
+  USER_ANNOTATIONS: "USER_ANNOTATIONS",
 };

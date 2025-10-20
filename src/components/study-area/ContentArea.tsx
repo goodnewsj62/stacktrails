@@ -172,7 +172,10 @@ const ContentArea: React.FC<ContentAreaProps> = ({
       )}
       {module.module_type === "document" && (
         <div className="w-full relative h-[460px] lg:h-[630px]">
-          <PdfViewer url={module.document_content.file_url} />
+          <PdfViewer
+            url={module.document_content.file_url}
+            docId={module.document_content.id}
+          />
         </div>
       )}
       {module.module_type === "discussion" && (

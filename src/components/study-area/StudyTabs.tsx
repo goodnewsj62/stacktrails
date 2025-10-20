@@ -78,13 +78,13 @@ const StudyTabs: React.FC<StudyTabsProps> = ({
       const canScrollLeftValue = scrollLeft > 5; // Small threshold for precision
       const canScrollRightValue = scrollLeft < scrollWidth - clientWidth - 5; // Small threshold for precision
 
-      console.log("Scroll check:", {
-        scrollLeft,
-        scrollWidth,
-        clientWidth,
-        canScrollLeftValue,
-        canScrollRightValue,
-      });
+      // console.log("Scroll check:", {
+      //   scrollLeft,
+      //   scrollWidth,
+      //   clientWidth,
+      //   canScrollLeftValue,
+      //   canScrollRightValue,
+      // });
 
       setCanScrollLeft(canScrollLeftValue);
       setCanScrollRight(canScrollRightValue);

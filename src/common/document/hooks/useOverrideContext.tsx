@@ -30,7 +30,7 @@ const useOverrideContext = ({
 
       const [pdfX, pdfY] = viewport.convertToPdfPoint(xPosition, yPosition);
 
-      console.log(pdfX, pdfY, xPosition, yPosition);
+      // console.log(pdfX, pdfY, xPosition, yPosition);
 
       const selection = window.getSelection();
 

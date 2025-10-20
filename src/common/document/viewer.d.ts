@@ -38,3 +38,12 @@ type AnnotationPinProps = {
   annotation: PdfCustomAnnotation;
   viewport: pdfJs.PageViewport;
 };
+
+type AnnotationResp = {
+  id: string;
+  type: "note" | "highlight";
+  page_number?: number;
+  content?: string;
+  meta_data?: { [string]: any };
+  account_id: string;
+};
