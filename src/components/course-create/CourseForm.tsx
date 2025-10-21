@@ -22,10 +22,10 @@ import { getImageProxyUrl } from "@/lib/utils";
 import { AppRoutes } from "@/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@mui/material";
+import { BsFillHandIndexFill } from "@react-icons/all-files/bs/BsFillHandIndexFill";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { FormProvider, useForm } from "react-hook-form";
-import { BsFillHandIndexFill } from "react-icons/bs";
 import z from "zod";
 
 // {

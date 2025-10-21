@@ -5,20 +5,16 @@ import screenfull from "screenfull";
 import { ReactPlayerProvider } from "../VidPlayer";
 
 // icons
-import {
-  FaPause,
-  FaPlay,
-  FaRedo,
-  FaUndo,
-  FaVolumeMute,
-  FaVolumeUp,
-} from "react-icons/fa";
-import {
-  MdFullscreen,
-  MdFullscreenExit,
-  MdLoop,
-  MdPictureInPictureAlt,
-} from "react-icons/md";
+import { FaPause } from "@react-icons/all-files/fa/FaPause";
+import { FaPlay } from "@react-icons/all-files/fa/FaPlay";
+import { FaRedo } from "@react-icons/all-files/fa/FaRedo";
+import { FaUndo } from "@react-icons/all-files/fa/FaUndo";
+import { FaVolumeMute } from "@react-icons/all-files/fa/FaVolumeMute";
+import { FaVolumeUp } from "@react-icons/all-files/fa/FaVolumeUp";
+import { MdFullscreen } from "@react-icons/all-files/md/MdFullscreen";
+import { MdFullscreenExit } from "@react-icons/all-files/md/MdFullscreenExit";
+import { MdLoop } from "@react-icons/all-files/md/MdLoop";
+import { MdPictureInPictureAlt } from "@react-icons/all-files/md/MdPictureInPictureAlt";
 
 type PlayerControlsProps = {
   playerRef: RefObject<any>;

@@ -3,11 +3,14 @@
 import CenterOnLgScreen from "@/common/utils/CenterOnLgScreen";
 import { Link } from "@/i18n/navigation";
 import { PublicRoutes } from "@/routes";
+import { FaFacebookF } from "@react-icons/all-files/fa/FaFacebookF";
+import { FaInstagram } from "@react-icons/all-files/fa/FaInstagram";
+import { FaTwitter } from "@react-icons/all-files/fa/FaTwitter";
+import { FaYoutube } from "@react-icons/all-files/fa/FaYoutube";
+import { SiTiktok } from "@react-icons/all-files/si/SiTiktok";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { CSSProperties } from "react";
-import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
-import { SiTiktok } from "react-icons/si";
 
 type params = {
   className?: string;

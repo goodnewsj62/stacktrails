@@ -1,9 +1,9 @@
 import useHideOnClickedOutside from "@/hooks/useHideOnClickedOutside";
 import { Link } from "@/i18n/navigation";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
+import { BsThreeDots } from "@react-icons/all-files/bs/BsThreeDots";
+import { LiaAngleRightSolid } from "@react-icons/all-files/lia/LiaAngleRightSolid";
 import * as React from "react";
-import { BsThreeDots } from "react-icons/bs";
-import { LiaAngleRightSolid } from "react-icons/lia";
 
 type props = {
   links: { to: string; name: string }[];
@@ -23,6 +23,7 @@ export default function AppLinkBreadCrumbs({
   const breadcrumbs = links.map(({ name, to }, index, array) => (
     <Link
       href={to}
+      key={to}
       className={`text-sm font-medium capitalize text-primary ${
         index + 1 === array.length ? "!text-[#A9A9A9]" : ""
       }`}

@@ -1,10 +1,10 @@
 "use client";
 
 import { PublicRoutes } from "@/routes";
+import { IoSearch } from "@react-icons/all-files/io5/IoSearch";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
-import { IoSearch } from "react-icons/io5";
 
 type HeroSearchProps = {};
 const HeroSearch: React.FC<HeroSearchProps> = ({}) => {

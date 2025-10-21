@@ -1,8 +1,11 @@
 "use client";
 import { IconButton } from "@mui/material";
+import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
+import { FiEdit } from "@react-icons/all-files/fi/FiEdit";
+import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
+import { FiX } from "@react-icons/all-files/fi/FiX";
 import React, { useEffect, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { FiCheck, FiEdit, FiPlus, FiX } from "react-icons/fi";
 import AppTextField from "./AppTextField";
 
 type StringArrayInputProps = {

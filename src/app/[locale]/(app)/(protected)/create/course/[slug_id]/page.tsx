@@ -13,12 +13,15 @@ import { format, parseISO } from "date-fns";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
+import { BsBackpack2Fill } from "@react-icons/all-files/bs/BsBackpack2Fill";
+import { FaMedal } from "@react-icons/all-files/fa/FaMedal";
+import { HiMiniSquare3Stack3D } from "@react-icons/all-files/hi2/HiMiniSquare3Stack3D";
+import { IoIosAlarm } from "@react-icons/all-files/io/IoIosAlarm";
+import { IoMdArchive } from "@react-icons/all-files/io/IoMdArchive";
+import { IoCloudUpload } from "@react-icons/all-files/io5/IoCloudUpload";
+import { IoEye } from "@react-icons/all-files/io5/IoEye";
+import { IoPencil } from "@react-icons/all-files/io5/IoPencil";
 import { use, useCallback } from "react";
-import { BsBackpack2Fill } from "react-icons/bs";
-import { FaMedal } from "react-icons/fa";
-import { HiMiniSquare3Stack3D } from "react-icons/hi2";
-import { IoIosAlarm, IoMdArchive } from "react-icons/io";
-import { IoCloudUpload, IoEye, IoPencil } from "react-icons/io5";
 import useFullCourseQuery from "../useFetchFullCourse";
 
 // review and update course

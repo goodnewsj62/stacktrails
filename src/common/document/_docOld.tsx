@@ -3,6 +3,13 @@ import { getImageProxyUrl } from "@/lib/utils";
 import * as pdfjsLib from "pdfjs-dist";
 import "pdfjs-dist/web/pdf_viewer.css";
 
+import { FaAngleLeft } from "@react-icons/all-files/fa/FaAngleLeft";
+import { FaAngleRight } from "@react-icons/all-files/fa/FaAngleRight";
+import { FaCopy } from "@react-icons/all-files/fa/FaCopy";
+import { FaSearchMinus } from "@react-icons/all-files/fa/FaSearchMinus";
+import { FaSearchPlus } from "@react-icons/all-files/fa/FaSearchPlus";
+import { FaHighlighter } from "@react-icons/all-files/fa6/FaHighlighter";
+import { FaRegCommentDots } from "@react-icons/all-files/fa6/FaRegCommentDots";
 import {
   createContext,
   RefObject,
@@ -11,14 +18,6 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  FaAngleLeft,
-  FaAngleRight,
-  FaCopy,
-  FaSearchMinus,
-  FaSearchPlus,
-} from "react-icons/fa";
-import { FaHighlighter, FaRegCommentDots } from "react-icons/fa6";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
 

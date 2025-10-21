@@ -1,6 +1,8 @@
+import { FiCopy } from "@react-icons/all-files/fi/FiCopy";
+import { FiCpu } from "@react-icons/all-files/fi/FiCpu";
+import { FiEdit3 } from "@react-icons/all-files/fi/FiEdit3";
 import * as pdfjsLib from "pdfjs-dist";
 import React, { useEffect, useRef } from "react";
-import { FiCopy, FiCpu, FiEdit3 } from "react-icons/fi";
 // Define the type for the selection options
 type selectOptionsT = "copy" | "note" | "ai";
 

@@ -1,6 +1,8 @@
 import CenterOnLgScreen from "@/common/utils/CenterOnLgScreen";
+import { MdGroups } from "@react-icons/all-files/md/MdGroups";
+import { MdHandshake } from "@react-icons/all-files/md/MdHandshake";
+import { MdSupportAgent } from "@react-icons/all-files/md/MdSupportAgent";
 import { getTranslations } from "next-intl/server";
-import { MdGroups, MdHandshake, MdSupportAgent } from "react-icons/md";
 
 export default async function Page() {
   const t = await getTranslations();

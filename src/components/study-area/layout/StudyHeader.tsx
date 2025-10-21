@@ -12,10 +12,10 @@ import {
   Divider,
   Typography,
 } from "@mui/material";
+import { FaRegShareSquare } from "@react-icons/all-files/fa/FaRegShareSquare";
+import { FaFireFlameCurved } from "@react-icons/all-files/fa6/FaFireFlameCurved";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { FaRegShareSquare } from "react-icons/fa";
-import { FaFireFlameCurved } from "react-icons/fa6";
 
 function getBgColor() {
   return ["primary", "secondary", "accentColor"][Math.floor(Math.random() * 3)];

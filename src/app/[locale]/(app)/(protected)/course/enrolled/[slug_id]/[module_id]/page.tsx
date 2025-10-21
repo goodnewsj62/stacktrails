@@ -12,12 +12,12 @@ import appAxios from "@/lib/axiosClient";
 import { cacheKeys } from "@/lib/cacheKeys";
 import { BackendRoutes } from "@/routes";
 import { useAppStore } from "@/store";
+import { FaExpandArrowsAlt } from "@react-icons/all-files/fa/FaExpandArrowsAlt";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { use, useEffect, useRef, useState } from "react";
-import { FaExpandAlt } from "react-icons/fa";
 import useFullCourseQuery from "../../../../create/course/useFetchFullCourse";
 import useFetchCourseEnrolment from "../useFetchCourseEnrolment";
 import useFetchCourseProgress from "../useFetchCourseProgress";
@@ -263,7 +263,7 @@ export default function Page({
                 }`}
                 onClick={() => setNavCollapsed(false)}
               >
-                <FaExpandAlt size={20} />
+                <FaExpandArrowsAlt size={20} />
               </button>
               <section
                 className={`hidden bg-white z-[300] right-0 overflow-y-auto lg:!block lg:w-[300px] xl:w-[400px] lg:fixed custom-scrollbar transition-all duration-300 ${

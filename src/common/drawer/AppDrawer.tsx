@@ -1,6 +1,7 @@
 import { Drawer, DrawerProps, styled } from "@mui/material";
+import { IoClose } from "@react-icons/all-files/io5/IoClose";
+import { IoEyeOutline } from "@react-icons/all-files/io5/IoEyeOutline";
 import { PropsWithChildren } from "react";
-import { IoClose, IoEyeOutline } from "react-icons/io5";
 
 type props = {
   isOpen: boolean;

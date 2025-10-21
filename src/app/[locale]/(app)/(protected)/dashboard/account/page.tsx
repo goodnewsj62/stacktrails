@@ -3,8 +3,8 @@
 import UpdateProfile from "@/components/profileForm/UpdateProfile";
 import { useAppStore } from "@/store";
 import { Avatar, IconButton } from "@mui/material";
+import { FaEdit } from "@react-icons/all-files/fa/FaEdit";
 import { useState } from "react";
-import { FaEdit } from "react-icons/fa";
 
 export default function Page() {
   const { user, currentProfile } = useAppStore((state) => state);

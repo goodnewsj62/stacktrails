@@ -1,14 +1,13 @@
 import { appToast } from "@/lib/appToast";
+import { FaAngleLeft } from "@react-icons/all-files/fa/FaAngleLeft";
+import { FaAngleRight } from "@react-icons/all-files/fa/FaAngleRight";
+import { FaCopy } from "@react-icons/all-files/fa/FaCopy";
+import { FaSearchMinus } from "@react-icons/all-files/fa/FaSearchMinus";
+import { FaSearchPlus } from "@react-icons/all-files/fa/FaSearchPlus";
+import { FaHighlighter } from "@react-icons/all-files/fa6/FaHighlighter";
+import { FaRegCommentDots } from "@react-icons/all-files/fa6/FaRegCommentDots";
 import "pdfjs-dist/web/pdf_viewer.css";
 import { useContext, useEffect, useState } from "react";
-import {
-  FaAngleLeft,
-  FaAngleRight,
-  FaCopy,
-  FaSearchMinus,
-  FaSearchPlus,
-} from "react-icons/fa";
-import { FaHighlighter, FaRegCommentDots } from "react-icons/fa6";
 import { ViewerContext } from "../PDFViewer";
 
 export default function PDFControls() {

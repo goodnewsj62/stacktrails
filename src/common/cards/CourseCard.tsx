@@ -4,11 +4,11 @@ import { Link } from "@/i18n/navigation";
 import { getImageProxyUrl, getNumberUnit, timeAgo } from "@/lib/utils";
 import { AppRoutes, PublicRoutes } from "@/routes";
 import { LinearProgress } from "@mui/material";
+import { FaStar } from "@react-icons/all-files/fa/FaStar";
+import { MdOutlineComment } from "@react-icons/all-files/md/MdOutlineComment";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import React, { useState } from "react";
-import { FaStar } from "react-icons/fa";
-import { MdOutlineComment } from "react-icons/md";
 
 type CourseCardProps = {
   course: Course;

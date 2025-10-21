@@ -1,7 +1,7 @@
 "use client";
 
+import { FaPlay } from "@react-icons/all-files/fa/FaPlay";
 import { useContext, useEffect, useRef, useState } from "react";
-import { FaPlay } from "react-icons/fa";
 import { ReactPlayerProvider } from "../VidPlayer";
 
 export default function PlayButton({ onClick }: { onClick?: () => void }) {

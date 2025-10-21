@@ -5,9 +5,11 @@ import MarkdownRenderer from "@/common/markdown/AppMdRenderer";
 import ConfirmPopup from "@/common/popups/ComfirmPop";
 import VidPlayer from "@/common/video/VidPlayer";
 import { Button, CircularProgress } from "@mui/material";
+import { FaChevronLeft } from "@react-icons/all-files/fa/FaChevronLeft";
+import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
+import { FaLink } from "@react-icons/all-files/fa/FaLink";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaLink } from "react-icons/fa";
 
 type ContentAreaProps = {
   course: FullCourse;

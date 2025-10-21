@@ -9,9 +9,11 @@ import { cacheKeys } from "@/lib/cacheKeys";
 import { BackendRoutes } from "@/routes";
 import { useAppStore } from "@/store";
 import { Button } from "@mui/material";
+import { FaCheckCircle } from "@react-icons/all-files/fa/FaCheckCircle";
+import { FaFolderPlus } from "@react-icons/all-files/fa/FaFolderPlus";
+import { FaHourglassHalf } from "@react-icons/all-files/fa/FaHourglassHalf";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { FaCheckCircle, FaFolderPlus, FaHourglassHalf } from "react-icons/fa";
 
 export default function Page() {
   const { user } = useAppStore((state) => state);

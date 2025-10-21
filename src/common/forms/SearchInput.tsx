@@ -1,4 +1,4 @@
-import { IoSearchOutline } from "react-icons/io5";
+import { IoSearchOutline } from "@react-icons/all-files/io5/IoSearchOutline";
 
 type props = {
   type?: "outline" | "normal";

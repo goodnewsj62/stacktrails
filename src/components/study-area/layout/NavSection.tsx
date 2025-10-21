@@ -7,7 +7,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdKeyboardArrowDown } from "@react-icons/all-files/md/MdKeyboardArrowDown";
 
 interface NavSectionProps {
   title: string;

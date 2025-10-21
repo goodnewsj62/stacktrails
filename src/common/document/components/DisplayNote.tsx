@@ -1,8 +1,9 @@
 import useHideOnClickedOutside from "@/hooks/useHideOnClickedOutside";
+import { CgNotes } from "@react-icons/all-files/cg/CgNotes";
+import { FaEdit } from "@react-icons/all-files/fa/FaEdit";
+import { FaRegTrashAlt } from "@react-icons/all-files/fa/FaRegTrashAlt";
 import { useTranslations } from "next-intl";
 import { useContext, useState } from "react";
-import { CgNotes } from "react-icons/cg";
-import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import { ViewerContext } from "../PDFViewer";
 import NoteAnnotationInput from "./NoteAnnotationInput";
 

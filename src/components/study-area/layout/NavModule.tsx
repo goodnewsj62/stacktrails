@@ -1,14 +1,12 @@
 "use client";
 
 import { Checkbox } from "@mui/material";
+import { MdDescription } from "@react-icons/all-files/md/MdDescription";
+import { MdKeyboardVoice } from "@react-icons/all-files/md/MdKeyboardVoice";
+import { MdLink } from "@react-icons/all-files/md/MdLink";
+import { MdOndemandVideo } from "@react-icons/all-files/md/MdOndemandVideo";
+import { MdQuiz } from "@react-icons/all-files/md/MdQuiz";
 import { useTranslations } from "next-intl";
-import {
-  MdDescription,
-  MdKeyboardVoice,
-  MdLink,
-  MdOndemandVideo,
-  MdQuiz,
-} from "react-icons/md";
 
 type NavModuleProps = {
   data: FullModule;

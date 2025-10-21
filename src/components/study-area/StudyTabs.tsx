@@ -1,9 +1,10 @@
 "use client";
 
 import { Box, IconButton, Tab, Tabs } from "@mui/material";
+import { IoChevronBack } from "@react-icons/all-files/io5/IoChevronBack";
+import { IoChevronForward } from "@react-icons/all-files/io5/IoChevronForward";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import CourseChat from "../chats/CourseChat";
 import CourseNav from "./layout/CourseNav";
 import Comments from "./study-tabs/Comments";

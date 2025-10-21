@@ -1,6 +1,6 @@
+import { FaTrash } from "@react-icons/all-files/fa/FaTrash";
 import "pdfjs-dist/web/pdf_viewer.css";
 import { useContext } from "react";
-import { FaTrash } from "react-icons/fa";
 import { ViewerContext } from "../PDFViewer";
 
 //--- AnnotationEditorLayer: Renders the interactive "BOXED DIV" ---

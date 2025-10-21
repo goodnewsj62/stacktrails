@@ -5,10 +5,10 @@ import appAxios from "@/lib/axiosClient";
 import { extractExternalId } from "@/lib/utils";
 import { BackendRoutes } from "@/routes";
 import { Button } from "@mui/material";
+import { IoTrashBin } from "@react-icons/all-files/io5/IoTrashBin";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useContext, useState } from "react";
-import { IoTrashBin } from "react-icons/io5";
 import { ContentProvider } from "../ModuleForm";
 
 type docProps = {};

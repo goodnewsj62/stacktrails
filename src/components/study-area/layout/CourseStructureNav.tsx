@@ -2,9 +2,10 @@
 
 import CourseChat from "@/components/chats/CourseChat";
 import { Tab, Tabs } from "@mui/material";
+import { IoClose } from "@react-icons/all-files/io5/IoClose";
+import { IoExpand } from "@react-icons/all-files/io5/IoExpand";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { IoClose, IoExpand } from "react-icons/io5";
 import CourseNav from "./CourseNav";
 
 type CourseStructureNavProps = {

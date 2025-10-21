@@ -9,9 +9,9 @@ import VidPlayer from "@/common/video/VidPlayer";
 import { Link } from "@/i18n/navigation";
 import { AppRoutes } from "@/routes";
 import { Button, IconButton, Modal } from "@mui/material";
+import { IoClose } from "@react-icons/all-files/io5/IoClose";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { IoClose } from "react-icons/io5";
 import Attachments from "./Attachments";
 
 type ModuleDetailProps = { data: FullModule; onClose: () => void };

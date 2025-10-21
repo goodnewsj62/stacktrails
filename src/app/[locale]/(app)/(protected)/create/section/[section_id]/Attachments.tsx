@@ -11,11 +11,12 @@ import { extractExternalId } from "@/lib/utils";
 import { BackendRoutes } from "@/routes";
 import { useAppStore } from "@/store";
 import { Button, IconButton, Modal } from "@mui/material";
+import { FaTrash } from "@react-icons/all-files/fa/FaTrash";
+import { IoClose } from "@react-icons/all-files/io5/IoClose";
+import { IoTrashBin } from "@react-icons/all-files/io5/IoTrashBin";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { FaTrash } from "react-icons/fa";
-import { IoClose, IoTrashBin } from "react-icons/io5";
 
 type AttachmentsProps = {
   data: FullModule;

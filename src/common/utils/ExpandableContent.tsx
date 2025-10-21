@@ -64,7 +64,7 @@ const ExpandableContent: React.FC<ExpandableContentProps> = ({
     // Use ResizeObserver to detect when the content's size changes.
     // This correctly handles asynchronously rendered content like Markdown.
     const observer = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         // Use scrollHeight to get the full height of the content, even when overflowing
         const naturalHeight = entry.target.scrollHeight;
 

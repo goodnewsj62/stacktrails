@@ -8,15 +8,17 @@ import {
 import { BackendRoutes } from "@/routes";
 import { useAppStore } from "@/store";
 import { CircularProgress, Modal, Tooltip } from "@mui/material";
+import { BsArrowLeft } from "@react-icons/all-files/bs/BsArrowLeft";
+import { FaPlus } from "@react-icons/all-files/fa/FaPlus";
+import { GrStorage } from "@react-icons/all-files/gr/GrStorage";
+import { IoClose } from "@react-icons/all-files/io5/IoClose";
+import { IoGrid } from "@react-icons/all-files/io5/IoGrid";
+import { IoList } from "@react-icons/all-files/io5/IoList";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { BsArrowLeft } from "react-icons/bs";
-import { FaPlus } from "react-icons/fa";
-import { GrStorage } from "react-icons/gr";
-import { IoClose, IoGrid, IoList } from "react-icons/io5";
 import Empty from "../utils/Empty";
 import LoadingComponent from "../utils/LoadingComponent";
 

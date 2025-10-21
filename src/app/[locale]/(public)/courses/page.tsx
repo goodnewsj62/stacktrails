@@ -7,11 +7,11 @@ import appAxios from "@/lib/axiosClient";
 import { cacheKeys } from "@/lib/cacheKeys";
 import { BackendRoutes, PublicRoutes } from "@/routes";
 import { Button, Chip, MenuItem, Select } from "@mui/material";
+import { IoSearch } from "@react-icons/all-files/io5/IoSearch";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { IoSearch } from "react-icons/io5";
 
 export default function Page() {
   const t = useTranslations();

@@ -13,13 +13,13 @@ import { deBounce } from "@/lib/debounce";
 import { getNumberUnit } from "@/lib/utils";
 import { BackendRoutes } from "@/routes";
 import { useAppStore } from "@/store";
+import { AiFillLike } from "@react-icons/all-files/ai/AiFillLike";
+import { FaCheckCircle } from "@react-icons/all-files/fa/FaCheckCircle";
+import { IoMdChatbubbles } from "@react-icons/all-files/io/IoMdChatbubbles";
+import { RiFolderSharedFill } from "@react-icons/all-files/ri/RiFolderSharedFill";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { AiFillLike } from "react-icons/ai";
-import { FaCheckCircle } from "react-icons/fa";
-import { IoMdChatbubbles } from "react-icons/io";
-import { RiFolderSharedFill } from "react-icons/ri";
 
 export default function Page() {
   const t = useTranslations();

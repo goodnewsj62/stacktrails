@@ -7,11 +7,12 @@ import { Link } from "@/i18n/navigation";
 import { getLanguageName, getNumberUnit } from "@/lib/utils";
 import { PublicRoutes } from "@/routes";
 import { Avatar, Divider, IconButton } from "@mui/material";
+import { CiGlobe } from "@react-icons/all-files/ci/CiGlobe";
+import { MdChat } from "@react-icons/all-files/md/MdChat";
+import { MdGroups } from "@react-icons/all-files/md/MdGroups";
+import { PiClockCountdown } from "@react-icons/all-files/pi/PiClockCountdown";
 import { format, parseISO } from "date-fns";
 import { useTranslations } from "next-intl";
-import { CiGlobe } from "react-icons/ci";
-import { MdChat, MdGroups } from "react-icons/md";
-import { PiClockCountdown } from "react-icons/pi";
 
 type SummaryProps = {
   course: FullCourse;
