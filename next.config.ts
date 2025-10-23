@@ -4,7 +4,6 @@ import createNextIntlPlugin from "next-intl/plugin";
 const backendURL =
   process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8082";
 const IsDEV = backendURL.startsWith("http://localhost");
-console.log("|||||||||||||||||||||||||||||||||", backendURL, IsDEV);
 
 const nextConfig: NextConfig = {
   experimental: {
