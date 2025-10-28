@@ -2,7 +2,6 @@ import CenterOnLgScreen from "@/common/utils/CenterOnLgScreen";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { PublicRoutes } from "@/routes";
-import { useState } from "react";
 
 import type { Metadata } from "next";
 import FaqContent from "./Faq";
@@ -23,16 +22,6 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  const [selectedFaq, setSelectedFaq] = useState<string>("");
-
-  const scrollToFaq = (index: number) => {
-    setSelectedFaq(`item-${index}`);
-    const element = document.getElementById(`faq-${index}`);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
   return (
     <CenterOnLgScreen element="main" className="py-10">
       <div className="min-h-screen bg-background">
