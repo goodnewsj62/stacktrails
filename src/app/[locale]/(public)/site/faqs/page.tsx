@@ -12,6 +12,23 @@ import { PublicRoutes } from "@/routes";
 import { MessageCircle } from "lucide-react";
 import { useState } from "react";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Frequently Asked Questions",
+  description:
+    "Find answers to common questions about StackTrails — from how it works to getting started with learning paths.",
+  alternates: {
+    canonical: "https://stacktrails.com/site/faqs",
+  },
+  openGraph: {
+    title: "StackTrails FAQs",
+    description:
+      "Your most common questions about StackTrails answered in one place.",
+    url: "https://stacktrails.com/site/faqs",
+  },
+};
+
 const faqs = [
   {
     q: "What is Stacktrails?",
