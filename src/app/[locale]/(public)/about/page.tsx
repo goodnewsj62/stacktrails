@@ -1,5 +1,3 @@
-"use client";
-
 import CenterOnLgScreen from "@/common/utils/CenterOnLgScreen";
 import { Metadata } from "next";
 
