@@ -12,6 +12,7 @@ type CourseStructureNavProps = {
   sections: FullSection[];
   progress?: CourseProgress;
   currentModule: FullModule;
+  courseId: string;
   setCurrentModuleId: (id: string) => void;
   onClose: () => void;
   toggleCompleted: toggleCompletedType;
@@ -29,6 +30,7 @@ const CourseStructureNav: React.FC<CourseStructureNavProps> = ({
   currentModule,
   setCurrentModuleId,
   progress,
+  courseId,
   onClose,
   toggleCompleted,
 }) => {
@@ -67,7 +69,7 @@ const CourseStructureNav: React.FC<CourseStructureNavProps> = ({
         </button>
       </div>
       <div hidden={value === 0} className="h-[calc(100%-3rem)]">
-        <CourseChat courseId={""} />
+        <CourseChat courseId={courseId} />
       </div>
       <div hidden={value === 1}>
         <CourseNav

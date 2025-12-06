@@ -388,6 +388,7 @@
         "CREATING_DIRECT_CHAT": "Creating direct chat...",
         "CREATING_GROUP_CHAT": "Creating group chat...",
         "CHAT_CREATED": "Chat created successfully",
-        "MEMBERS_ADDED": "Members added successfully"
+        "MEMBERS_ADDED": "Members added successfully",
+        "DELETE_MESSAGE": "Are you sure you want to delete this message?"
     }
 }

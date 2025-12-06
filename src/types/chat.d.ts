@@ -1,9 +1,9 @@
 // Enum types
-type ChatType = "DIRECT" | "GROUP";
-type MessageType = "TEXT" | "IMAGE" | "FILE" | "SYSTEM";
-type MemberRole = "MEMBER" | "ADMIN" | "MODERATOR";
-type MemberStatus = "ACTIVE" | "LEFT" | "REMOVED" | "BANNED";
-type GroupChatPrivacy = "PUBLIC" | "PRIVATE" | "RESTRICTED";
+type ChatType = "direct" | "group";
+type MessageType = "text" | "image" | "file" | "system";
+type MemberRole = "member" | "admin" | "moderator";
+type MemberStatus = "active" | "left" | "removed" | "banned";
+type GroupChatPrivacy = "public" | "private" | "restricted";
 
 // Base types
 type ChatBase = {
@@ -192,6 +192,13 @@ type ChatAndUnReadCount = {
   chat: ChatRead;
   unread_count: number;
   has_reply: boolean;
+  last_message: ChatMessageRead | null;
+};
+
+type ChatStatRead = {
+  chat_id: string;
+  unread_count: number;
+  has_reply: boolean;
 };
 
 type PaginatedChatResp = {
@@ -261,10 +268,7 @@ type ChatMessageWrite = {
   file_name?: string | null;
   file_size?: number | null;
   file_type?: string | null;
-  is_edited: boolean;
-  edited_at?: string | null;
-  is_deleted: boolean;
-  deleted_at?: string | null;
+
   extra_data?: Record<string, any> | null;
   chat_id: string;
   reply_to_id?: string | null;
@@ -288,4 +292,21 @@ type ChatInviteWrite = {
 
 type ChatInviteBulkWrite = {
   data: ChatInviteWrite[];
+};
+
+type PaginatedMessagesResp = {
+  items: ChatMessageRead[];
+  last_message_id: string;
+  recent_message_id: string;
+  hasNext: boolean;
+};
+
+type PaginatedChatMemberRead = {
+  items: ChatMemberRead[];
+  total: number;
+  page: number;
+  per_page: number;
+  total_pages: number;
+  has_next: boolean;
+  has_prev: boolean;
 };

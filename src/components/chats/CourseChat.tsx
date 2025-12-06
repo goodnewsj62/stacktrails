@@ -1,6 +1,7 @@
 "use client";
 
 import ChatLogsPanel from "@/components/chats/ChatLogsPanel";
+import ChatMain from "@/components/chats/ChatMain";
 import appAxios from "@/lib/axiosClient";
 import { cacheKeys } from "@/lib/cacheKeys";
 import { BackendRoutes } from "@/routes";
@@ -13,15 +14,24 @@ type CourseChatProps = {
 };
 
 const CourseChat: React.FC<CourseChatProps> = ({ courseId }) => {
+  const [activeChat, setActiveChat] = useState<ChatRead | null>(null);
   const { user } = useAppStore((state) => state);
   const [search, setSearch] = useState("");
-  const { data: users_chats } = useInfiniteQuery({
-    queryKey: [cacheKeys.USER_CHATS, user?.id, search],
+  const {
+    data: users_chats,
+    isLoading: isLoadingChats,
+    isFetching: isFetchingChats,
+    fetchNextPage: fetchChatsNextPage,
+    hasNextPage,
+    error,
+  } = useInfiniteQuery({
+    queryKey: [cacheKeys.USER_CHATS, user?.id, courseId, search],
     queryFn: async ({ pageParam = 1 }): Promise<PaginatedChatResp> => {
       const resp = await appAxios.get(BackendRoutes.LIST_CHATS, {
         params: {
           q: search,
           page: pageParam,
+          course_id: courseId,
         },
       });
 
@@ -31,14 +41,34 @@ const CourseChat: React.FC<CourseChatProps> = ({ courseId }) => {
       return lastPage.has_next ? lastPage.page + 1 : undefined;
     },
     initialPageParam: 1,
-    staleTime: 3 * 60 * 1000,
-    refetchInterval: 3 * 60 * 1000,
+    enabled: !!user?.id, // Only fetch when user is authenticated
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchInterval: false, // Disable automatic refetch, rely on WebSocket updates
+    refetchOnWindowFocus: false, // Prevent refetch on window focus
   });
 
   return (
     <section className="border border-gray-300 h-full">
-      <ChatLogsPanel />
-      {/* <ChatMain /> */}
+      {!activeChat && (
+        <ChatLogsPanel
+          data={users_chats}
+          isLoadingChats={isLoadingChats}
+          isFetchingChats={isFetchingChats}
+          fetchChatsNextPage={fetchChatsNextPage}
+          error={error}
+          setActiveChat={setActiveChat}
+          activeChatId={null}
+          search={search}
+          setSearch={setSearch}
+          hasNextPage={hasNextPage}
+        />
+      )}
+      {activeChat && (
+        <ChatMain
+          chat={activeChat}
+          clearCurrentChat={() => setActiveChat(null)}
+        />
+      )}
     </section>
   );
 };

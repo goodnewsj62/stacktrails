@@ -295,6 +295,7 @@ export default function Page({
                 <CourseStructureNav
                   sections={course.sections}
                   currentModule={module}
+                  courseId={course.id}
                   setCurrentModuleId={handleModuleSelect}
                   onClose={() => setNavCollapsed(!navCollapsed)}
                   progress={progress}

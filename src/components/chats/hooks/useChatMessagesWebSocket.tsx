@@ -23,22 +23,28 @@ type ChatMessageEvent =
   | "chat.message.delete"
   | "chat.update"
   | "chat.member.delete"
-  | "chat.stat";
+  | "chat.stat"
+  | "chat.initial";
 
 type ChatMessageWebSocketMessage = {
   event: ChatMessageEvent;
   data: any;
 };
 
-type UseChatMessagesWebSocketProps = {
-  chatId?: string;
-  enabled?: boolean;
+type ChatMessagesEventHandlers = {
   onMessageCreated?: (data: any) => void;
   onMessageUpdated?: (data: any) => void;
   onMessageDeleted?: (data: any) => void;
   onChatUpdated?: (data: any) => void;
   onMemberDeleted?: (data: any) => void;
   onStatUpdated?: (data: any) => void;
+  onInitial?: (data: any) => void;
+};
+
+type UseChatMessagesWebSocketProps = {
+  chatId?: string;
+  enabled?: boolean;
+  handlers?: ChatMessagesEventHandlers;
 };
 
 /**
@@ -48,12 +54,7 @@ type UseChatMessagesWebSocketProps = {
 export function useChatMessagesWebSocket({
   chatId,
   enabled = true,
-  onMessageCreated,
-  onMessageUpdated,
-  onMessageDeleted,
-  onChatUpdated,
-  onMemberDeleted,
-  onStatUpdated,
+  handlers = {},
 }: UseChatMessagesWebSocketProps) {
   const { user } = useAppStore((s) => s);
   const queryClient = useQueryClient();
@@ -64,33 +65,16 @@ export function useChatMessagesWebSocket({
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
 
-  // Store handlers in refs to avoid dependency issues
-  const handlersRef = useRef({
-    onMessageCreated,
-    onMessageUpdated,
-    onMessageDeleted,
-    onChatUpdated,
-    onMemberDeleted,
-    onStatUpdated,
-  });
+  // Store handlers, queryClient, and chatId in refs to avoid dependency issues
+  const handlersRef = useRef(handlers);
+  const queryClientRef = useRef(queryClient);
+  const chatIdRef = useRef(chatId);
 
   useEffect(() => {
-    handlersRef.current = {
-      onMessageCreated,
-      onMessageUpdated,
-      onMessageDeleted,
-      onChatUpdated,
-      onMemberDeleted,
-      onStatUpdated,
-    };
-  }, [
-    onMessageCreated,
-    onMessageUpdated,
-    onMessageDeleted,
-    onChatUpdated,
-    onMemberDeleted,
-    onStatUpdated,
-  ]);
+    handlersRef.current = handlers;
+    queryClientRef.current = queryClient;
+    chatIdRef.current = chatId;
+  }, [handlers, queryClient, chatId]);
 
   const cleanupSocket = useCallback(() => {
     if (reconnectTimerRef.current) {
@@ -116,7 +100,8 @@ export function useChatMessagesWebSocket({
 
   const openSocketWithToken = useCallback(
     (token: string) => {
-      if (!chatId) return;
+      const currentChatId = chatIdRef.current;
+      if (!currentChatId) return;
 
       cleanupSocket();
 
@@ -130,75 +115,85 @@ export function useChatMessagesWebSocket({
             : "localhost:8082");
 
       // Connect to specific chat's message stream
-      const wsUrl = `${baseWsUrl}/ws/chat/${chatId}/?token=${token}`;
+      const wsUrl = `${baseWsUrl}/ws/chat/${currentChatId}?token=${token}`;
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log("[Chat Messages WS] Connected to chat:", chatId);
-        retriesRef.current = 0;
+        console.log("[Chat Messages WS] Connected to chat:", currentChatId);
+        // Don't reset retries here - only reset after stable connection
         connectingRef.current = false;
         setIsConnecting(false);
         setIsConnected(true);
       };
 
       ws.onmessage = (e) => {
+        console.log("jjj", e);
         try {
           const msg: ChatMessageWebSocketMessage = JSON.parse(e.data);
-          const handlers = handlersRef.current;
+          const currentHandlers = handlersRef.current;
+          const qc = queryClientRef.current;
+          const currentChatId = chatIdRef.current;
+
+          // Reset retries on first successful message (connection is stable)
+          if (retriesRef.current > 0) {
+            console.log(
+              "[Chat Messages WS] Connection stable, resetting retries"
+            );
+            retriesRef.current = 0;
+          }
 
           switch (msg.event) {
+            case "chat.initial":
+              currentHandlers.onInitial?.(msg.data);
+              break;
             case "chat.message.create":
-              handlers.onMessageCreated?.(msg.data);
+              currentHandlers.onMessageCreated?.(msg.data);
               // Invalidate messages query to refetch
-              queryClient.invalidateQueries({
-                queryKey: [cacheKeys.CHAT_MESSAGES, chatId],
+              qc.invalidateQueries({
+                queryKey: [cacheKeys.CHAT_MESSAGES, currentChatId],
               });
               // Also invalidate chat list to update last_message_at
-              queryClient.invalidateQueries({
+              qc.invalidateQueries({
                 queryKey: [cacheKeys.USER_CHATS],
               });
               break;
             case "chat.message.update":
-              handlers.onMessageUpdated?.(msg.data);
+              currentHandlers.onMessageUpdated?.(msg.data);
               // Invalidate to update edited messages or reactions
-              queryClient.invalidateQueries({
-                queryKey: [cacheKeys.CHAT_MESSAGES, chatId],
+              qc.invalidateQueries({
+                queryKey: [cacheKeys.CHAT_MESSAGES, currentChatId],
               });
               break;
             case "chat.message.delete":
-              handlers.onMessageDeleted?.(msg.data);
+              currentHandlers.onMessageDeleted?.(msg.data);
               // Invalidate to remove deleted messages
-              queryClient.invalidateQueries({
-                queryKey: [cacheKeys.CHAT_MESSAGES, chatId],
+              qc.invalidateQueries({
+                queryKey: [cacheKeys.CHAT_MESSAGES, currentChatId],
               });
               break;
             case "chat.update":
-              handlers.onChatUpdated?.(msg.data);
+              currentHandlers.onChatUpdated?.(msg.data);
               // Invalidate to update chat info
-              queryClient.invalidateQueries({
-                queryKey: [cacheKeys.CHAT_MESSAGES, chatId],
+              qc.invalidateQueries({
+                queryKey: [cacheKeys.CHAT_MESSAGES, currentChatId],
               });
-              queryClient.invalidateQueries({
+              qc.invalidateQueries({
                 queryKey: [cacheKeys.USER_CHATS],
               });
               break;
             case "chat.member.delete":
-              handlers.onMemberDeleted?.(msg.data);
+              currentHandlers.onMemberDeleted?.(msg.data);
               // Invalidate to update member list
-              queryClient.invalidateQueries({
-                queryKey: [cacheKeys.CHAT_MESSAGES, chatId],
+              qc.invalidateQueries({
+                queryKey: [cacheKeys.CHAT_MESSAGES, currentChatId],
               });
-              queryClient.invalidateQueries({
+              qc.invalidateQueries({
                 queryKey: [cacheKeys.USER_CHATS],
               });
               break;
             case "chat.stat":
-              handlers.onStatUpdated?.(msg.data);
-              // Update unread counts in chat list
-              queryClient.invalidateQueries({
-                queryKey: [cacheKeys.USER_CHATS],
-              });
+              currentHandlers.onStatUpdated?.(msg.data);
               break;
             default:
               console.log("[Chat Messages WS] Unknown event:", msg.event);
@@ -209,17 +204,41 @@ export function useChatMessagesWebSocket({
       };
 
       ws.onerror = (err) => {
-        console.error("[Chat Messages WS] Error:", err);
+        console.error("[Chat Messages WS] WebSocket error occurred:", err);
+        // Note: The actual error details are not available in the error event
+        // Check the onclose event for more information
       };
 
       ws.onclose = (event) => {
-        console.warn("[Chat Messages WS] Closed:", event.code, event.reason);
+        console.warn(
+          "[Chat Messages WS] Connection closed:",
+          `Code: ${event.code}`,
+          `Reason: ${event.reason || "No reason provided"}`,
+          `Clean: ${event.wasClean}`
+        );
         setIsConnected(false);
+        connectingRef.current = false;
+        setIsConnecting(false);
 
-        // Auth errors
+        // Normal close - don't reconnect
+        if (event.code === 1000) {
+          console.log("[Chat Messages WS] Normal close, not reconnecting");
+          return;
+        }
+
+        // Auth errors - retry with new token
         if ([1008, 4401, 4403].includes(event.code)) {
-          if (retriesRef.current < AUTH_MAX_RETRIES) {
-            retriesRef.current += 1;
+          const currentRetries = retriesRef.current;
+          console.log(
+            `[Chat Messages WS] Auth error, retry ${
+              currentRetries + 1
+            }/${AUTH_MAX_RETRIES}`
+          );
+
+          if (currentRetries < AUTH_MAX_RETRIES) {
+            retriesRef.current = currentRetries + 1;
+            const delay = RECONNECT_DELAY * retriesRef.current;
+
             reconnectTimerRef.current = window.setTimeout(async () => {
               try {
                 const newToken = await getFreshAccessToken();
@@ -229,41 +248,54 @@ export function useChatMessagesWebSocket({
                   "[Chat Messages WS] Failed to refresh token:",
                   err
                 );
+                connectingRef.current = false;
+                setIsConnecting(false);
               }
-            }, RECONNECT_DELAY * retriesRef.current);
+            }, delay);
+          } else {
+            console.error(
+              "[Chat Messages WS] Max auth retries reached, giving up"
+            );
           }
           return;
         }
 
-        // Normal close
-        if (event.code === 1000) {
-          cleanupSocket();
-          return;
-        }
+        // Other errors - reconnect with exponential backoff
+        const currentRetries = retriesRef.current;
+        console.log(
+          `[Chat Messages WS] Connection lost, retry ${
+            currentRetries + 1
+          }/${MAX_RETRIES}`
+        );
 
-        // Reconnect with exponential backoff
-        if (retriesRef.current < MAX_RETRIES) {
-          retriesRef.current += 1;
+        if (currentRetries < MAX_RETRIES) {
+          retriesRef.current = currentRetries + 1;
           const backoff = Math.min(
             RECONNECT_DELAY * Math.pow(2, retriesRef.current),
             30000
           );
+
           reconnectTimerRef.current = window.setTimeout(async () => {
             try {
               const token = await getFreshAccessToken();
               openSocketWithToken(token);
             } catch (err) {
               console.error("[Chat Messages WS] Reconnect failed:", err);
+              connectingRef.current = false;
+              setIsConnecting(false);
             }
           }, backoff);
+        } else {
+          console.error("[Chat Messages WS] Max retries reached, giving up");
         }
       };
     },
-    [chatId, cleanupSocket, queryClient]
+    [] // No dependencies - uses refs only
   );
 
   const connect = useCallback(async () => {
-    if (!user || !enabled || !chatId || connectingRef.current) return;
+    if (!user || !enabled || !chatIdRef.current || connectingRef.current)
+      return;
 
     connectingRef.current = true;
     setIsConnecting(true);
@@ -276,16 +308,48 @@ export function useChatMessagesWebSocket({
       connectingRef.current = false;
       setIsConnecting(false);
     }
-  }, [user, enabled, chatId, openSocketWithToken]);
+  }, [user, enabled, openSocketWithToken]);
 
+  // Separate effect for connection management
   useEffect(() => {
+    let mounted = true;
+
+    const initConnection = async () => {
+      if (
+        !enabled ||
+        !chatId ||
+        !user ||
+        connectingRef.current ||
+        wsRef.current
+      )
+        return;
+
+      connectingRef.current = true;
+      setIsConnecting(true);
+
+      try {
+        const token = await getFreshAccessToken();
+        if (mounted) {
+          openSocketWithToken(token);
+        }
+      } catch (err) {
+        console.error("[Chat Messages WS] Initial connection failed:", err);
+        if (mounted) {
+          connectingRef.current = false;
+          setIsConnecting(false);
+        }
+      }
+    };
+
     if (enabled && chatId && user) {
-      connect();
+      initConnection();
     }
+
     return () => {
+      mounted = false;
       cleanupSocket();
     };
-  }, [enabled, chatId, user, connect, cleanupSocket]);
+  }, [enabled, chatId, user?.id, openSocketWithToken, cleanupSocket]); // Only re-run when these change
 
   const sendMessage = useCallback((event: string, data: any) => {
     const ws = wsRef.current;
@@ -293,8 +357,15 @@ export function useChatMessagesWebSocket({
       console.warn("[Chat Messages WS] Cannot send - not connected");
       return false;
     }
-    ws.send(JSON.stringify({ event, data }));
-    return true;
+    try {
+      const payload = JSON.stringify({ event, data });
+      console.log("[Chat Messages WS] Sending:", payload);
+      ws.send(payload);
+      return true;
+    } catch (err) {
+      console.error("[Chat Messages WS] Error sending message:", err);
+      return false;
+    }
   }, []);
 
   const sendChatMessage = useCallback(

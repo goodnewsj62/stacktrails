@@ -22,9 +22,7 @@ type ChatsSyncEvent =
   | "chat.direct.add"
   | "chat.accept"
   | "chat.join_public"
-  | "chat.message.create"
   | "chat.update"
-  | "chat.member.delete"
   | "chat.stat";
 
 type ChatsSyncMessage = {
@@ -32,14 +30,16 @@ type ChatsSyncMessage = {
   data: any;
 };
 
-type UseChatsSyncWebSocketProps = {
-  enabled?: boolean;
+type ChatsSyncEventHandlers = {
   onChatCreated?: (data: any) => void;
   onAccept?: (data: any) => void;
-  onNewMessage?: (data: any) => void;
   onChatUpdated?: (data: any) => void;
-  onMemberDeleted?: (data: any) => void;
   onStatUpdated?: (data: any) => void;
+};
+
+type UseChatsSyncWebSocketProps = {
+  enabled?: boolean;
+  handlers?: ChatsSyncEventHandlers;
 };
 
 /**
@@ -51,12 +51,7 @@ type UseChatsSyncWebSocketProps = {
  */
 export function useChatsSyncWebSocket({
   enabled = true,
-  onChatCreated,
-  onAccept,
-  onNewMessage,
-  onChatUpdated,
-  onMemberDeleted,
-  onStatUpdated,
+  handlers = {},
 }: UseChatsSyncWebSocketProps = {}) {
   const { user } = useAppStore((s) => s);
   const queryClient = useQueryClient();
@@ -67,33 +62,14 @@ export function useChatsSyncWebSocket({
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
 
-  // Store handlers in refs to avoid dependency issues
-  const handlersRef = useRef({
-    onChatCreated,
-    onAccept,
-    onNewMessage,
-    onChatUpdated,
-    onMemberDeleted,
-    onStatUpdated,
-  });
+  // Store handlers and queryClient in refs to avoid dependency issues
+  const handlersRef = useRef(handlers);
+  const queryClientRef = useRef(queryClient);
 
   useEffect(() => {
-    handlersRef.current = {
-      onChatCreated,
-      onAccept,
-      onNewMessage,
-      onChatUpdated,
-      onMemberDeleted,
-      onStatUpdated,
-    };
-  }, [
-    onChatCreated,
-    onAccept,
-    onNewMessage,
-    onChatUpdated,
-    onMemberDeleted,
-    onStatUpdated,
-  ]);
+    handlersRef.current = handlers;
+    queryClientRef.current = queryClient;
+  }, [handlers, queryClient]);
 
   const cleanupSocket = useCallback(() => {
     if (reconnectTimerRef.current) {
@@ -130,14 +106,14 @@ export function useChatsSyncWebSocket({
             ? window.location.host
             : "localhost:8082");
 
-      // Connect to user's chat list sync endpoint
+      //     // Connect to user's chat list sync endpoint
       const wsUrl = `${baseWsUrl}/ws/chat/?token=${token}`;
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {
         console.log("[Chats Sync WS] Connected");
-        retriesRef.current = 0;
+        // Don't reset retries here - only reset after stable connection
         connectingRef.current = false;
         setIsConnecting(false);
         setIsConnected(true);
@@ -146,62 +122,55 @@ export function useChatsSyncWebSocket({
       ws.onmessage = (e) => {
         try {
           const msg: ChatsSyncMessage = JSON.parse(e.data);
-          const handlers = handlersRef.current;
+          const currentHandlers = handlersRef.current;
+          const qc = queryClientRef.current;
+
+          // Reset retries on first successful message (connection is stable)
+          if (retriesRef.current > 0) {
+            console.log("[Chats Sync WS] Connection stable, resetting retries");
+            retriesRef.current = 0;
+          }
 
           switch (msg.event) {
             case "chat.create":
-              handlers.onChatCreated?.(msg.data);
+              currentHandlers.onChatCreated?.(msg.data as ChatRead);
               // Invalidate chat list to refetch
-              queryClient.invalidateQueries({
+              qc.invalidateQueries({
                 queryKey: [cacheKeys.USER_CHATS],
               });
               break;
             case "chat.accept":
-              handlers.onAccept?.(msg.data);
+              currentHandlers.onAccept?.(msg.data as ChatMemberRead);
               // Invalidate to update chat info
-              queryClient.invalidateQueries({
+              qc.invalidateQueries({
                 queryKey: [cacheKeys.USER_CHATS],
               });
               break;
             case "chat.join_public":
-              handlers.onAccept?.(msg.data);
-              // Invalidate to add new chat
-              queryClient.invalidateQueries({
+              currentHandlers.onAccept?.(msg.data as ChatMemberRead);
+              // Invalidate to remove deleted chat
+              qc.invalidateQueries({
                 queryKey: [cacheKeys.USER_CHATS],
               });
               break;
             case "chat.direct.add":
-              handlers.onChatCreated?.(msg.data);
-              // Invalidate to add new direct chat
-              queryClient.invalidateQueries({
-                queryKey: [cacheKeys.USER_CHATS],
-              });
-              break;
-            case "chat.message.create":
-              handlers.onNewMessage?.(msg.data);
+              currentHandlers.onChatCreated?.(msg.data as ChatRead);
               // Invalidate to update last_message_at and unread counts
-              queryClient.invalidateQueries({
+              qc.invalidateQueries({
                 queryKey: [cacheKeys.USER_CHATS],
               });
               break;
             case "chat.update":
-              handlers.onChatUpdated?.(msg.data);
+              currentHandlers.onChatUpdated?.(msg.data);
               // Invalidate to update chat info (name, avatar, etc.)
-              queryClient.invalidateQueries({
-                queryKey: [cacheKeys.USER_CHATS],
-              });
-              break;
-            case "chat.member.delete":
-              handlers.onMemberDeleted?.(msg.data);
-              // Invalidate to update member counts
-              queryClient.invalidateQueries({
+              qc.invalidateQueries({
                 queryKey: [cacheKeys.USER_CHATS],
               });
               break;
             case "chat.stat":
-              handlers.onStatUpdated?.(msg.data);
+              currentHandlers.onStatUpdated?.(msg.data);
               // Update unread counts in chat list
-              queryClient.invalidateQueries({
+              qc.invalidateQueries({
                 queryKey: [cacheKeys.USER_CHATS],
               });
               break;
@@ -220,48 +189,76 @@ export function useChatsSyncWebSocket({
       ws.onclose = (event) => {
         console.warn("[Chats Sync WS] Closed:", event.code, event.reason);
         setIsConnected(false);
+        connectingRef.current = false;
+        setIsConnecting(false);
 
-        // Auth errors
+        // Normal close - don't reconnect
+        if (event.code === 1000) {
+          return;
+        }
+
+        // Auth errors - retry with new token
         if ([1008, 4401, 4403].includes(event.code)) {
-          if (retriesRef.current < AUTH_MAX_RETRIES) {
-            retriesRef.current += 1;
+          const currentRetries = retriesRef.current;
+          console.log(
+            `[Chats Sync WS] Auth error, retry ${
+              currentRetries + 1
+            }/${AUTH_MAX_RETRIES}`
+          );
+
+          if (currentRetries < AUTH_MAX_RETRIES) {
+            retriesRef.current = currentRetries + 1;
+            const delay = RECONNECT_DELAY * retriesRef.current;
+
             reconnectTimerRef.current = window.setTimeout(async () => {
               try {
                 const newToken = await getFreshAccessToken();
                 openSocketWithToken(newToken);
               } catch (err) {
                 console.error("[Chats Sync WS] Failed to refresh token:", err);
+                connectingRef.current = false;
+                setIsConnecting(false);
               }
-            }, RECONNECT_DELAY * retriesRef.current);
+            }, delay);
+          } else {
+            console.error(
+              "[Chats Sync WS] Max auth retries reached, giving up"
+            );
           }
           return;
         }
 
-        // Normal close
-        if (event.code === 1000) {
-          cleanupSocket();
-          return;
-        }
+        // Other errors - reconnect with exponential backoff
+        const currentRetries = retriesRef.current;
+        console.log(
+          `[Chats Sync WS] Connection lost, retry ${
+            currentRetries + 1
+          }/${MAX_RETRIES}`
+        );
 
-        // Reconnect with exponential backoff
-        if (retriesRef.current < MAX_RETRIES) {
-          retriesRef.current += 1;
+        if (currentRetries < MAX_RETRIES) {
+          retriesRef.current = currentRetries + 1;
           const backoff = Math.min(
             RECONNECT_DELAY * Math.pow(2, retriesRef.current),
             30000
           );
+
           reconnectTimerRef.current = window.setTimeout(async () => {
             try {
               const token = await getFreshAccessToken();
               openSocketWithToken(token);
             } catch (err) {
               console.error("[Chats Sync WS] Reconnect failed:", err);
+              connectingRef.current = false;
+              setIsConnecting(false);
             }
           }, backoff);
+        } else {
+          console.error("[Chats Sync WS] Max retries reached, giving up");
         }
       };
     },
-    [cleanupSocket, queryClient]
+    [] // No dependencies - uses refs only
   );
 
   const connect = useCallback(async () => {
@@ -280,19 +277,76 @@ export function useChatsSyncWebSocket({
     }
   }, [user, enabled, openSocketWithToken]);
 
-  useEffect(() => {
-    if (enabled && user) {
-      connect();
+  const sendMessage = useCallback((event: string, data: any) => {
+    const ws = wsRef.current;
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      console.warn(
+        "[Chats Sync WS] Cannot send - not connected. ReadyState:",
+        ws?.readyState
+      );
+      return false;
     }
+    console.log(`[Chats Sync WS] Sending event: ${event}`, data);
+    ws.send(JSON.stringify({ event, data }));
+    return true;
+  }, []);
+
+  const subscribe = useCallback(
+    (data: string) => {
+      return sendMessage("chat.subscribe", data);
+    },
+    [sendMessage]
+  );
+
+  const unsubscribe = useCallback(
+    (data: string) => {
+      return sendMessage("chat.unsubscribe", {
+        data,
+      });
+    },
+    [sendMessage]
+  );
+
+  // Separate effect for connection management
+  useEffect(() => {
+    let mounted = true;
+
+    const initConnection = async () => {
+      if (!enabled || !user || connectingRef.current || wsRef.current) return;
+
+      connectingRef.current = true;
+      setIsConnecting(true);
+
+      try {
+        const token = await getFreshAccessToken();
+        if (mounted) {
+          openSocketWithToken(token);
+        }
+      } catch (err) {
+        console.error("[Chats Sync WS] Initial connection failed:", err);
+        if (mounted) {
+          connectingRef.current = false;
+          setIsConnecting(false);
+        }
+      }
+    };
+
+    if (enabled && user) {
+      initConnection();
+    }
+
     return () => {
+      mounted = false;
       cleanupSocket();
     };
-  }, [enabled, user, connect, cleanupSocket]);
+  }, [enabled, user?.id, openSocketWithToken, cleanupSocket]); // Stable deps
 
   return {
     isConnected,
     isConnecting,
     connect,
     disconnect: cleanupSocket,
+    subscribe,
+    unsubscribe,
   };
 }

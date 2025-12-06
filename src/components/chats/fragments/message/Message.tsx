@@ -1,46 +1,37 @@
-/*
-    message can take many forms from 
-    - reference to course module 
-    - image (support small image upload )
-    - text
-    - links
-    etc  this is the component that acts as the engine to represent the message as 
-    it should 
-
-    message from the current user should start from the right and can
-    only span 80%
-    and message from the others should start from the left and can only span 80% the total width 
-    this means each message wrapper has a width 100% but the secondary wrapper will be 80%
- */
-
 "use client";
 
-import MarkdownRenderer from "@/common/markdown/AppMdRenderer";
-import { cn, getImageProxyUrl, timeAgo } from "@/lib/utils";
+import ConfirmPopup from "@/common/popups/ComfirmPop";
+import { cn } from "@/lib/utils";
 import { useAppStore } from "@/store";
-import { Avatar } from "@mui/material";
-import { FaBook } from "@react-icons/all-files/fa/FaBook";
-import { FaEdit } from "@react-icons/all-files/fa/FaEdit";
-import { FaFile } from "@react-icons/all-files/fa/FaFile";
-import Image from "next/image";
+import { IoTrashBin } from "@react-icons/all-files/io5/IoTrashBin";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
+import CourseModuleReference from "./CourseModuleReference";
+import DeletedMessage from "./DeletedMessage";
+import MessageActions from "./MessageActions";
+import MessageBubble from "./MessageBubble";
+import MessageContent from "./MessageContent";
+import MessageFooter from "./MessageFooter";
+import MessageHeader from "./MessageHeader";
+import SenderAvatar from "./SenderAvatar";
+import { getInitials } from "./helpers";
 
 type MessageProps = {
   message: ChatMessageRead;
+  onEdit?: (messageId: string, content: string) => void;
+  onDelete?: (messageId: string) => void;
 };
 
-// Helper function to format file size
-function formatFileSize(bytes?: number | null): string {
-  if (!bytes) return "";
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-export default function Message({ message }: MessageProps) {
+export default function Message({ message, onEdit, onDelete }: MessageProps) {
   const { user } = useAppStore((state) => state);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(message.content || "");
+  const [showActions, setShowActions] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  const t = useTranslations();
 
   // Determine if message is from current user
-  const isCurrentUser = message.sender_id === user?.id;
+  const isCurrentUser = message.sender?.account_id === user?.id;
 
   // Get sender info
   const senderName =
@@ -52,146 +43,58 @@ export default function Message({ message }: MessageProps) {
     message.chat?.avatar_url ||
     undefined;
 
-  // Get initials for avatar fallback
-  const getInitials = (name: string): string => {
-    const parts = name.trim().split(/\s+/);
-    if (parts.length >= 2) {
-      return (parts[0][0] + parts[1][0]).toUpperCase();
+  const initials = getInitials(senderName);
+
+  // Handle edit save
+  const handleSaveEdit = () => {
+    if (editContent.trim() && onEdit && editContent !== message.content) {
+      onEdit(message.id, editContent.trim());
     }
-    return name.substring(0, 2).toUpperCase();
+    setIsEditing(false);
   };
 
-  const initials = getInitials(senderName);
+  // Handle edit cancel
+  const handleCancelEdit = () => {
+    setEditContent(message.content || "");
+    setIsEditing(false);
+  };
+
+  // Handle delete
+  const handleDelete = () => {
+    setShowDelete(true);
+  };
 
   // Handle deleted messages
   if (message.is_deleted) {
     return (
-      <div
-        className={cn(
-          "w-full flex",
-          isCurrentUser ? "justify-end" : "justify-start"
-        )}
-      >
-        <div className="w-[80%] flex gap-2">
-          {!isCurrentUser && (
-            <div className="flex-shrink-0">
-              <Avatar
-                src={senderAvatar || undefined}
-                alt={senderName}
-                sx={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: "100%",
-                  bgcolor: "black",
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
-                }}
-              >
-                {initials}
-              </Avatar>
-            </div>
-          )}
-          <div
-            className={cn(
-              "flex-1 px-4 py-2 rounded-lg bg-gray-100 text-gray-500 italic text-sm"
-            )}
-          >
-            This message was deleted
-          </div>
-        </div>
-      </div>
+      <DeletedMessage
+        isCurrentUser={isCurrentUser}
+        senderAvatar={senderAvatar}
+        senderName={senderName}
+        initials={initials}
+      />
     );
   }
-
-  // Render message content based on type
-  const renderMessageContent = () => {
-    switch (message.message_type) {
-      case "TEXT":
-        if (!message.content) return null;
-        return (
-          <div className="text-gray-900 whitespace-pre-wrap break-words">
-            <MarkdownRenderer content={message.content} />
-          </div>
-        );
-
-      case "IMAGE":
-        if (!message.file_url) return null;
-        return (
-          <div className="space-y-2">
-            <div className="relative rounded-lg overflow-hidden max-w-md">
-              <Image
-                src={getImageProxyUrl(message.file_url) || "/placeholder.png"}
-                alt={message.file_name || "Image"}
-                width={400}
-                height={300}
-                className="w-full h-auto object-contain rounded-lg"
-                style={{ maxHeight: "400px" }}
-              />
-            </div>
-            {message.content && (
-              <div className="text-gray-900 whitespace-pre-wrap break-words text-sm">
-                <MarkdownRenderer content={message.content} />
-              </div>
-            )}
-          </div>
-        );
-
-      case "FILE":
-        return (
-          <div className="space-y-2">
-            <a
-              href={message.file_url || "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
-            >
-              <div className="flex-shrink-0 text-gray-600">
-                <FaFile className="w-5 h-5" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">
-                  {message.file_name || "File"}
-                </p>
-                {message.file_size && (
-                  <p className="text-xs text-gray-500">
-                    {formatFileSize(message.file_size)}
-                  </p>
-                )}
-              </div>
-            </a>
-            {message.content && (
-              <div className="text-gray-900 whitespace-pre-wrap break-words text-sm">
-                <MarkdownRenderer content={message.content} />
-              </div>
-            )}
-          </div>
-        );
-
-      case "SYSTEM":
-        return (
-          <div className="text-center text-gray-500 text-sm italic">
-            {message.content || "System message"}
-          </div>
-        );
-
-      default:
-        return (
-          <div className="text-gray-900 whitespace-pre-wrap break-words">
-            {message.content || "Message"}
-          </div>
-        );
-    }
-  };
 
   // Check for course module reference in extra_data
   const courseModuleRef = message.extra_data?.course_module;
   const courseRef = message.chat?.course;
 
   // System messages have special layout (centered, no bubble)
-  if (message.message_type === "SYSTEM") {
+  if (message.message_type === "system") {
     return (
       <div className="w-full flex justify-center mb-4">
-        <div className="w-[80%]">{renderMessageContent()}</div>
+        <div className="w-[80%]">
+          <MessageContent
+            message={message}
+            isCurrentUser={isCurrentUser}
+            isEditing={false}
+            editContent=""
+            onEditContentChange={() => {}}
+            onSaveEdit={() => {}}
+            onCancelEdit={() => {}}
+          />
+        </div>
       </div>
     );
   }
@@ -211,90 +114,73 @@ export default function Message({ message }: MessageProps) {
       >
         {/* Avatar - only show for other users */}
         {!isCurrentUser && (
-          <div className="flex-shrink-0">
-            <Avatar
-              src={senderAvatar || undefined}
-              alt={senderName}
-              sx={{
-                width: 32,
-                height: 32,
-                borderRadius: "100%",
-                bgcolor: "black",
-                fontSize: "0.75rem",
-                fontWeight: 600,
-              }}
-            >
-              {initials}
-            </Avatar>
-          </div>
+          <SenderAvatar
+            avatarUrl={senderAvatar}
+            name={senderName}
+            initials={initials}
+          />
         )}
 
         {/* Message Content */}
         <div className="flex-1 min-w-0 flex flex-col">
           {/* Sender name and timestamp - only for other users */}
-          {!isCurrentUser && (
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-medium text-gray-700">
-                {senderName}
-              </span>
-              {message.created_at && (
-                <span className="text-xs text-gray-500">
-                  {timeAgo(message.created_at)}
-                </span>
-              )}
-            </div>
-          )}
+
+          <MessageHeader
+            isCreator={isCurrentUser}
+            senderName={senderName}
+            createdAt={message.created_at}
+          />
 
           {/* Course Module Reference */}
           {courseModuleRef && courseRef && (
-            <div className="mb-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="flex items-center gap-2 mb-1">
-                <FaBook className="w-4 h-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-900">
-                  Course Module Reference
-                </span>
-              </div>
-              <p className="text-xs text-blue-700">{courseRef.title}</p>
-              {courseModuleRef.title && (
-                <p className="text-xs text-blue-600 mt-1">
-                  Module: {courseModuleRef.title}
-                </p>
-              )}
-            </div>
+            <CourseModuleReference
+              courseTitle={courseRef.title}
+              moduleTitle={courseModuleRef.title}
+            />
           )}
-
           {/* Message Bubble */}
-          <div
-            className={cn(
-              "px-4 py-2 rounded-lg",
-              isCurrentUser
-                ? "bg-[#3e3d3d] text-white [&_*]:text-white [&_a]:text-blue-200 [&_a:hover]:text-white"
-                : "bg-white border border-gray-200 text-gray-900"
-            )}
+          <MessageBubble
+            isCurrentUser={isCurrentUser}
+            onMouseEnter={() => setShowActions(true)}
+            onMouseLeave={() => setShowActions(false)}
           >
-            {renderMessageContent()}
-          </div>
+            <MessageContent
+              message={message}
+              isCurrentUser={isCurrentUser}
+              isEditing={isEditing}
+              editContent={editContent}
+              onEditContentChange={setEditContent}
+              onSaveEdit={handleSaveEdit}
+              onCancelEdit={handleCancelEdit}
+            />
 
+            {/* Edit/Delete Actions - Only show for current user's text messages */}
+            {isCurrentUser && message.message_type === "text" && !isEditing && (
+              <MessageActions
+                onEdit={() => setIsEditing(true)}
+                onDelete={handleDelete}
+                show={showActions}
+              />
+            )}
+          </MessageBubble>
           {/* Edited indicator and timestamp for current user */}
-          {isCurrentUser && (
-            <div className="flex items-center gap-2 mt-1 justify-end">
-              {message.is_edited && (
-                <span className="text-xs text-gray-500 flex items-center gap-1">
-                  <FaEdit className="w-3 h-3" />
-                  Edited
-                </span>
-              )}
-              {message.created_at && (
-                <span
-                  className={cn(
-                    "text-xs",
-                    isCurrentUser ? "text-gray-400" : "text-gray-500"
-                  )}
-                >
-                  {timeAgo(message.created_at)}
-                </span>
-              )}
-            </div>
+          <MessageFooter
+            isEdited={message.is_edited}
+            createdAt={message.created_at}
+            isCurrentUser={isCurrentUser}
+          />
+
+          {showDelete && (
+            <ConfirmPopup
+              body={t("CHAT.DELETE_MESSAGE")}
+              header={t("CONFIRM_DELETE")}
+              close={() => setShowDelete(false)}
+              isOpen={showDelete}
+              proceedCallback={() => onDelete?.(message.id)}
+              cancelText={t("CANCEL_TEXT")}
+              proceedText={t("PROCEED_DELETE")}
+              icon={<IoTrashBin />}
+            />
           )}
         </div>
       </div>
