@@ -6,7 +6,7 @@ import appAxios from "@/lib/axiosClient";
 import { cacheKeys } from "@/lib/cacheKeys";
 import { BackendRoutes } from "@/routes";
 import { useAppStore } from "@/store";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 type CourseChatProps = {
@@ -17,6 +17,7 @@ const CourseChat: React.FC<CourseChatProps> = ({ courseId }) => {
   const [activeChat, setActiveChat] = useState<ChatRead | null>(null);
   const { user } = useAppStore((state) => state);
   const [search, setSearch] = useState("");
+  const queryClient = useQueryClient();
   const {
     data: users_chats,
     isLoading: isLoadingChats,
@@ -66,7 +67,12 @@ const CourseChat: React.FC<CourseChatProps> = ({ courseId }) => {
       {activeChat && (
         <ChatMain
           chat={activeChat}
-          clearCurrentChat={() => setActiveChat(null)}
+          clearCurrentChat={() => {
+            setActiveChat(null);
+            queryClient.invalidateQueries({
+              queryKey: [cacheKeys.USER_CHATS, user?.id],
+            });
+          }}
         />
       )}
     </section>

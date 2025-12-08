@@ -150,4 +150,7 @@ export class BackendRoutes {
   static CHAT_INVITE = "/chat/invite";
   static LIST_CHATS = "/chat";
   static LIST_CHAT_MEMBERS = (chat_id: string) => `/chat/${chat_id}/members`;
+  static GET_CHAT_MESSAGES = (chat_id: string) => `/chat/${chat_id}/messages`;
+  static MARK_CHAT_AS_READ = (chat_id: string) =>
+    `/chat/${chat_id}/mark-all-as-read`;
 }

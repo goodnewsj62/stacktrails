@@ -163,16 +163,10 @@ export function useChatsSyncWebSocket({
             case "chat.update":
               currentHandlers.onChatUpdated?.(msg.data);
               // Invalidate to update chat info (name, avatar, etc.)
-              qc.invalidateQueries({
-                queryKey: [cacheKeys.USER_CHATS],
-              });
               break;
             case "chat.stat":
               currentHandlers.onStatUpdated?.(msg.data);
               // Update unread counts in chat list
-              qc.invalidateQueries({
-                queryKey: [cacheKeys.USER_CHATS],
-              });
               break;
             default:
               console.log("[Chats Sync WS] Unknown event:", msg.event);

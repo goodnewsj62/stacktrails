@@ -176,7 +176,10 @@ export default function Message({ message, onEdit, onDelete }: MessageProps) {
               header={t("CONFIRM_DELETE")}
               close={() => setShowDelete(false)}
               isOpen={showDelete}
-              proceedCallback={() => onDelete?.(message.id)}
+              proceedCallback={() => {
+                onDelete?.(message.id);
+                setShowDelete(false);
+              }}
               cancelText={t("CANCEL_TEXT")}
               proceedText={t("PROCEED_DELETE")}
               icon={<IoTrashBin />}
